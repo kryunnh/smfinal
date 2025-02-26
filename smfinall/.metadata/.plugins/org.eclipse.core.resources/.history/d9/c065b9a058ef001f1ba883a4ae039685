@@ -1,0 +1,15 @@
+package com.project.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface krhMainMapper {
+	//인기 레시피 조회
+	
+	//최신 레시피 조회
+	
+	//관심 목록에 있는 레시피들이 가장 많이 속한 카테고리 속 레시피 추천
+	
+	//날씨 기반 레시피 추천
+	
+}

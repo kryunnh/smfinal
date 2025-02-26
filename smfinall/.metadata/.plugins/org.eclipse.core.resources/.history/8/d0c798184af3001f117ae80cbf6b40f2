@@ -1,0 +1,12 @@
+package com.project.model;
+
+import lombok.Data;
+
+@Data
+public class krhLikeDislikeVO {
+	private int id;         // 좋아요/싫어요 기록의 ID
+    private int userId;     // 사용자 ID
+    private int boardId;     // 게시글 ID
+    private boolean isLike; // 좋아요
+    private boolean isDislike; //싫어요
+}

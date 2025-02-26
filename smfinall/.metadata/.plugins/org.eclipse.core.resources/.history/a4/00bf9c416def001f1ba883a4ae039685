@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.mapper.krhMainMapper">
+	<!--인기 레시피 조회(receipes db에서 갖고오기)-->
+	<select id="popularRecipe" resultType="krhMainVo">
+		select foodName, recipesId as recipesId, foodImg from recipes order by views asc limit 4
+	</select>	
+	<!--최신 레시피 조회-->
+	<select id="recentRecipe" resultType="krhMainVo">
+		select foodName, recipesId as recipesId, foodImg from recipes order by recipesId asc limit 4
+	</select>
+	<!-- 사용자의 관심 목록에서 가장 많이 등장한 카테고리의 레시피 추천 -->
+	<select id="getRecommendedRecipes" resultType="krhMainVO">
+	    SELECT r.recipesId, r.foodName, r.foodImg 
+	    FROM recipes r
+	    WHERE r.categoryId = (
+	        SELECT categoryId 
+	        FROM (
+	            SELECT r.categoryId, COUNT(*) AS count 
+	            FROM favorites f
+	            JOIN recipes r ON f.recipeId = r.recipesId
+	            WHERE f.userId = #{id}
+	            GROUP BY r.categoryId
+	            ORDER BY count DESC
+	            LIMIT 1
+	        ) AS topCategory
+	    )
+	    ORDER BY RAND()
+	    LIMIT 4;
+	</select>
+
+	<!--날씨 기반 레시피 추천 목록 조회-->
+</mapper>

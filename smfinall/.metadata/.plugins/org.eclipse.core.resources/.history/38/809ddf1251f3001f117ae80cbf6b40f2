@@ -1,0 +1,104 @@
+package com.project.controller;
+
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import com.project.model.krhBoardVO;
+import com.project.model.krhReportVO;
+import com.project.service.krhBoardService;
+import jakarta.servlet.http.HttpSession;
+
+@RestController
+@RequestMapping("/api/board")
+public class krhBoardController {
+    
+    @Autowired
+    private krhBoardService krhboardService;
+    
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getBoardList(
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size,
+        @RequestParam(value = "findStr", defaultValue = "") String findStr) {
+
+        Map<String, Object> result = krhboardService.getBoardList(page, size, findStr);
+        return ResponseEntity.ok(result);
+    }
+    
+    @GetMapping("/{boardId}")
+    public ResponseEntity<krhBoardVO> getBoardById(@PathVariable int boardId) {
+        krhboardService.incrementViews(boardId);
+        return ResponseEntity.ok(krhboardService.getBoardById(boardId));
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable int boardId, HttpSession session) {
+        try {
+            Integer loggedInUserId = (Integer) session.getAttribute("id");
+            if (loggedInUserId == null) {
+                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+            }
+            Integer authorId = krhboardService.getAuthorIdByBoardId(boardId);
+            if (authorId == null || !authorId.equals(loggedInUserId)) {
+                return new ResponseEntity<>("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            }
+            krhboardService.deleteBoard(boardId);
+            return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            return new ResponseEntity<>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @PostMapping
+    public ResponseEntity<String> insertBoard(@RequestBody krhBoardVO krhboardVo, HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("id");
+        String loggedInName = (String) session.getAttribute("name");
+        if (loggedInUserId == null || loggedInName == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+        }
+        krhboardVo.setAuthor(loggedInName);
+        krhboardVo.setAuthorId(loggedInUserId);
+        krhboardService.insertBoard(krhboardVo);
+        return ResponseEntity.status(HttpStatus.CREATED).body("게시글이 성공적으로 등록되었습니다.");
+    }
+    
+    @PutMapping("/{boardId}")
+    public ResponseEntity<String> updateBoard(@RequestBody krhBoardVO krhboardVo, HttpSession session, @PathVariable int boardId) {
+        try {
+            Integer loggedInUserId = (Integer) session.getAttribute("id");
+            if (loggedInUserId == null) {
+                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+            }
+            Integer authorId = krhboardService.getAuthorIdByBoardId(boardId);
+            if (authorId == null || !authorId.equals(loggedInUserId)) {
+                return new ResponseEntity<>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            }
+            krhboardService.updateBoard(krhboardVo);
+            return ResponseEntity.ok("게시글이 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            return new ResponseEntity<>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @PostMapping("/{boardId}/report")
+    public ResponseEntity<String> reportBoard(
+            @PathVariable int boardId,
+            @RequestBody krhReportVO report,
+            HttpSession session) {
+        try {
+            Integer reporterId = (Integer) session.getAttribute("id");
+            if (reporterId == null) {
+                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+            }
+            report.setBoardId(boardId);
+            report.setReporterId(reporterId);
+            krhboardService.reportBoard(report);
+            return ResponseEntity.ok("게시물이 성공적으로 신고되었습니다.");
+        } catch (Exception e) {
+            return new ResponseEntity<>("신고 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}

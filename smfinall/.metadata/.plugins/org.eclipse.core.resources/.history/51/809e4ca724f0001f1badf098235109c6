@@ -1,0 +1,20 @@
+package com.project.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.project.model.krhBoardVO;
+
+public interface krhBoardService {
+	//페이징 처리된 전체 게시글 수 조회 + 검색
+	int countBoard(String findStr);
+	
+	//페이징된 목록 조회 + 검색
+	Map<String,Object>getBoardList(int page, int size, String findStr);
+	
+	//단건 상세보기
+	krhBoardVO getBoardById(int boardId);
+	
+	//조회수 추가
+	void incrementViews(int boardId);
+}
