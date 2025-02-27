@@ -1,5 +1,56 @@
 package com.project.service;
 
-public class krhCommentServiceImpl {
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.krhCommentMapper;
+import com.project.mapper.krhMainMapper;
+import com.project.model.krhCommentVO;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class krhCommentServiceImpl implements krhCommentService {
+	private final krhCommentMapper krhcommentMapper;
+	
+	@Override
+	public List<krhCommentVO> commentList(int boardId) {
+		// TODO Auto-generated method stub
+		return krhcommentMapper.commentList(boardId) ;
+	}
+
+	@Override
+	public List<krhCommentVO> commentListReply(int commentId) {
+		// TODO Auto-generated method stub
+		return krhcommentMapper.commentListReply(commentId);
+	}
+
+	@Override
+	public void addComment(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.addComment(params);
+	}
+
+	@Override
+	public void addReply(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.addReply(params);
+	}
+
+	@Override
+	public void deleteComment(int commentId) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.deleteComment(commentId);
+	}
+
+	@Override
+	public void updateComment(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.updateComment(params);
+	}
+	
+	
 }

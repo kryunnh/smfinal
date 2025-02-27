@@ -1,5 +1,31 @@
 package com.project.mapper;
 
-public interface krhCommentMapper {
+import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.project.model.krhCommentVO;
+
+@Mapper
+public interface krhCommentMapper {
+	//댓글 목록 조회
+	List<krhCommentVO> commentList(@Param("boardId") int boardId);
+	
+	//대댓글 목록 조회
+	List<krhCommentVO> commentListReply(@Param("commentId") int commentId);
+	
+	//댓글 추가
+	void addComment(Map<String, Object>params);
+	
+	//대댓글 추가
+	void addReply(Map<String, Object>params);
+	
+	//댓글 수정
+	void updateComment(Map<String, Object>parmas);
+	
+	//댓글 삭제
+	void deleteComment(int commentId);
+	
 }

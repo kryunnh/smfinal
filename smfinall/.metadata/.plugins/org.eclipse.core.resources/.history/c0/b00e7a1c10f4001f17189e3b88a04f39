@@ -1,0 +1,15 @@
+package com.project.service;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.project.model.krhCommentVO;
+
+public interface krhCommentService {
+	//댓글 목록 조회
+	List<krhCommentVO> commentList(int boardId);
+		
+	//대댓글 목록 조회
+	List<krhCommentVO> commentListReply(int boardId, int commentId);
+}
