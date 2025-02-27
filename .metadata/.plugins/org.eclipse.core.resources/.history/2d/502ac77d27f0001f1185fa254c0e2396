@@ -1,0 +1,14 @@
+package com.project.model;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Inquiry {
+    private Long id;
+    private Long userId;
+    private String title;
+    private String content;
+    private String reply;
+}

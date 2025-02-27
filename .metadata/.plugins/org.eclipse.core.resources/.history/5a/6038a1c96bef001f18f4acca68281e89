@@ -1,0 +1,80 @@
+package com.project.controller;
+
+import com.project.model.Recipe;
+import com.project.model.User;
+import com.project.model.Inquiry;
+import com.project.service.AdminService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin")
+@RequiredArgsConstructor
+public class AdminController {
+
+    private final AdminService adminService;
+
+    // 🔹 회원 목록 조회
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return adminService.getAllUsers();
+    }
+
+    // 🔹 회원 삭제
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        adminService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
+    // 🔹 레시피 목록 조회
+    @GetMapping("/recipes")
+    public List<Recipe> getAllRecipes() {
+        return adminService.getAllRecipes();
+    }
+
+    // 🔹 레시피 등록
+    @PostMapping("/recipe/add")
+    public ResponseEntity<String> addRecipe(@RequestBody Recipe recipe) {
+        adminService.insertRecipe(recipe);
+        return ResponseEntity.ok("Recipe added successfully");
+    }
+
+    // 🔹 레시피 수정
+    @PutMapping("/recipe/edit/{id}")
+    public ResponseEntity<String> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
+        recipe.setId(id);
+        adminService.updateRecipe(recipe);
+        return ResponseEntity.ok("Recipe updated successfully");
+    }
+
+    // 🔹 레시피 삭제
+    @DeleteMapping("/recipe/delete/{id}")
+    public ResponseEntity<String> deleteRecipe(@PathVariable Long id) {
+        adminService.deleteRecipe(id);
+        return ResponseEntity.ok("Recipe deleted successfully");
+    }
+
+    // 🔹 1:1 문의 목록 조회
+    @GetMapping("/inquiries")
+    public List<Inquiry> getAllInquiries() {
+        return adminService.getAllInquiries();
+    }
+
+    // 🔹 1:1 문의 답변 등록
+    @PostMapping("/inquiries/reply/{id}")
+    public ResponseEntity<String> replyInquiry(@PathVariable Long id, @RequestBody String reply) {
+        adminService.replyInquiry(id, reply);
+        return ResponseEntity.ok("Inquiry replied successfully");
+    }
+
+    // 🔹 1:1 문의 삭제
+    @DeleteMapping("/inquiries/{id}")
+    public ResponseEntity<String> deleteInquiry(@PathVariable Long id) {
+        adminService.deleteInquiry(id);
+        return ResponseEntity.ok("Inquiry deleted successfully");
+    }
+}

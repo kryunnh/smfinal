@@ -1,0 +1,36 @@
+package com.project.config;
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Date;
+
+public class JwtUtil {
+    private static final String SECRET_KEY = "yourSecretKeyyourSecretKeyyourSecretKeyyourSecretKey"; // 32바이트 이상 필수
+    private static final Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+
+    // ✅ JWT 토큰 생성
+    public static String generateToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)  
+                .setIssuedAt(new Date()) 
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) 
+                .signWith(key, SignatureAlgorithm.HS256) // ✅ SignatureAlgorithm 추가
+                .compact();
+    }
+
+    // ✅ JWT 토큰 검증 (`parserBuilder()` 사용)
+    public static String validateToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()  // ✅ 최신 jjwt 방식
+                    .setSigningKey(key)  // ✅ 검증 키 설정
+                    .build()
+                    .parseClaimsJws(token) // ✅ 올바른 메서드 사용
+                    .getBody();
+            return claims.getSubject(); 
+        } catch (Exception e) {
+            return null; 
+        }
+    }
+}

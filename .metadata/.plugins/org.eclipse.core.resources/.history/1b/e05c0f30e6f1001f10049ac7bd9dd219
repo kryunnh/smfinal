@@ -1,0 +1,17 @@
+package com.project.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
+@Configuration
+public class WebConfig {
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthFilter> jwtAuthFilter() {
+        FilterRegistrationBean<JwtAuthFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new JwtAuthFilter());
+        registrationBean.addUrlPatterns("/admin/*"); // 🔹 관리자 API에 JWT 필터 적용
+        return registrationBean;
+    }
+}

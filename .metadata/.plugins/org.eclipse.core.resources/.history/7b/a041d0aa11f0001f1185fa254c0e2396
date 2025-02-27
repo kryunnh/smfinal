@@ -1,0 +1,25 @@
+package com.project.mapper;
+
+import com.project.model.User;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface UserMapper {
+
+    @Select("SELECT * FROM users WHERE id = #{id}")
+    User getUserById(Long id);
+
+    @Select("SELECT * FROM users")
+    List<User> getAllUsers();
+
+    @Insert("INSERT INTO users(email, password, name, profile_image, role) VALUES(#{email}, #{password}, #{name}, #{profileImage}, #{role})")
+    void insertUser(User user);
+
+    @Update("UPDATE users SET email=#{email}, name=#{name}, profile_image=#{profileImage} WHERE id=#{id}")
+    void updateUser(User user);
+
+    @Delete("DELETE FROM users WHERE id=#{id}")
+    void deleteUser(Long id);
+}

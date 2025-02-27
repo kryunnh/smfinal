@@ -1,0 +1,88 @@
+package com.project.mapper;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import com.project.model.*;
+
+@Mapper
+public interface UserMapper {
+
+    // 🔹 이름과 휴대폰 번호로 아이디 찾기
+    @Select("SELECT email FROM users WHERE name = #{name} AND phone_number = #{phoneNumber}")
+    String findEmailByNameAndPhone(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+
+    // 🔹 해당 이메일과 휴대폰 번호를 가진 유저 존재 여부 확인
+    @Select("SELECT COUNT(*) FROM users WHERE email = #{email} AND phone_number = #{phoneNumber}")
+    int countUserByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+
+    // 🔹 비밀번호 변경 (이메일 + 휴대폰 번호 확인 후)
+    @Update("UPDATE users SET password = #{password} WHERE email = #{email} AND phone_number = #{phoneNumber}")
+    void updatePassword(@Param("email") String email, @Param("phoneNumber") String phoneNumber, @Param("password") String password);
+
+    // 🔹 특정 이메일로 유저 조회 (Optional)
+    @Select("SELECT * FROM users WHERE email = #{email}")
+    Optional<User> findByEmail(String email);
+
+    // 🔹 회원가입 (휴대폰 번호 포함)
+    @Insert("INSERT INTO users (email, password, name, phone_number, profile_image, role, created_at, is_verified) " +
+            "VALUES (#{email}, #{password}, #{name}, #{phoneNumber}, #{profileImage}, 'USER', NOW(), #{verified})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void registerUser(User user);
+
+    // 🔹 로그인 (휴대폰 번호 포함)
+    @Select("SELECT * FROM users WHERE email = #{email} AND password = #{password}")
+    User login(@Param("email") String email, @Param("password") String password);
+
+    // 🔹 유저 정보 조회 (휴대폰 번호 포함)
+    @Select("SELECT * FROM users WHERE email = #{email}")
+    User getUserByEmail(@Param("email") String email);
+
+    // 🔹 유저 정보 수정 (이름, 프로필 이미지, 휴대폰 번호)
+    @Update("UPDATE users SET name = #{name}, phone_number = #{phoneNumber}, profile_image = #{profileImage} WHERE email = #{email}")
+    int updateUser(User user);
+
+    // 🔹 회원 탈퇴 요청 저장
+    @Insert("INSERT INTO user_deletion_requests (email, reason, created_at) " +
+            "VALUES (#{email}, #{reason}, NOW())")
+    void requestAccountDeletion(@Param("email") String email, @Param("reason") String reason);
+
+    // 🔹 유저 알림 목록 조회
+    @Select("SELECT * FROM notifications WHERE receiver_email = #{email}")
+    List<Notification> getUserNotifications(@Param("email") String email);
+
+    // 🔹 유저 알림 읽음 처리
+    @Update("UPDATE notifications SET is_read = TRUE WHERE id = #{notificationId} AND receiver_email = #{email}")
+    void markUserNotificationAsRead(@Param("notificationId") Long notificationId, @Param("email") String email);
+
+    // 🔹 게시물 등록
+    @Insert("INSERT INTO posts (user_email, title, content) VALUES (#{userEmail}, #{title}, #{content})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insertPost(Post post);
+
+    // 🔹 특정 유저의 게시물 조회
+    @Select("SELECT * FROM posts WHERE user_email = #{email}")
+    List<Post> getUserPosts(@Param("email") String email);
+
+    // 🔹 관심 레시피 조회
+    @Select("SELECT * FROM wishlist WHERE user_email = #{email}")
+    List<Recipe> getWishlist(@Param("email") String email);
+
+    // 🔹 관심 레시피 삭제
+    @Delete("DELETE FROM wishlist WHERE id = #{id} AND user_email = #{email}")
+    int deleteWishlistItem(@Param("id") Long id, @Param("email") String email);
+
+    // 🔹 1:1 문의 등록
+    @Insert("INSERT INTO inquiries (user_email, title, content, created_at) VALUES (#{userEmail}, #{title}, #{content}, NOW())")
+    void insertInquiry(Inquiry inquiry);
+
+    // 🔹 1:1 문의 목록 조회
+    @Select("SELECT * FROM inquiries WHERE user_email = #{email}")
+    List<Inquiry> getUserInquiries(@Param("email") String email);
+
+    // 🔹 1:1 문의 삭제
+    @Delete("DELETE FROM inquiries WHERE id = #{inquiryId} AND user_email = #{email}")
+    void deleteUserInquiry(@Param("inquiryId") Long inquiryId, @Param("email") String email);
+}

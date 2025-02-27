@@ -1,0 +1,64 @@
+package com.project.controller;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.model.Inquiry;
+import com.project.model.User;
+import com.project.service.InquiryService;
+import com.project.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+    private final InquiryService inquiryService;
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user) {
+        userService.registerUser(user);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok("User updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+        // 1:1 문의 등록 (POST 요청)
+        @PostMapping("/inquiries")
+        public ResponseEntity<String> createInquiry(@RequestBody Inquiry inquiry) {
+            inquiryService.insertInquiry(inquiry);
+            return ResponseEntity.ok("Inquiry successfully created.");
+        }
+    
+
+}

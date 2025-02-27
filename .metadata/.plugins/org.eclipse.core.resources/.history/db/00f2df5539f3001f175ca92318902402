@@ -1,0 +1,50 @@
+package com.project.config;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
+            throws ServletException, IOException {
+        
+        String token = jwtUtil.resolveToken(request);
+        
+        if (token != null && jwtUtil.validateToken(token)) {
+            String email = jwtUtil.extractEmail(token);
+
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    jwtUtil.setAuthentication(userDetails);
+                }
+            }
+        } else if (token != null) {
+            System.out.println("🔴 JWT 토큰 검증 실패: " + token);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
+            return;
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}

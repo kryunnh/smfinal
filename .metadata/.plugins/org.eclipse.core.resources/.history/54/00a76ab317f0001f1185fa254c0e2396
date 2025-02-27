@@ -1,0 +1,30 @@
+package com.project.service;
+
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.AuthMapper;
+import com.project.model.User;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final AuthMapper authMapper;
+
+    // 🔹 인증 - 회원가입
+    public void registerUser(User user) {
+        authMapper.registerUser(user);
+    }
+
+    // 🔹 인증 - 로그인
+    public String login(User user) {
+        return authMapper.login(user);
+    }
+
+    // 🔹 인증 - 로그아웃
+    public void logout() {
+        authMapper.logout();
+    }
+}

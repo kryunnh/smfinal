@@ -1,0 +1,22 @@
+package com.project.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.project.service.TarotService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/tarot")
+@RequiredArgsConstructor
+public class TarotController {
+
+    private final TarotService tarotService;
+
+    // 🔹 타로 카드 선택별 추천 레시피
+    @GetMapping("/recommend")
+    public ResponseEntity<String> getTarotRecommendation(@RequestParam Long cardId) {
+        return ResponseEntity.ok(tarotService.getTarotRecommendation(cardId));
+    }
+}

@@ -1,0 +1,78 @@
+package com.project.service;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.UserMapper;
+import com.project.model.Inquiry;
+import com.project.model.Recipe;
+import com.project.model.User;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserMapper userMapper;
+
+    // 🔹 회원가입
+    public void registerUser(User user) {
+        userMapper.registerUser(user);
+    }
+
+    // 🔹 로그인
+    public User login(String email, String password) {
+        return userMapper.login(new User(null, email, password, null, null, null));
+    }
+    // 🔹 로그아웃 (현재는 클라이언트에서 처리)
+    public void logout() {
+        // 토큰을 사용하지 않는 경우 서버에서 할 작업 없음.
+    }
+
+    // 🔹 회원탈퇴 요청 저장 (유저)
+    public void requestAccountDeletion(String email , String reason) {
+        userMapper.requestAccountDeletion(email, reason);
+    }
+
+    // 🔹 유저 정보 조회 (본인)
+    public User getUserById(Long id) {
+        return userMapper.getUserById(id);
+    }
+
+    public void updateUser(User user) {
+        System.out.println("업데이트 요청 받은 데이터: " + user);
+        userMapper.updateUser(user);
+        System.out.println("업데이트 완료! DB에서 다시 조회: " + userMapper.getUserById(user.getId()));
+    }
+
+    // 🔹 유저 알림 목록 조회 (본인)
+    public List<String> getNotifications(Long userId) {
+        return userMapper.getNotifications(userId);
+    }
+
+    // 🔹 유저 알림 읽음 처리 (본인)
+    public void markNotificationAsRead(Long id) {
+        userMapper.markNotificationAsRead(id);
+    }
+
+    // 🔹 관심 레시피 조회 (본인)
+    public List<Recipe> getWishlist(Long userId) {
+        return userMapper.getWishlist(userId);
+    }
+
+    // 🔹 관심 레시피 삭제 (본인)
+    public void removeWishlist(Long id) {
+        userMapper.removeWishlist(id);
+    }
+
+    // 🔹 1:1 문의 목록 조회 (본인)
+    public List<Inquiry> getUserInquiries(Long userId) {
+        return userMapper.getUserInquiries(userId);
+    }
+
+    // 🔹 1:1 문의 삭제 (본인)
+    public void deleteUserInquiry(Long id, Long userId) {
+        userMapper.deleteUserInquiry(id, userId);
+    }
+}
