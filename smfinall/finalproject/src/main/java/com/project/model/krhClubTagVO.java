@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class krhClubTagVO {
-	int clubId;
-	int tagId;
+	private int id;
+	private krhTagVO krhtagVo;
+	private krhClubVO krhclubVo;
 }

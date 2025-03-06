@@ -6,10 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.project.config.JwtUtil;
+import com.project.model.User;
 import com.project.model.krhBoardVO;
 import com.project.model.krhLikeVO;
 import com.project.model.krhReportVO;
+import com.project.service.UserService;
 import com.project.service.krhBoardService;
+
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -18,7 +24,11 @@ public class krhBoardController {
     
     @Autowired
     private krhBoardService krhboardService;
-    
+    @Autowired
+	private UserService userService;
+	@Autowired
+	private JwtUtil jwtUtil;
+	
     //게시글 목록 조회
     @GetMapping
     public ResponseEntity<Map<String, Object>> getBoardList(
@@ -38,55 +48,97 @@ public class krhBoardController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/{boardId}")
-    public ResponseEntity<String> deleteBoard(@PathVariable int boardId, HttpSession session) {
-        try {
-            Integer loggedInUserId = (Integer) session.getAttribute("id");
-            if (loggedInUserId == null) {
-                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
-            }
-            Integer authorId = krhboardService.getAuthorIdByBoardId(boardId);
-            if (authorId == null || !authorId.equals(loggedInUserId)) {
-                return new ResponseEntity<>("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
-            }
-            krhboardService.deleteBoard(boardId);
-            return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
-        } catch (Exception e) {
-            return new ResponseEntity<>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("/{boardId}/delete")
+    public ResponseEntity<String> deleteBoard(@PathVariable int boardId, @RequestHeader("Authorization") String token) {
+    	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
+		Claims claims;
+		try {
+			claims=jwtUtil.extractClaim(jwtToken, null);
+		}catch(Exception e){
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		
+		String email = claims.getSubject();
+		if(email==null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+
+		 // 사용자 이메일을 기반으로 게시물 삭제 요청
+	    try {
+	        krhboardService.deleteBoard(boardId, email);
+	        return ResponseEntity.ok("게시물이 성공적으로 삭제되었습니다.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시물 삭제에 실패했습니다.");
+	    }
     }
     
     //게시글 추가
-    @PostMapping
-    public ResponseEntity<String> insertBoard(@RequestBody krhBoardVO krhboardVo, HttpSession session) {
-        Integer loggedInUserId = (Integer) session.getAttribute("id");
-        String loggedInName = (String) session.getAttribute("name");
-        if (loggedInUserId == null || loggedInName == null) {
-            return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+    @PostMapping("/add")
+    public ResponseEntity<String> insertBoard(@RequestBody krhBoardVO krhboardVo, @RequestHeader("Authorization") String token ) {
+    	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
+		Claims claims;
+		try {
+			claims=jwtUtil.extractClaim(jwtToken, null);
+		}catch(Exception e){
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		
+		String email = claims.getSubject();
+		if(email==null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+
+		User user = userService.findByUserEmail(email);
+		// 사용자가 존재하지 않을 경우 예외 처리
+	    if (user == null) {
+	        throw new RuntimeException("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+
+        long authorId=user.getId(); //id 갖고오기
+        String author=user.getName(); //이름 갖고오기
+        
+        //게시글 정보에 사용자 정보 추가
+        krhboardVo.setAuthor(author);
+        krhboardVo.setAuthorId(authorId);
+        krhboardVo.setAuthorEmail(email);
+        
+        // 게시글 등록
+        try {
+            krhboardService.insertBoard(krhboardVo);
+            return ResponseEntity.status(HttpStatus.CREATED).body("게시글이 성공적으로 등록되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 등록에 실패했습니다.");
         }
-        krhboardVo.setAuthor(loggedInName);
-        krhboardVo.setAuthorId(loggedInUserId);
-        krhboardService.insertBoard(krhboardVo);
-        return ResponseEntity.status(HttpStatus.CREATED).body("게시글이 성공적으로 등록되었습니다.");
     }
     
     //게시글 수정
-    @PutMapping("/{boardId}")
-    public ResponseEntity<String> updateBoard(@RequestBody krhBoardVO krhboardVo, HttpSession session, @PathVariable int boardId) {
+    @PutMapping("/{boardId}/update")
+    public ResponseEntity<String> updateBoard(@RequestBody krhBoardVO krhboardVo, @PathVariable int boardId, @RequestHeader("Authorization") String token) {
+    	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
+		Claims claims;
+		try {
+			claims=jwtUtil.extractClaim(jwtToken, null);
+		}catch(Exception e){
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		
+		String email = claims.getSubject();
+		if(email==null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+    	
+		// 게시글의 authorEmail이 토큰에서 받은 이메일과 동일한지 확인
+	    if (!email.equals(krhboardVo.getAuthorEmail())) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 작성한 게시물만 수정할 수 있습니다.");
+	    }
+	    // 게시글 수정
         try {
-            Integer loggedInUserId = (Integer) session.getAttribute("id");
-            if (loggedInUserId == null) {
-                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
-            }
-            Integer authorId = krhboardService.getAuthorIdByBoardId(boardId);
-            if (authorId == null || !authorId.equals(loggedInUserId)) {
-                return new ResponseEntity<>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
-            }
             krhboardService.updateBoard(krhboardVo);
-            return ResponseEntity.ok("게시글이 성공적으로 수정되었습니다.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("게시글이 성공적으로 수정되었습니다.");
         } catch (Exception e) {
-            return new ResponseEntity<>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 수정에 실패했습니다.");
         }
+        
     }
     
     //신고하기

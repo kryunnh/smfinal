@@ -1,0 +1,54 @@
+package com.project.controller;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.config.JwtUtil;
+import com.project.model.Recipes;
+import com.project.model.krhMainVO;
+import com.project.service.krhMainService;
+
+import jakarta.servlet.http.HttpSession;
+
+@RestController
+@RequestMapping("/api/main")
+public class krhMainController {
+	
+	private final krhMainService krhmainService;
+	
+	public krhMainController(krhMainService krhmainService) {
+		super();
+		this.krhmainService = krhmainService;
+	}
+
+	//인기 레시피 조회
+	@GetMapping("/popular")
+	public List<Recipes> popularRecipe() { //리턴타입을 json형태로 변환
+		return krhmainService.popularRecipe();
+	}
+	
+	//최신 레시피 조회
+	@GetMapping("/recent")
+	public List<Recipes> recentRecipe(){
+		return krhmainService.recentRecipe();
+	}
+
+	//관심 목록에 있는 레시피들이 가장 많이 속한 카테고리 속 레시피 추천
+	@GetMapping("/recommend")
+	public List<Recipes> getRecommendedRecipes(@RequestHeader("Authorization") String token){
+		int userId = JwtUtil.extractUser(token);
+		return krhmainService.getRecommendedRecipes(userId);
+	}
+}

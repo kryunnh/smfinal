@@ -73,6 +73,57 @@
 			<version>3.0.4</version>
 			<scope>test</scope>
 		</dependency>
+		      <!-- Spring Boot Mail -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-mail</artifactId>
+      </dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.11.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId> <!-- JSON 변환을 위한 라이브러리 -->
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency>
+
+      <!-- Spring Security (JWT와 함께 사용 가능) -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
+      <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-aop</artifactId>
+	</dependency>		
+		
+		<!-- Spring JDBC (for @Transactional support) -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		</dependency>
+		
+		<!-- JUnit 5 (already included in spring-boot-starter-test) -->
+		<!-- AssertJ for Assertions -->
+		<dependency>
+		    <groupId>org.assertj</groupId>
+		    <artifactId>assertj-core</artifactId>
+		    <scope>test</scope>
+		</dependency>
+			<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20210307</version>
+		</dependency>
 	</dependencies>
 
 	<build>

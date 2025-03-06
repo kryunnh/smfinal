@@ -4,12 +4,12 @@
 <mapper namespace="com.project.mapper.krhCommentMapper">
 
 	<!--요리 고민방 댓글 목록 조회-->
-	<select id="commentList" parameterType="int" resultType="krhCommentVO">
+	<select id="commentList" parameterType="int" resultType="com.project.model.krhCommentVO">
 		select * from comment where boardId=#{boardId} and replyId=0 order by createdAt asc
 	</select>
 	
 	<!--요리 고민방 대댓글 목록 조회-->
-	<select id="commentListReply" parameterType="int" resultType="krhCommentVO"> 
+	<select id="commentListReply" parameterType="int" resultType="com.project.model.krhCommentVO"> 
 		select * from comment where replyId=#{commentId} order by createdAt asc
 	</select>
 

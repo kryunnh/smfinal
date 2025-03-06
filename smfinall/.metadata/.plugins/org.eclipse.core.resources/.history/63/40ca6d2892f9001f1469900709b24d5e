@@ -1,0 +1,13 @@
+package com.project.model;
+
+import lombok.Data;
+
+@Data
+public class krhApplicationRequestVO {
+	int clubId; //해당 클럽 번호
+	String recruiterEmail; //주최자 이메일
+	String applicantEmail; //신청자 이메일
+	String applicantName;//신청자 이름
+	int applicantAge;//신청자 나이
+	String applicantSex;//신청자 성별
+}

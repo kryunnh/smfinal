@@ -14,7 +14,7 @@
 	</select>
 		
 	<!-- 요리 고민방 페이징 후 게시글 조회(검색 포함) -->
-	<select id="getBoardList" resultType="krhBoardVO">
+	<select id="getBoardList" resultType="com.project.model.krhBoardVO">
 		SELECT * FROM board
 		<where>
 			<if test="findStr != null and findStr !=''">
@@ -26,7 +26,7 @@
 	</select>
 	
 	<!--요리 고민방 목록 단건 상세 조회 -->
-	<select id="getBoardById" parameterType="int" resultType="krhBoardVO">
+	<select id="getBoardById" parameterType="int" resultType="com.project.model.krhBoardVO">
 		select * from board
 		where boardId=#{boardId}
 	</select>
@@ -37,26 +37,26 @@
 	</update>
 	
 	<!--요리 고민방 단건 수정-->
-	<update id="updateBoard" parameterType="krhBoardVO">
+	<update id="updateBoard" parameterType="com.project.model.krhBoardVO">
 		update board set title=#{title}, content=#{content} where boardId=#{boardId}
 	</update>
 	
 	<!--요리 고민방 단건 추가 -->
-	<insert id="insertBoard" parameterType="krhBoardVO">
-		insert into board(title, author, authorId, content,createdAt) values (#{title}, #{author}, #{authorId], #{content}, now())
+	<insert id="insertBoard" parameterType="com.project.model.krhBoardVO">
+		insert into board(title, author, authorId, content, authorEmail, createdAt) values (#{title}, #{author}, #{authorId], #{content}, #{authorEmail}, now())
 	</insert>
 	
-	<!--요리 고민방 단건 삭제 -->
-	<select id="getAuthorIdByBoardId" resultType="int">
-		select authorId from board where boardId=#{boardId}
-	</select>
+	<!--요리 고민방 단건 삭제 
+	<select id="getAuthorEmailByBoardId" resultType="String">
+		select authorEmail from board where boardId=#{boardId}
+	</select>-->
 	
 	<delete id="deleteBoard" parameterType="int">
-		delete from board where boardId=#{boardId}
+		delete from board where boardId=#{boardId} and authorEmail=#{authorEmail}
 	</delete>
 	
 	<!--요리 고민방 신고하기-->
-	<insert id="reportBoard" parameterType="krhReportVO">
+	<insert id="reportBoard" parameterType="com.project.model.krhReportVO">
 		insert into reports(boardId, reporterId, reporter, reason, description, reportedAt) values(#{boardId}, #{reporterId}, #{reporter}, #{reason}, #{description}, now())
 	</insert>
 	

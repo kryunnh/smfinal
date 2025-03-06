@@ -1,0 +1,77 @@
+package com.project.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.project.mapper.krhBoardMapper;
+import com.project.mapper.krhClubMapper;
+import com.project.model.krhClubVO;
+import com.project.model.krhTagVO;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class krhClubServiceImpl implements krhClubService{
+	
+	private final krhClubMapper krhclubMapper;
+
+	//클럽 목록
+	@Override
+	public List<krhClubVO> clubList() {
+		// TODO Auto-generated method stub
+		return krhclubMapper.clubList();
+	}
+	
+	//태그 목록
+	@Override
+	public List<krhTagVO> tagList() {
+		// TODO Auto-generated method stub
+		return krhclubMapper.tagList();
+	}
+
+	//태그에 해당되는 클럽 목록
+	@Override
+	public List<krhClubVO> clubtagList(int tagId) {
+		// TODO Auto-generated method stub
+		return krhclubMapper.clubtagList(tagId);
+	}
+
+	//클럽 검색
+	@Override
+	public List<krhClubVO> searchClub(String keyword) {
+		// TODO Auto-generated method stub
+		return krhclubMapper.searchClub(keyword);
+	}
+
+	@Override
+	@Transactional
+	public void createClub(krhClubVO krhclubVO) {
+		// TODO Auto-generated method stub
+		krhclubMapper.insertClub(krhclubVO);
+		if(krhclubVO.getHashtags()!=null&&!krhclubVO.getHashtags().isEmpty()) {
+			krhclubMapper.insertHashtags(krhclubVO.getHashtags());
+			krhclubMapper.linkClubHashtags(krhclubVO.getClubId(), krhclubVO.getHashtags());
+		}
+	}
+
+	//단건조회
+	@Override
+	public krhClubVO getClubById(int clubId) {
+		// TODO Auto-generated method stub
+		return krhclubMapper.getClubById(clubId);
+	}
+
+	//동호회 주최자 이메일 get
+	@Override
+	public String getEmailbyId(int clubId) {
+		// TODO Auto-generated method stub
+		return krhclubMapper.getEmailbyId(clubId);
+	}
+
+	
+}

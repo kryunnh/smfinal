@@ -1,0 +1,21 @@
+package com.project.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.service.krhClubService;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@RestController
+@RequestMapping("/api/club")
+public class krhClubController {
+	
+	private final krhClubService krhclubService;
+	
+	@GetMapping
+	public 
+	
+}

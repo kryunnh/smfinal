@@ -22,11 +22,11 @@ public interface krhBoardMapper {
 	//조회수 증가
 	void incrementViews(int boardId);
 	
-	//게시글의 작성자 조회
-	int getAuthorIdByBoardId(@Param("boardId") int boardId);
+//	//게시글의 작성자 조회
+//	String getAuthorIdByBoardId(@Param("boardId") int boardId);
 	
 	//게시글 삭제
-	void deleteBoard(@Param("boardId") int boardId);
+	void deleteBoard(@Param("boardId") int boardId, @Param("authorEmail") String authorEmail);
 
 	//게시글 추가
 	void insertBoard(krhBoardVO board);
