@@ -31,8 +31,11 @@ function App() {
           }/>
         <Route path="register" element={<Register/>}/>
         <Route path="login" element={<Login/>}/>
+        
+       
 
-        <Route path='/' element={<Layout />}>
+
+        { <Route path='/' element={<Layout />}>
         <Route path="List" element={<List />} />
         <Route path="List/:id" element={<ListDetail/>}/> 
         <Route path="Korean" element={<Korean />} />
@@ -41,7 +44,7 @@ function App() {
         <Route path="Western" element={<Western />} />
         <Route path="Popular" element={<Popular />} />
         <Route path="Challenge" element={<Challenge />} />
-        </Route>
+        </Route> }
       </Routes>
   )
 }

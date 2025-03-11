@@ -2,11 +2,13 @@ import { FaCloud, FaCloudRain, FaSnowflake, FaSun } from "react-icons/fa";
 import './Home.css'
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 
 export default function Home(){
     const [weather, setWeather] = useState({});
     const [error, setError] = useState(null);
+    const [recipes, setRecipes] = useState([]);
 
     useEffect(() => {
         const fetchWeather = async () => {
@@ -16,7 +18,7 @@ export default function Home(){
             const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
             const date = String(now.getDate()).padStart(2, '0');
             const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const minutes = '00';
     
             const response = await axios.get('http://localhost:8080/api/weather', {
               params: {
@@ -24,7 +26,6 @@ export default function Home(){
                 baseTime:`${hours}${minutes}`, // 현재 시간
                 nx: 60, // 서울의 nx 값
                 ny: 127, // 서울의 ny 값
-                authKey: 'DzckNPKXTjK3JDTyl24yJg' // 기상청 API 키 입력
               },
               responseType: 'text'
             });
@@ -62,10 +63,18 @@ export default function Home(){
     
             setWeather(weatherData);
             setError(null);
+            const recipeResponse = await axios.get('http://localhost:8080/api/weather/recipe', {
+              params: { precipitation: weatherData.precipitation }
+              });
+              setRecipes(recipeResponse.data);
           } catch (error) {
-            setError("날씨 정보를 가져오는 데 실패했습니다.",error);
+            setError("날씨 정보를 가져오는 데 실패했습니다.", error);
           }
         };
+
+
+        
+  
     
         fetchWeather();
       }, []);
@@ -86,16 +95,45 @@ export default function Home(){
         }
       };
 
+      const handleClick = (recipesId) =>{
+        console.log("클릭된 레시피 ID: ", recipesId); 
+        axios.put(`http://localhost:8080/api/recipes/${recipesId}/increase-view`)
+        .then(response =>{
+            console.log("조회수 증가 : ", response.data);
+
+        })
+        .catch(error =>{
+            console.log("에러", error);
+            
+        })
+    }
+
+
+     
 
     return(  
         <div>
-            <h1>Welcome to the Recipe App</h1>
             <div className="weather-app">
-                <p>오늘의 날씨에 어울리는 레시피</p>
+              <div>
+              <h3>추천 레시피</h3>
+                    <div className="weather-recipe">
+                        {recipes.map((recipe, index) => (
+                          <div key={index} className="weather-recipe-card">
+                            <Link to={`/list/${recipe.recipesId}`} onClick={()=> { handleClick(recipe.recipesId)}}>
+                              <img src={recipe.foodImg} alt={recipe.foodName}/>
+                              <p>{recipe.foodName}</p>
+                            </Link>
+                          </div>
+                        ))}
+                    </div>
+              </div>
+              <div className="weather"> 
+                <a>Today</a>
                 {error && <p className="error">{error}</p>}
                 {Object.keys(weather).length > 0 && (
-                <p> 온도: {weather.temperature} {weather.precipitation} {renderWeatherIcon(weather.precipitation)}  </p>
+                <p>{weather.temperature} {weather.precipitation} {renderWeatherIcon(weather.precipitation)}  </p>
                 )}
+              </div>
             </div>
         </div>
           
