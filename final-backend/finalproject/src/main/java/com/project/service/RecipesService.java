@@ -90,6 +90,10 @@ public class RecipesService {
 	    return recipesMapper.getFavoritesByUserId(userId);
 	}
 	
+	public List<Recipes> getWeatherRecipes(String precipitation){
+    	List<Recipes> recipes = recipesMapper.getWeatherRecipes(precipitation);
+    	return recipes;
+    }
 	
 }
 

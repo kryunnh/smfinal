@@ -33,10 +33,10 @@ public class SecurityConfig {
                         "/user/send-verification-code",  
                         "/user/reset-password", "/user/verify-email",  
                         "/user/confirm-email","/api/recipes","/api/recipes/popular",
-                        "/api/recipes/search","/api/recipes/**","/api/review/{id}",
+                        "/api/recipes/search","/api/recipes/**","/api/review/{id}","/api/weather","/api/weather/recipe",
                         "/api/recipes/{id}/increase-view").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ `hasRole("ADMIN")` → `hasAuthority("ROLE_ADMIN")`
-                .requestMatchers("/user/**","/api/recipes/{id}/favorite","/api/review").authenticated()
+                .requestMatchers("/user/**","/api/recipes/{id}/favorite","/api/review","/api/review/{id}").authenticated()
                 .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

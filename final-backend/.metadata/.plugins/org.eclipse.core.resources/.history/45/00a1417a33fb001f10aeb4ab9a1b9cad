@@ -1,0 +1,37 @@
+package com.project.controller;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class WeatherController {
+	@Value("${weather.api.key}")  // application.properties에서 기상청 API 키를 관리합니다.
+    private String apiKey;
+
+    @GetMapping("/api/weather")
+    public ResponseEntity<String> getWeather(@RequestParam String baseDate,
+                                             @RequestParam String baseTime,
+                                             @RequestParam int nx,
+                                             @RequestParam int ny,
+                                             @RequestParam String authKey) {
+
+        // 기상청 API URL
+    	String url = String.format("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
+                + "?serviceKey=%s&numOfRows=10&pageNo=1&dataType=XML&base_date=%s&base_time=%s&nx=%d&ny=%d", 
+                authKey, baseDate, baseTime, nx, ny);
+
+        // RestTemplate을 사용하여 외부 API 호출
+        RestTemplate restTemplate = new RestTemplate();
+        String response = restTemplate.getForObject(url, String.class);
+
+        return ResponseEntity.ok(response);
+    } catch (UnsupportedEncodingException e) {
+        return ResponseEntity.status(500).body("인코딩 오류 발생");
+    }
+    }
+}
+

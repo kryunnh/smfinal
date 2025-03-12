@@ -1,25 +1,29 @@
+*{
+    margin: 10px;
+}
 .header{
     background-color:white;
     align-items: center;
     display: flex;
+    margin: 0;
     justify-content: space-between;
     padding: 10px 20px;
     position: relative;
-    height: 150px;
+    height: 180px;
 }
-.header h1{
+.header-logo h1{
     flex-grow: 1; 
     display: flex;
     align-items: center;
     justify-content: center; 
     margin: 0;
 }
-.logo img{
+.header-logo img{
     width: 80px;
     height: 80px;
 
 }
-.logo{
+.header-logo{
     position: absolute;
     left: 50%;
     transform: translateX(-50%); /* 가로 중앙 정렬 */
@@ -49,7 +53,8 @@
     display: flex;
     position: absolute;
     left: 20px; 
-    bottom: 1px;
+    bottom: 0px;
+    
 }
 
 .category-dropdown{
@@ -76,4 +81,9 @@
 .category-dropdown:hover .dropdown{
     visibility: visible;
     opacity: 1;
+}
+
+.category .active{
+    font-weight: bold;
+    font-size: larger;
 }

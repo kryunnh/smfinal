@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -18,6 +18,7 @@ export default function Login() {
 
             if (response.data.token) {
                 localStorage.setItem("token", response.data.token);
+                localStorage.setItem("email", email);
                 alert("로그인 성공!");
                 navigate("/"); // 로그인 후 이동할 페이지
             } else {
@@ -34,6 +35,7 @@ export default function Login() {
             <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button onClick={handleLogin}>로그인</button>
+            <button><Link to={'/register'}>회원가입</Link></button>
         </div>
     );
 }

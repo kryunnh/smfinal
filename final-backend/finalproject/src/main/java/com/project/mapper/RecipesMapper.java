@@ -42,6 +42,10 @@ public interface RecipesMapper {
 
     @Select("SELECT r.* FROM Recipes r JOIN favorite f ON r.recipes_id = f.recipe_id WHERE f.users_id = #{userId}")
     List<Recipes> getFavoritesByUserId(@Param("userId") Long userId);
+    
+    @Select("SELECT r.*, w.weatherType FROM Recipes r LEFT JOIN weather_data w ON r.weatherId = w.weatherId WHERE w.weatherType = #{precipitation} ORDER BY RAND() LIMIT 4")
+    List<Recipes> getWeatherRecipes(@Param("precipitation") String precipitation);
+
 
     
    

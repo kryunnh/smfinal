@@ -29,4 +29,22 @@ public class ReviewService {
 	        throw new RuntimeException("사용자를 찾을 수 없습니다.");
 	    }
 	}
+	
+	public void putReview(Review review, Long userId) {
+		if(userId != null) {
+			review.setUsersId(userId);
+			reviewMapper.putReview(review);
+		}else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
+	
+	public void deleteReview(Review review, Long userId) {
+		if(userId != null) {
+			review.setUsersId(userId);
+			reviewMapper.deleteReview(review);
+		}else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
 }

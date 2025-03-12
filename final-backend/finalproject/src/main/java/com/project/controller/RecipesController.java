@@ -33,6 +33,8 @@ public class RecipesController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+
+	
 	@GetMapping("/api/recipes")
 	public List<Recipes> getRecipes(){
 		List<Recipes> recipes = recipesService.getAllRecipes(); 

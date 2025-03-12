@@ -7,12 +7,12 @@ export default function Layout(){
   return (
     <div className="layout-main">
       <Header />
-      <div className="content-container">
-        {/* <Sidebar /> */}
+        {/* <div className="content-container">
+        <Sidebar />
+        </div>  */}
         <div className="pages">
           <Outlet />
         </div>
-      </div>
       <Footer />
     </div>
   );

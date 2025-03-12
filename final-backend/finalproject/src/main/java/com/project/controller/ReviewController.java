@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,4 +65,54 @@ public class ReviewController {
         }
 	}
 	
+	@PutMapping("/api/review/{id}")
+	public Review putReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		Claims claims;
+		try {
+			claims = jwtUtil.extractAllClaims(jwtToken);
+		}catch(Exception e) {
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		
+		String email = claims.getSubject();
+		
+		if(email == null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+			User user = userService.findByUserEmail(email);
+			Recipes recipe = recipesService.findById(review.getRecipesId());
+			if(recipe != null) {
+				reviewService.putReview(review, user.getId());
+				return review;
+			}else {
+				throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
+			}
+	}
+	
+	
+	@DeleteMapping("/api/review/{id}")
+	public Review deleteReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		Claims claims;
+		try {
+			claims = jwtUtil.extractAllClaims(jwtToken);
+		}catch(Exception e) {
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		String email = claims.getSubject();
+		
+		if(email == null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+			User user = userService.findByUserEmail(email);
+			Recipes recipe = recipesService.findById(review.getRecipesId());
+			if(recipe != null) {
+				reviewService.deleteReview(review, user.getId());
+				return review;
+			}else {
+				throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
+			}
+		}
 }
+

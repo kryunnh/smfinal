@@ -4,7 +4,6 @@
 
 .recipe-detail-main{
     align-items: center; 
-    margin: 5%;
 }
 
 .recipe-view{
@@ -114,14 +113,17 @@ table{
 
 .review-content textarea{
     margin: 0;
-    height: 100px;
-    width: 950px;
+    height: 83px;
+    width: 1400px;
     resize: none;
+    padding: 10px 10px;
 }
 
 .review-content button{
-   height: 100px;
-    padding: 10px 10px;
+    height: 106px;
+    padding: 10px 20px;
+    text-align: center;
+    align-items: center;
 }
 
 .review-rating{

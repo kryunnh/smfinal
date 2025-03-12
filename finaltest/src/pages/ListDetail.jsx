@@ -14,6 +14,9 @@ export default function ListDetail(){
     const [rating, setRating] = useState(0); // 별점 기본값 5점
     const [token, setToken] = useState(localStorage.getItem('token')); 
     
+
+    
+
     useEffect(()=>{
         const token = localStorage.getItem('token');
         setToken(token);
@@ -101,21 +104,26 @@ export default function ListDetail(){
         
     },[id])
     
-
+    const handleStarClick = (index) => {
+        setRating(index + 1); 
+    };
+    
     const handleReviewSubmit = () => {
+        
         if (!token) {
             alert("로그인이 필요합니다.");
             return;
         }
         const currentTime = new Date().toISOString();
-    
+        
         const newReview = {
             reviewText : content,
             rating,
             recipesId: id,
-            timestamp: currentTime, 
+            timestamp: currentTime,
+
         };
-    
+       
         axios.post(`http://localhost:8080/api/review`, newReview, {
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -124,11 +132,12 @@ export default function ListDetail(){
         })
         .then(response => {
             console.log(response.data);
-            // 리뷰 작성 후 리뷰 목록 갱신
+            
             axios.get(`http://localhost:8080/api/review/${id}`)
                 .then(response => {
-                    setReview(response.data); // 리뷰 목록 갱신
+                    setReview(response.data); 
                     console.log(response.data);
+                    
                 })
                 .catch(error => {
                     console.error("리뷰를 불러오는 중 오류 발생:", error);
@@ -137,12 +146,63 @@ export default function ListDetail(){
         .catch(error => {
             console.error("리뷰 작성 중 오류 발생:", error);
         });
+        
     };
 
-    const handleStarClick = (index) => {
-        setRating(index + 1); 
+
+    const handleEditReview = (reviewId) => {
+
+        const currentTime = new Date().toISOString();
+        const updatedReview = {
+            reviewText: content,
+            rating,
+            timestamp: currentTime,
+
+        };
+    
+        axios.put(`http://localhost:8080/api/review/${reviewId}`, updatedReview, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            console.log("리뷰 수정 완료:", response.data);
+            
+            axios.get(`http://localhost:8080/api/review/${id}`)
+                .then((reponse)=> {
+                    setReview(reponse.data);
+                })
+                .catch(error => {
+                    console.error("리뷰 목록 갱신 중 오류 발생:", error);
+                });
+        })
+        .catch(error => {
+            console.error("리뷰 수정 중 오류 발생:", error);
+        });
     };
 
+    const handleDeleteReview = (reviewId) => {
+        axios.delete(`http://localhost:8080/api/review/${reviewId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+        .then(response => {
+            console.log("리뷰 삭제 완료:", response.data);
+            // 삭제 후 리뷰 목록 갱신
+            axios.get(`http://localhost:8080/api/review/${id}`)
+                .then(() => {
+                    setReview(response.data);
+                })
+                .catch(error => {
+                    console.error("리뷰 목록 갱신 중 오류 발생:", error);
+                });
+        })
+        .catch(error => {
+            console.error("리뷰 삭제 중 오류 발생:", error);
+        });
+    };
 
 
 
@@ -222,11 +282,17 @@ export default function ListDetail(){
             {review.length > 0 ? (
                         <ul>
                         {review.map((r) => (
-                            
+
                             <li key={r.reviewId}>
                                 {r.name} - {r.reviewText} - {r.rating}점
                                 <br />
-                                <small>{new Date(r.createdAt).toLocaleString()}</small> 
+                                <small>{new Date(r.createdAt).toLocaleString()}</small>
+                                {r.userId === localStorage.getItem("userId") && (
+                                    <div>
+                                        <button onClick={() => handleEditReview(r.reviewId)}>수정</button>
+                                        <button onClick={() => handleDeleteReview(r.reviewId)}>삭제</button>
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>
@@ -239,7 +305,7 @@ export default function ListDetail(){
                     <form onSubmit={handleReviewSubmit}>
                         <div className="review-content">
                             <textarea value={content} onChange={(e) => setContent(e.target.value)} required />
-                            <button type="submit">후기입력</button>
+                            <button type="submit">작성</button>
                         </div>
                         <div className="review-rating">
                             <label>별점: </label>
@@ -253,7 +319,7 @@ export default function ListDetail(){
                                             color: index < rating ? "gold" : "gray",
                                         }}
                                     >
-                                        &#9733; {/* 별 문자 */}
+                                        &#9733; 
                                     </span>
                                 ))}
                             </div>
