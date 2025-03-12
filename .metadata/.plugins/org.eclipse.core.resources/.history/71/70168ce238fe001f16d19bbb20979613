@@ -1,0 +1,29 @@
+package com.project.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import com.project.model.Recipe;
+import com.project.model.TarotCard;
+
+@Mapper
+public interface TarotMapper {
+	
+	
+	//랜덤카드 4장 가져오기 
+    @Select("SELECT * FROM tarot_cards ORDER BY RAND() LIMIT #{count}")
+    List<TarotCard> getRandomTarotCards(@Param("count") int count);
+
+    //타로카드 선택저장
+    @Insert("INSERT INTO tarot_history (user_email, tarot_card_id) VALUES (#{email}, #{tarotCardId})")
+    void insertTarotSelection(@Param("email") String email, @Param("tarotCardId") int tarotCardId);
+    
+    //랜덤레시피 저장 
+    @Select("SELECT * FROM recipes ORDER BY RAND() LIMIT 1")
+    Recipe getRandomRecipe();
+
+}

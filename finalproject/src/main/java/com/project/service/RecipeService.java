@@ -1,41 +1,26 @@
 package com.project.service;
 
-import java.util.List;
-import org.springframework.stereotype.Service;
-
 import com.project.mapper.RecipeMapper;
 import com.project.model.Recipe;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
 
     private final RecipeMapper recipeMapper;
+    private final Random random = new Random();
 
-    // 🔹 레시피 전체 조회
-    public List<Recipe> getAllRecipes() {
-        return recipeMapper.getAllRecipes();
-    }
-
-    // 🔹 레시피 상세 조회
-    public Recipe getRecipeById(Long id) {
-        return recipeMapper.getRecipeById(id);
-    }
-
-    // 🔹 레시피 등록
-    public void insertRecipe(Recipe recipe) {
-        recipeMapper.insertRecipe(recipe);
-    }
-
-    // 🔹 레시피 수정
-    public void updateRecipe(Recipe recipe) {
-        recipeMapper.updateRecipe(recipe);
-    }
-
-    // 🔹 레시피 삭제
-    public void deleteRecipe(Long id) {
-        recipeMapper.deleteRecipe(id);
+    // ✅ 랜덤 레시피 반환
+    public Recipe getRandomRecipe() {
+        List<Recipe> recipes = recipeMapper.getAllRecipes();
+        if (recipes.isEmpty()) {
+            return null;
+        }
+        return recipes.get(random.nextInt(recipes.size()));
     }
 }

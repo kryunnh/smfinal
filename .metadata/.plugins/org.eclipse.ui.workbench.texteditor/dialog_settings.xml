@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="selection" value="registerUser"/>
 		<item key="wrap" value="true"/>
@@ -21,5 +22,20 @@
 		<item key="DIALOG_WIDTH" value="324"/>
 		<item key="DIALOG_HEIGHT" value="439"/>
 		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.163636|0|WINDOWS|1|-14|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="java.lang.Class">
+		<list key="findhistory">
+			<item value="getUserByEmail"/>
+			<item value="validateUser"/>
+			<item value="getuserby"/>
+			<item value="board"/>
+			<item value="Recipe"/>
+			<item value="checkWeatherExists"/>
+			<item value="deleteRecipe"/>
+			<item value="getAllContests"/>
+			<item value="approveContest"/>
+			<item value="findContestById"/>
+			<item value="admincon"/>
+		</list>
 	</section>
 </section>

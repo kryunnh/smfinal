@@ -25,7 +25,10 @@ public interface UserMapper {
     // 🔹 특정 이메일로 유저 조회 (Optional)
     @Select("SELECT * FROM users WHERE email = #{email}")
     Optional<User> findByEmail(String email);
-
+    
+ // ✅ 이메일 인증 후 is_verified = true로 변경
+    @Update("UPDATE users SET is_verified = true WHERE email = #{email}")
+    void updateVerifiedStatus(@Param("email") String email);
     // 🔹 회원가입 (휴대폰 번호 포함)
     @Insert("INSERT INTO users (email, password, name, phone_number, profile_image, role, created_at, is_verified) " +
             "VALUES (#{email}, #{password}, #{name}, #{phoneNumber}, #{profileImage}, 'USER', NOW(), #{verified})")
@@ -63,16 +66,18 @@ public interface UserMapper {
     void insertPost(Post post);
 
     // 🔹 특정 유저의 게시물 조회
-    @Select("SELECT * FROM posts WHERE user_email = #{email}")
-    List<Post> getUserPosts(@Param("email") String email);
+    @Select("SELECT boardid, title FROM board WHERE authorEmail = #{email}")
+    List<Board> findBoardsByUserEmail(@Param("email") String email);
 
-    // 🔹 관심 레시피 조회
-    @Select("SELECT * FROM wishlist WHERE user_email = #{email}")
-    List<Recipe> getWishlist(@Param("email") String email);
+    /** ✅ 유저 즐겨찾기 관련 기능 **/
 
-    // 🔹 관심 레시피 삭제
-    @Delete("DELETE FROM wishlist WHERE id = #{id} AND user_email = #{email}")
-    int deleteWishlistItem(@Param("id") Long id, @Param("email") String email);
+    // 유저의 즐겨찾기 목록 조회
+    @Select("SELECT * FROM favorites WHERE user_id = #{userId}")
+    List<Favorite> getFavoritesByUserId(Long userId);
+
+    // 즐겨찾기 삭제
+    @Delete("DELETE FROM favorites WHERE user_id = #{userId} AND recipe_id = #{recipeId}")
+    void removeFavorite(Long userId, Long recipeId);
 
     // 🔹 1:1 문의 등록
     @Insert("INSERT INTO inquiries (user_email, title, content, created_at) VALUES (#{userEmail}, #{title}, #{content}, NOW())")
@@ -85,4 +90,17 @@ public interface UserMapper {
     // 🔹 1:1 문의 삭제
     @Delete("DELETE FROM inquiries WHERE id = #{inquiryId} AND user_email = #{email}")
     void deleteUserInquiry(@Param("inquiryId") Long inquiryId, @Param("email") String email);
+    
+    // 로그인 기록 저장
+    @Update("UPDATE users SET last_login = NOW() WHERE id = #{userId}")
+    void updateLastLogin(Long userId);
+    @Update("""
+    	    UPDATE users 
+    	    SET login_count = login_count + 1, 
+    	        last_login_update = NOW() 
+    	    WHERE email = #{email} 
+    	        AND (last_login_update IS NULL OR last_login_update < NOW() - INTERVAL 1 HOUR)
+    	""")
+    	void incrementLoginCount(@Param("email") String email);
+
 }

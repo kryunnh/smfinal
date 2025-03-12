@@ -1,15 +1,14 @@
 package com.project.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Random;
+
 import org.springframework.stereotype.Service;
 
 import com.project.mapper.TarotMapper;
-import com.project.mapper.RecipeMapper;
-import com.project.model.TarotCard;
 import com.project.model.Recipe;
+import com.project.model.TarotCard;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,25 +17,38 @@ import lombok.RequiredArgsConstructor;
 public class TarotService {
 
     private final TarotMapper tarotMapper;
-    private final RecipeMapper recipeMapper;
-    private final Random random = new Random();
+    private final RecipeService recipeService;
 
-    // 🔹 랜덤 타로 카드 4장 + 랜덤 레시피 이미지 가져오기
-    public Map<String, Object> getRandomTarotAndRecipe() {
-        List<TarotCard> tarotCards = tarotMapper.getAllTarotCards();
-        List<Recipe> recipes = recipeMapper.getAllRecipes();
+    // ✅ 랜덤 타로 카드 4장 가져오기
+    public List<Map<String, Object>> getRandomTarotCards(int count) {
+        return tarotMapper.getRandomTarotCards(count);
+    }
 
-        // 랜덤 타로 카드 4장 선택
-        Map<String, Object> result = new HashMap<>();
-        result.put("tarotCards", tarotCards.subList(0, Math.min(4, tarotCards.size())));
-
-        // 랜덤 레시피 이미지 가져오기
-        if (!recipes.isEmpty()) {
-            Recipe randomRecipe = recipes.get(random.nextInt(recipes.size()));
-            result.put("randomRecipeImage", randomRecipe.getImageUrl());
-            result.put("randomRecipeId", randomRecipe.getId());
+    // ✅ 유저가 하루 2번만 선택할 수 있도록 제한 후 저장
+    public Map<String, Object> saveSelectedTarot(String email, int tarotCardId) {
+        int selectionCount = tarotMapper.countTodaySelections(email);
+        if (selectionCount >= 2) {
+            throw new IllegalStateException("오늘은 최대 두 번까지 타로 카드를 선택할 수 있습니다.");
         }
 
-        return result;
+        // ✅ 타로 카드 선택 저장
+        tarotMapper.insertTarotSelection(email, tarotCardId);
+
+        // ✅ 선택한 타로 카드 정보 가져오기
+        TarotCard selectedCard = tarotMapper.getTarotCardById(tarotCardId);
+
+        // ✅ 랜덤 레시피 가져오기 (ID & 제목만)
+        Recipe recipe = recipeService.getRandomRecipe();
+        Map<String, Object> recipeInfo = new HashMap<>();
+        recipeInfo.put("id", recipe.getRecipesId());
+        recipeInfo.put("name", recipe.getFoodName());
+
+        // ✅ 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Tarot card selection saved.");
+        response.put("selectedCard", selectedCard);
+        response.put("randomRecipe", recipeInfo);
+
+        return response;
     }
 }

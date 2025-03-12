@@ -6,10 +6,24 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.project.config.JwtUtil;
-import com.project.model.*;
+import com.project.model.Board;
+import com.project.model.Favorite;
+import com.project.model.Inquiry;
+import com.project.model.Notification;
+import com.project.model.User;
 import com.project.service.EmailService;
 import com.project.service.UserService;
 
@@ -33,20 +47,15 @@ public class UserController {
         return ResponseEntity.ok("이메일 인증 코드가 전송되었습니다.");
     }
 
-    // ✅ 2️⃣ 이메일 인증 후 최종 회원가입 완료
+ // ✅ 이메일 인증만 수행 (회원가입 X)
     @PostMapping("/confirm-email")
-    public ResponseEntity<String> confirmEmailAndRegister(@RequestBody Map<String, String> request) {
+    public ResponseEntity<String> confirmEmail(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String verificationCode = request.get("verificationCode");
-        String password = request.get("password");
-        String name = request.get("name");
-        String phoneNumber = request.get("phoneNumber");
-        String profileImage = request.get("profileImage");
 
-        // ✅ 올바른 인자 개수로 메서드 호출
-        userService.confirmEmailAndRegister(email, verificationCode, password, name, phoneNumber, profileImage);
+        userService.verifyEmail(email, verificationCode);
 
-        return ResponseEntity.ok("Email verified and user registered successfully.");
+        return ResponseEntity.ok("Email verified successfully.");
     }
 
     // ✅ 1. 🔹 아이디 찾기 (이름 + 휴대폰 번호)
@@ -83,22 +92,29 @@ public class UserController {
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 
-    // ✅ 4. 🔹 회원가입
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
-        userService.registerUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        try {
+            userService.registerUser(user);
+            return ResponseEntity.ok("회원가입이 완료되었습니다.");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
     }
 
-    // ✅ 5. 🔹 로그인 (JWT 발급)
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
         User validUser = userService.validateUser(user.getEmail(), user.getPassword());
+
         if (validUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
         }
 
-        String token = jwtUtil.generateToken(validUser.getEmail(), validUser.getRole()); // ✅ 역할 포함
+        // ✅ JWT에서 이메일을 제대로 추출하는지 확인
+        String token = jwtUtil.generateToken(validUser.getEmail(), validUser.getRole()); 
+        String extractedEmail = jwtUtil.extractUsername(token);
+        
+        System.out.println("🔍 JWT에서 추출한 이메일: " + extractedEmail);
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
@@ -106,11 +122,26 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+//    @PostMapping("/login")
+//    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+//        System.out.println("🔹 UserController: login() 실행됨!"); // 컨트롤러 로그
+//
+//        Map<String, Object> response = userService.login(user.getEmail(), user.getPassword());
+//
+//        System.out.println("✅ UserController: userService.login() 호출 성공!"); // 로그인 성공 로그
+//
+//        return ResponseEntity.ok(response);
+//    }
 
-    // ✅ 6. 🔹 본인 정보 조회
+ // ✅ 유저 정보 조회
     @GetMapping("/get-user")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
+        try {
+            User user = userService.getUserByEmail(email);
+            return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        }
     }
 
     // ✅ 7. 🔹 본인 정보 수정
@@ -120,12 +151,20 @@ public class UserController {
         return ResponseEntity.ok("User updated successfully");
     }
 
-    // ✅ 8. 🔹 회원 탈퇴 요청
+ // ✅ 8. 🔹 회원 탈퇴 요청
     @PostMapping("/request-deletion")
     public ResponseEntity<String> requestDeletion(@RequestBody Map<String, String> request) {
-        userService.requestAccountDeletion(request.get("email"), request.get("reason"));
+        String email = request.get("email");
+        String reason = request.get("reason");
+
+        // 🔍 요청이 들어오는지 확인하는 로그 추가
+        System.out.println("🟢 [회원 탈퇴 요청] email: " + email + ", reason: " + reason);
+
+        userService.requestAccountDeletion(email, reason);
+        
         return ResponseEntity.ok("Account deletion request submitted.");
     }
+
 
     // ✅ 9. 🔹 유저 알림 목록 조회
     @GetMapping("/notifications")
@@ -140,21 +179,19 @@ public class UserController {
         return ResponseEntity.ok("Notification read");
     }
 
-    // ✅ 11. 🔹 관심 레시피 조회
-    @GetMapping("/wishlist")
-    public ResponseEntity<List<Recipe>> getUserWishlist(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getWishlist(email));
+    /** ✅ 유저 즐겨찾기 관련 기능 **/
+
+    // 유저의 즐겨찾기 목록 조회 (마이페이지에서)
+    @GetMapping("/{userId}/favorites")
+    public ResponseEntity<List<Favorite>> getFavoritesByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getFavoritesByUser(userId));
     }
 
-    // ✅ 12. 🔹 관심 레시피 삭제
-    @DeleteMapping("/wishlist/remove")
-    public ResponseEntity<String> removeWishlist(@RequestBody Map<String, String> request) {
-        boolean deleted = userService.removeWishlist(Long.parseLong(request.get("id")), request.get("email"));
-        if (deleted) {
-            return ResponseEntity.ok("Wishlist item removed successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist item not found or does not belong to this user.");
-        }
+    // 유저의 즐겨찾기 삭제 (본인의 것만)
+    @DeleteMapping("/{userId}/favorites/{recipeId}")
+    public ResponseEntity<String> removeFavorite(@PathVariable Long userId, @PathVariable Long recipeId) {
+        userService.removeFavorite(userId, recipeId);
+        return ResponseEntity.ok("즐겨찾기에서 삭제되었습니다.");
     }
 
     // ✅ 13. 🔹 1:1 문의 등록
@@ -179,9 +216,10 @@ public class UserController {
     }
 
     // ✅ 16. 🔹 게시물 조회
-    @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getUserPosts(@RequestParam String email) {
-        List<Post> posts = userService.getUserPosts(email);
-        return ResponseEntity.ok(posts);
+ // ✅ 게시물 조회 (email 기반)
+    @GetMapping("/my-board-titles")
+    public ResponseEntity<List<Board>> getUserBoardTitles(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getUserBoardTitles(email));
     }
+
 }

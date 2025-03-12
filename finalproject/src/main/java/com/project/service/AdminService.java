@@ -1,18 +1,47 @@
 package com.project.service;
 
-import com.project.mapper.AdminMapper;
-import com.project.model.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.project.mapper.AdminMapper;
+import com.project.model.Inquiry;
+import com.project.model.Notification;
+import com.project.model.Recipe;
+import com.project.model.User;
+import com.project.model.UserDeletionRequest;
+import com.project.model.UserRecipe;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
     private final AdminMapper adminMapper;
+    private final JdbcTemplate jdbcTemplate;
+    // ✅ 로그인할 때마다 login_history 테이블에 기록 추가
+    public void saveLoginHistory(Long userId) {
+        String sql = "INSERT INTO login_history (user_id) VALUES (?)";
+        jdbcTemplate.update(sql, userId);
+    }
 
+    // ✅ 최근 30일 동안 가장 많이 로그인한 유저 조회
+    public List<Map<String, Object>> getMostActiveUsers() {
+        String sql = "SELECT u.email, COUNT(lh.id) AS login_count " +
+                     "FROM users u " +
+                     "JOIN login_history lh ON u.id = lh.user_id " +
+                     "WHERE lh.login_time >= NOW() - INTERVAL 30 DAY " +
+                     "GROUP BY u.id " +
+                     "ORDER BY login_count DESC " +
+                     "LIMIT 5";
+        return jdbcTemplate.queryForList(sql);
+    }
     // 🔹 전체 회원 조회
     public List<User> getAllUsers() {
         return adminMapper.getAllUsers();
@@ -45,8 +74,9 @@ public class AdminService {
     }
 
     // 🔹 1:1 문의 답변 삭제
-    public void deleteInquiryReply(Long inquiryId) {
-        adminMapper.deleteInquiryReply(inquiryId);
+    @Transactional
+    public void deleteInquiryReply(int id) {
+        adminMapper.deleteInquiryReply(id);
     }
 
     // 🔹 특정 유저에게 알림 전송
@@ -54,53 +84,100 @@ public class AdminService {
         adminMapper.sendUserNotification(receiverEmail, message);
     }
 
-    // 🔹 레시피 목록 조회
+    /** ✅ 일반 레시피 (Recipes) 관리 **/
+
     public List<Recipe> getAllRecipes() {
         return adminMapper.getAllRecipes();
     }
 
-    // 🔹 레시피 등록
-    public void insertRecipe(Recipe recipe) {
-        adminMapper.insertRecipe(recipe);
+    public Recipe getRecipeById(Long id) {
+        return adminMapper.getRecipeById(id);
     }
- // 🔹 레시피 수정 (수정)
+
+    public void addRecipe(Recipe recipe) {
+        adminMapper.addRecipe(recipe);
+    }
+
+    @Transactional
     public void updateRecipe(Recipe recipe) {
-        adminMapper.updateRecipe(recipe);  // AdminMapper에서 업데이트 수행
+        // ✅ weatherId 존재 여부 확인
+        Integer weatherId = recipe.getWeatherId(); // int → Integer 변경 (nullable 허용)
+        if (weatherId != null) {
+            int weatherCount = adminMapper.checkWeatherExists(weatherId);
+            if (weatherCount == 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 weatherId가 존재하지 않습니다.");
+            }
+        } else {
+            recipe.setWeatherId(null); // ✅ NULL 값 허용
+        }
+
+     // ✅ category_id 존재 여부 확인
+        Integer categoryId = recipe.getCategoryId();
+        System.out.println("💡 DEBUG: 받은 category_id = " + categoryId);
+
+        if (categoryId == null || categoryId == 0) {  // 🔥 0일 경우도 예외 처리
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "category_id는 필수 입력값이며, 0이 될 수 없습니다.");
+        }
+
+        int categoryCount = adminMapper.checkCategoryExists(categoryId);
+        System.out.println("💡 DEBUG: checkCategoryExists 결과 = " + categoryCount);
+
+        if (categoryCount == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 category_id가 존재하지 않습니다.");
+        }
+        // ✅ 레시피 업데이트 수행
+        adminMapper.updateRecipe(recipe);
     }
 
-    // 🔹 레시피 삭제
-    public void deleteRecipe(Long recipeId) {
-        adminMapper.deleteRecipe(recipeId);
-    }
- // 🔹 관리자 게시물 목록 조회 (수정)
-    public List<AdminPost> getAllPosts() {
-        return adminMapper.getAllPosts();  // AdminMapper에서 가져오기
-    }
-    // 🔹 공모전 게시물 승인
-    public void approveContest(Long contestId) {
-        adminMapper.approveContest(contestId);
+    
+    public void deleteRecipe(Long id) {
+        adminMapper.deleteRecipe(id);
     }
 
-    // 🔹 공모전 게시물 거절
-    public void rejectContest(Long contestId) {
-        adminMapper.rejectContest(contestId);
+    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+
+    // ✅ 전체 유저 레시피 조회
+    public List<UserRecipe> getAllUserRecipes() {
+        return adminMapper.getAllUserRecipes();
     }
 
-    // 🔹 공모전 게시물 삭제
-    public void deleteContest(Long contestId) {
-        adminMapper.deleteContest(contestId);
+ // ✅ 특정 유저 레시피 조회
+    public UserRecipe getUserRecipeById(Long id) {
+        return adminMapper.getUserRecipeById(id);
     }
 
-    // 🔹 게시물 삭제 (관리자 게시판)
-    public void deletePost(Long postId) {
-        adminMapper.deletePost(postId);
+    // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'만 가져옴)
+    public List<UserRecipe> getPendingUserRecipes() {
+        return adminMapper.getPendingUserRecipes();
     }
 
+    // ✅ 유저 레시피 승인 (STATUS = 'ON'으로 변경)
+   
+    public void approveUserRecipe(Integer  id) {
+        System.out.println("🔍 [Service] 승인 요청된 레시피 ID: " + id);
+        
+        int updatedRows = adminMapper.approveUserRecipe(id);
+        
+        if (updatedRows == 0) {
+            System.out.println("❌ [Service] 승인 실패 - 존재하지 않는 ID일 가능성");
+            throw new RuntimeException("레시피 승인 실패: 존재하지 않는 ID일 가능성이 있음.");
+        }
+
+        System.out.println("✅ [Service] 승인 완료! 업데이트된 행 수: " + updatedRows);
+    }
+
+    // ✅ 유저 레시피 삭제
+    public void deleteUserRecipe(Integer  id) {
+        adminMapper.deleteUserRecipe(id);
+    }
     // 🔹 관리자 알림 목록 조회
     public List<Notification> getAdminNotifications(String email) {
-        return adminMapper.getAdminNotifications(email);
+        List<Notification> notifications = adminMapper.getAdminNotifications(email);
+        if (notifications.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No notifications found for admin.");
+        }
+        return notifications;
     }
-
     // 🔹 관리자 알림 읽음 처리
     public void markAdminNotificationAsRead(Long notificationId) {
         adminMapper.markAdminNotificationAsRead(notificationId);

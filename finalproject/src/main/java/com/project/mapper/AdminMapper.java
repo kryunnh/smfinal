@@ -35,46 +35,72 @@ public interface AdminMapper {
     void replyToInquiry(@Param("inquiryId") Long inquiryId, @Param("reply") String reply);
 
     // 🔹 1:1 문의 답변 삭제
-    @Update("UPDATE inquiries SET reply = NULL WHERE id = #{inquiryId}")
-    void deleteInquiryReply(@Param("inquiryId") Long inquiryId);
 
-    // 🔹 특정 유저에게 알림 전송
-    @Insert("INSERT INTO notifications (receiver_email, message, is_read, created_at) " +
-            "VALUES (#{receiverEmail}, #{message}, FALSE, NOW())")
-    void sendUserNotification(@Param("receiverEmail") String receiverEmail, @Param("message") String message);
+
+    // ✅ 수정 코드 (모델과 컨트롤러에 맞게 `id`로 변경)
+    @Update("UPDATE inquiries SET reply = NULL WHERE id = #{id}")
+    void deleteInquiryReply(@Param("id") int id);
+
+
  // 🔹 관리자 게시물 목록 조회 (수정)
     @Select("SELECT * FROM admin_posts")
     List<AdminPost> getAllPosts();
 
-    // 🔹 레시피 목록 조회 (수정)
-    @Select("SELECT * FROM recipes")
+ /** ✅ 일반 레시피 (Recipes) 관리 **/
+    
+    // 모든 레시피 조회
+    @Select("SELECT * FROM Recipes")
     List<Recipe> getAllRecipes();
 
-    // 🔹 레시피 수정 (수정)
-    @Update("UPDATE recipes SET name = #{name}, description = #{description}, image_url = #{imageUrl}, category = #{category} WHERE id = #{id}")
+    // 특정 레시피 조회
+    @Select("SELECT * FROM Recipes WHERE recipes_id = #{id}")
+    Recipe getRecipeById(Long id);
+
+    // 레시피 등록 (관리자)
+    @Insert("INSERT INTO Recipes (foodName, foodImg, step1, step2, step3, step4, step5, step6, stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, view, foodTime, category_id, weatherId) " +
+            "VALUES (#{foodName}, #{foodImg}, #{step1}, #{step2}, #{step3}, #{step4}, #{step5}, #{step6}, #{stepImg1}, #{stepImg2}, #{stepImg3}, #{stepImg4}, #{stepImg5}, #{stepImg6}, 0, #{foodTime}, #{categoryId}, #{weatherId})")
+    void addRecipe(Recipe recipe);
+
+ 
+
+    // ✅ 레시피 업데이트
+    @Update("UPDATE Recipes SET foodName = #{foodName}, foodImg = #{foodImg}, step1 = #{step1}, step2 = #{step2}, step3 = #{step3}, " +
+            "step4 = #{step4}, step5 = #{step5}, step6 = #{step6}, stepImg1 = #{stepImg1}, stepImg2 = #{stepImg2}, " +
+            "stepImg3 = #{stepImg3}, stepImg4 = #{stepImg4}, stepImg5 = #{stepImg5}, stepImg6 = #{stepImg6}, " +
+            "foodTime = #{foodTime}, category_id = #{categoryId}, weatherId = #{weatherId} WHERE recipes_id = #{recipesId}")
     void updateRecipe(Recipe recipe);
+    // 레시피 삭제 (관리자)
+    @Delete("DELETE FROM Recipes WHERE recipes_id = #{id}")
+    void deleteRecipe(Long id);
 
+    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+    
+    // ✅ 전체 유저 레시피 조회
+    @Select("SELECT * FROM user_recipes")
+    List<UserRecipe> getAllUserRecipes();
 
-    // 🔹 레시피 등록
-    @Insert("INSERT INTO recipes (user_email, name, description, image_url, recipe_url, category, created_at) " +
-            "VALUES (#{userEmail}, #{name}, #{description}, #{imageUrl}, #{recipeUrl}, #{category}, NOW())")
-    void insertRecipe(Recipe recipe);
+ // ✅ 특정 유저 레시피 조회 (ID 기반)
+    @Select("SELECT * FROM user_recipes WHERE user_id = #{id}")
+    UserRecipe getUserRecipeById(@Param("id") Long id);
 
-    // 🔹 레시피 삭제
-    @Delete("DELETE FROM recipes WHERE id = #{recipeId}")
-    void deleteRecipe(@Param("recipeId") Long recipeId);
+    // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'인 것만 가져오기)
+    @Select("SELECT * FROM user_recipes WHERE STATUS = 'OFF'")
+    List<UserRecipe> getPendingUserRecipes();
 
-    // 🔹 공모전 게시물 승인
-    @Update("UPDATE admin_contests SET status = 'APPROVED' WHERE id = #{contestId}")
-    void approveContest(@Param("contestId") Long contestId);
+    // ✅ 유저 레시피 승인 (STATUS = 'ON'으로 변경)
+    @Update("UPDATE user_recipes SET STATUS = 'ON' WHERE user_recipes_id = #{id}")
+    int approveUserRecipe(@Param("id") Integer  id);
 
-    // 🔹 공모전 게시물 거절
-    @Update("UPDATE admin_contests SET status = 'REJECTED' WHERE id = #{contestId}")
-    void rejectContest(@Param("contestId") Long contestId);
+    // ✅ 유저 레시피 거절 (STATUS = 'OFF' 유지)
+    @Update("UPDATE user_recipes SET STATUS = 'OFF' WHERE user_recipes_id = #{id}")
+    int rejectUserRecipe(@Param("id") Integer  id);
 
-    // 🔹 공모전 게시물 삭제
-    @Delete("DELETE FROM admin_contests WHERE id = #{contestId}")
-    void deleteContest(@Param("contestId") Long contestId);
+    // ✅ 유저 레시피 삭제
+    @Delete("DELETE FROM user_recipes WHERE user_recipes_id = #{id}")
+    int deleteUserRecipe(@Param("id") Integer  id);
+    // 🔹 특정 유저에게 알림 전송
+    @Insert("INSERT INTO notifications (receiver_email, message, is_read, created_at) VALUES (#{email}, #{message}, FALSE, NOW())")
+    void sendUserNotification(@Param("email") String email, @Param("message") String message);
 
     // 🔹 게시물 삭제 (관리자 게시판)
     @Delete("DELETE FROM admin_posts WHERE id = #{postId}")
@@ -91,4 +117,13 @@ public interface AdminMapper {
     // 🔹 관리자 알림 삭제
     @Delete("DELETE FROM notifications WHERE id = #{notificationId}")
     void deleteAdminNotification(@Param("notificationId") Long notificationId);
+    
+    @Select("SELECT COUNT(*) FROM categories WHERE category_id = #{categoryId}")
+    int checkCategoryExists(int categoryId);
+
+
+    @Select("SELECT COUNT(*) FROM weather_data WHERE weatherId = #{weatherId}")
+    int checkWeatherExists(int weatherId);
+    
+    
 }

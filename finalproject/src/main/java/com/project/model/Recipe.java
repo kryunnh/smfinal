@@ -6,12 +6,25 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
-    private Long id;
-    private String userEmail;
-    private String name;
-    private String description;
-    private String imageUrl;
-    private String recipeUrl;
-    private String category; // "한식", "중식", "양식", "일식"
-    private String createdAt;
+    private Long recipesId;
+    private String foodName;
+    private String foodImg;
+    private String step1;
+    private String step2;
+    private String step3;
+    private String step4;
+    private String step5;
+    private String step6;
+    private String stepImg1;
+    private String stepImg2;
+    private String stepImg3;
+    private String stepImg4;
+    private String stepImg5;
+    private String stepImg6;
+    private int view;
+    private int foodTime;
+    private int categoryId;
+    private Integer weatherId;
 }
+
+

@@ -1,12 +1,33 @@
 package com.project.controller;
 
-import com.project.model.*;
-import com.project.service.AdminService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Map;
+
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.model.Inquiry;
+import com.project.model.Notification;
+import com.project.model.Recipe;
+import com.project.model.User;
+import com.project.model.UserDeletionRequest;
+import com.project.model.UserRecipe;
+import com.project.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/admin")
@@ -14,7 +35,8 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
-
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     // 🔹 전체 회원 조회
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -56,79 +78,114 @@ public class AdminController {
 
     // 🔹 1:1 문의 삭제
     @DeleteMapping("/inquiries/{id}")
-    public ResponseEntity<String> deleteInquiry(@PathVariable Long id) {
+    public ResponseEntity<String> deleteInquiry(@PathVariable int id) {
         adminService.deleteInquiryReply(id);
         return ResponseEntity.ok("Inquiry deleted.");
     }
 
-    // 🔹 특정 유저에게 알림 전송
     @PostMapping("/send-notification")
-    public ResponseEntity<String> sendUserNotification(@RequestParam String email, @RequestParam String message) {
-        adminService.sendUserNotification(email, message);
-        return ResponseEntity.ok("Notification sent to user.");
+    public ResponseEntity<String> sendNotification(@RequestBody Map<String, String> payload) {
+        String receiverEmail = payload.get("receiverEmail");
+        String message = payload.get("message");
+
+        if (receiverEmail == null || receiverEmail.isEmpty()) {
+            return ResponseEntity.badRequest().body("receiverEmail 값이 필요합니다.");
+        }
+
+        adminService.sendUserNotification(receiverEmail, message);
+        return ResponseEntity.ok("알림이 성공적으로 전송되었습니다.");
     }
 
-    // 🔹 공모전 게시물 승인
-    @PatchMapping("/contests/approve/{id}")
-    public ResponseEntity<String> approveContest(@PathVariable Long id) {
-        adminService.approveContest(id);
-        return ResponseEntity.ok("Contest approved.");
-    }
+    /** ✅ 일반 레시피 (Recipes) 관리 **/
 
-    // 🔹 공모전 게시물 거절
-    @PatchMapping("/contests/reject/{id}")
-    public ResponseEntity<String> rejectContest(@PathVariable Long id) {
-        adminService.rejectContest(id);
-        return ResponseEntity.ok("Contest rejected.");
-    }
-
-    // 🔹 공모전 게시물 삭제
-    @DeleteMapping("/contests/{id}")
-    public ResponseEntity<String> deleteContest(@PathVariable Long id) {
-        adminService.deleteContest(id);
-        return ResponseEntity.ok("Contest deleted.");
-    }
-
-    // 🔹 관리자 게시물 목록 조회
-    @GetMapping("/posts")
-    public ResponseEntity<List<AdminPost>> getAllPosts() {
-        return ResponseEntity.ok(adminService.getAllPosts());
-    }
-
-    // 🔹 관리자 게시물 삭제
-    @DeleteMapping("/posts/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id) {
-        adminService.deletePost(id);
-        return ResponseEntity.ok("Post deleted.");
-    }
-
-    // 🔹 레시피 목록 조회
     @GetMapping("/recipes")
     public ResponseEntity<List<Recipe>> getAllRecipes() {
         return ResponseEntity.ok(adminService.getAllRecipes());
     }
 
-    // 🔹 레시피 등록
-    @PostMapping("/recipes")
-    public ResponseEntity<String> insertRecipe(@RequestBody Recipe recipe) {
-        adminService.insertRecipe(recipe);
-        return ResponseEntity.ok("Recipe added successfully.");
+    @GetMapping("/recipes/{id}")
+    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.getRecipeById(id));
     }
 
-    // 🔹 레시피 수정
+    @PostMapping("/api/admin/recipes")
+    public ResponseEntity<String> addRecipe(@RequestBody Recipe recipe) {
+        System.out.println("🔎 받은 데이터: " + recipe.toString()); // 로그 출력 추가
+        System.out.println("📌 category_id: " + recipe.getCategoryId()); // category_id 값 확인
+
+        adminService.addRecipe(recipe);
+        return ResponseEntity.ok("레시피 추가 성공");
+    }
+
     @PutMapping("/recipes/{id}")
     public ResponseEntity<String> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
-        recipe.setId(id);
+        recipe.setRecipesId(id);
         adminService.updateRecipe(recipe);
-        return ResponseEntity.ok("Recipe updated successfully.");
+        return ResponseEntity.ok("레시피가 수정되었습니다.");
     }
 
-    // 🔹 레시피 삭제
     @DeleteMapping("/recipes/{id}")
     public ResponseEntity<String> deleteRecipe(@PathVariable Long id) {
         adminService.deleteRecipe(id);
-        return ResponseEntity.ok("Recipe deleted.");
+        return ResponseEntity.ok("레시피가 삭제되었습니다.");
     }
+
+    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+
+ // ✅ 전체 유저 레시피 조회
+ @GetMapping("/user-recipes")
+ public ResponseEntity<List<UserRecipe>> getAllUserRecipes() {
+     return ResponseEntity.ok(adminService.getAllUserRecipes());
+ }
+
+
+ // ✅ 특정 유저 레시피 조회 (id 기반)
+ @GetMapping("/user-recipes/{id}")
+ public ResponseEntity<UserRecipe> getUserRecipeById(@PathVariable Long id) {
+     return ResponseEntity.ok(adminService.getUserRecipeById(id));
+ }
+
+ // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'인 데이터만 조회)
+ @GetMapping("/user-recipes/pending")
+ public ResponseEntity<List<UserRecipe>> getPendingUserRecipes() {
+     return ResponseEntity.ok(adminService.getPendingUserRecipes());
+ }
+
+//✅ 유저 레시피 승인 (STATUS = 'ON'으로 변경)
+@PatchMapping("/user-recipes/{id}/approve") // ✅ 중복된 "/admin" 제거
+public ResponseEntity<String> approveUserRecipe(@PathVariable Integer  id, Authentication authentication) {
+  System.out.println("🚀 PATCH 요청 수신됨 - 승인할 레시피 ID: " + id);
+  
+  try {
+      adminService.approveUserRecipe(id);
+      System.out.println("✅ 레시피 승인 완료 - ID: " + id);
+      return ResponseEntity.ok("유저 레시피가 승인되었습니다.");
+  } catch (Exception e) {
+      System.out.println("❌ PATCH 요청 실패 - 오류 발생: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("레시피 승인 중 오류 발생");
+  }
+}
+
+
+ // ✅ 테스트용 GET 엔드포인트 (PATCH 차단 문제 확인)
+ @GetMapping("/user-recipes/{id}/approve-test") // ✅ 중복된 "/admin" 제거
+ public ResponseEntity<String> testApproveUserRecipe(@PathVariable Long id) {
+     System.out.println("✅ GET 요청 수신됨 - 승인할 레시피 ID: " + id);
+     return ResponseEntity.ok("GET 요청 정상 작동");
+ }
+
+
+ // ✅ 유저 레시피 삭제 (거절 포함)
+ @DeleteMapping("/user-recipes/{id}")
+ public ResponseEntity<String> deleteUserRecipe(@PathVariable Integer  id) {
+     adminService.deleteUserRecipe(id);
+     return ResponseEntity.ok("유저 레시피가 삭제되었습니다.");
+ }
+
+
+
+
+   
 
     // 🔹 관리자 알림 목록 조회
     @GetMapping("/notifications")
@@ -148,5 +205,36 @@ public class AdminController {
     public ResponseEntity<String> deleteAdminNotification(@PathVariable Long id) {
         adminService.deleteAdminNotification(id);
         return ResponseEntity.ok("Admin notification deleted.");
+    }
+ // 📌 1. 일별 회원가입 수 통계
+    @GetMapping("/daily-signups")
+    public List<Map<String, Object>> getDailySignups() {
+        String sql = "SELECT DATE(created_at) AS date, COUNT(*) AS count FROM users GROUP BY DATE(created_at) ORDER BY DATE(created_at)";
+        return jdbcTemplate.queryForList(sql);
+    }
+
+ // 📌 2. 조회수가 많은 레시피
+    @GetMapping("/top-viewed-recipes")
+    public List<Map<String, Object>> getTopViewedRecipes() {
+        String sql = "SELECT foodname, view FROM recipes ORDER BY view DESC LIMIT 5"; // ✅ 'likes' → 'view'로 변경
+        return jdbcTemplate.queryForList(sql);
+    }
+
+
+  
+
+ 
+
+    // ✅ 최근 30일 동안 가장 많이 로그인한 유저 조회
+    @GetMapping("/most-active-users")
+    public List<Map<String, Object>> getMostActiveUsers() {
+        return adminService.getMostActiveUsers();
+    }
+
+    // 📌 5. 현재 접속자 수
+    @GetMapping("/current-users")
+    public Map<String, Object> getCurrentActiveUsers() {
+        String sql = "SELECT COUNT(*) AS active_users FROM users WHERE last_login >= NOW() - INTERVAL 10 MINUTE";
+        return jdbcTemplate.queryForMap(sql);
     }
 }

@@ -25,32 +25,35 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token, String email) {
-        return (extractEmail(token).equals(email)) && !isTokenExpired(token);
+    // ✅ 토큰에서 이메일(username) 추출
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
-    }
-
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
+    // ✅ 토큰에서 Claim 추출
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    // ✅ 모든 클레임 추출
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
-                .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+    // ✅ 토큰에서 역할(role) 추출
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class)); // 🔍 역할(role) 가져오기
+    }
+    // ✅ 토큰 만료 여부 확인
+    public boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
+    }
+
+    // ✅ 토큰 유효성 검사
+    public boolean validateToken(String token, String email) {
+        return (extractUsername(token).equals(email) && !isTokenExpired(token));
     }
 }

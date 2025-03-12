@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +16,16 @@ import org.springframework.web.server.ResponseStatusException;
 import com.project.config.JwtUtil;
 import com.project.mapper.InquiryMapper;
 import com.project.mapper.UserMapper;
+import com.project.model.Board;
+import com.project.model.Favorite;
 import com.project.model.Inquiry;
 import com.project.model.Notification;
 import com.project.model.Post;
-import com.project.model.Recipe;
 import com.project.model.User;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -34,7 +37,22 @@ public class UserService {
     private final Map<String, String> verificationCodes = new HashMap<>(); // 🔹 이메일-코드 저장
     private final EmailService emailService;
     
-    
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public UserService(EmailService emailService,
+                       InquiryMapper inquiryMapper,
+                       JwtUtil jwtUtil,
+                       PasswordEncoder passwordEncoder,
+                       UserMapper userMapper,
+                       JdbcTemplate jdbcTemplate) {  // 🔹 JdbcTemplate 추가
+        this.emailService = emailService;
+        this.inquiryMapper = inquiryMapper;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+        this.jdbcTemplate = jdbcTemplate; // 🔹 추가된 jdbcTemplate
+    }
     // ✅ 회원가입 시 이메일 인증 코드 발송
     public void sendVerificationEmail(String email) {
         // 6자리 랜덤 인증 코드 생성
@@ -47,38 +65,38 @@ public class UserService {
         emailService.sendEmail(email, "회원가입 이메일 인증", "인증 코드: " + verificationCode);
     }
 
-    // ✅ 이메일 인증 코드 확인 후 최종 회원가입
-    public void confirmEmailAndRegister(String email, String verificationCode, String password, String name, String phoneNumber, String profileImage) {
-        // 🔹 이메일 중복 확인
-        if (userMapper.getUserByEmail(email) != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 이메일입니다.");
-        }
+ // ✅ 이메일 인증 코드 저장하는 맵
+    private final Map<String, Boolean> verifiedEmails = new HashMap<>();
 
-        // 🔹 인증 코드 검증
+    // ✅ 이메일 인증 후 verifiedEmails에 저장 (DB 저장 X)
+    public void verifyEmail(String email, String verificationCode) {
+        // 🔹 저장된 인증 코드 확인
         String storedCode = verificationCodes.get(email);
         if (storedCode == null || !storedCode.equals(verificationCode)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증 코드가 올바르지 않습니다.");
         }
 
-        // 🔹 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        // ✅ 이메일 인증 완료 (별도 저장)
+        verifiedEmails.put(email, true);
 
-        // 🔹 새로운 유저 객체 생성 (isVerified = true 설정)
-        User newUser = new User(email, encodedPassword, name, phoneNumber, profileImage);
-        newUser.setVerified(true);  // ✅ 이메일 인증 완료 후 isVerified = true 설정
-
-        userMapper.registerUser(newUser); // DB에 저장
-
-        // 🔹 인증 코드 삭제
+        // 🔹 인증 코드 삭제 (사용 후 제거)
         verificationCodes.remove(email);
     }
-
-
-    // 🔹 기존 회원가입 (이메일 인증 후 최종 가입 시 사용)
+    // ✅ 회원가입을 별도로 처리하고, 이메일 인증을 하지 않은 유저는 가입 불가
+    @Transactional
     public void registerUser(User user) {
+        // 🔹 이메일 인증 여부 확인
+        User existingUser = userMapper.getUserByEmail(user.getEmail());
+        if (existingUser == null || !existingUser.isVerified()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일 인증을 완료한 사용자만 회원가입할 수 있습니다.");
+        }
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userMapper.registerUser(user);
     }
+
+
+
 
     // ✅ 1. 🔹 이름과 휴대폰 번호로 아이디(이메일) 찾기 (변경)
     public String findUserIdByNameAndPhone(String name, String phoneNumber) {
@@ -135,29 +153,74 @@ public class UserService {
     }
 
   
+    public Map<String, Object> login(String email, String rawPassword) {
+        System.out.println("🚀 login() 메서드 실행됨! email = " + email);
 
-    public String login(String email, String rawPassword) {
+        // 🔹 유저 정보 가져오기
         User user = userMapper.getUserByEmail(email);
         if (user == null || !passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호입니다.");
         }
 
-        String role = user.getRole();  // 🔹 DB에서 role 가져오기
+        System.out.println("✅ 로그인 성공: userId = " + user.getId());
 
-        return jwtUtil.generateToken(user.getEmail(), role);  // ✅ role 포함
+        // 🔹 로그인 기록 저장 실행 여부 확인
+        if (user.getId() != null) {
+            System.out.println("🔹 saveLoginHistory() 호출 예정: userId = " + user.getId());
+            saveLoginHistory(user.getId()); // 🔥 로그인 기록 저장 실행
+        } else {
+            System.out.println("⚠️ user.getId()가 NULL이라 로그인 기록 저장 불가능!");
+        }
+
+        // ✅ 로그인 성공 시 `last_login` 업데이트
+        userMapper.updateLastLogin(user.getId());
+     // ✅ 1시간마다 `login_count` 증가
+        userMapper.incrementLoginCount(email);
+        // ✅ JWT 토큰 생성 (role 포함)
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
+        // ✅ 로그인 응답 데이터 구성
+        // ✅ 유저 전체 정보를 포함한 응답 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);  // ✅ 유저 전체 정보 포함
+        response.put("token", token);
+
+        return response;
     }
 
+    
+    
+    public void saveLoginHistory(Long userId) {
+        System.out.println("📝 saveLoginHistory() 실행됨! userId = " + userId);
+        if (userId == null) {
+            System.out.println("⚠️ userId가 NULL이라 기록이 안 됨!");
+            return;
+        }
 
+        String sql = "INSERT INTO login_history (user_id) VALUES (?)";
+        jdbcTemplate.update(sql, userId);
+        System.out.println("✅ 로그인 기록 저장 완료! userId = " + userId);
+    }
 
 
     public User getUserByEmail(String email) {
-        System.out.println("🔍 유저 이메일 조회 요청: " + email);
+        System.out.println("🔍 getUserByEmail() 실행됨: " + email);
         User user = userMapper.getUserByEmail(email);
-        System.out.println("🔍 조회된 유저 정보: " + user);
-        return user;
+
+        if (user != null) {
+            System.out.println("✅ 조회된 유저: " + user);
+            return user;
+        } else {
+            System.out.println("⚠ 유저를 찾을 수 없음!");
+            throw new IllegalArgumentException("해당 이메일의 유저를 찾을 수 없습니다.");
+        }
+    }
+    public boolean isUserExists(String email) {
+        return userMapper.getUserByEmail(email) != null;
     }
 
-
+   
+    
     // 🔹 (본인) 유저 정보 수정
     @Transactional
     public void updateUser(User user) {
@@ -174,10 +237,10 @@ public class UserService {
         userMapper.insertPost(post);
     }
 
-    public List<Post> getUserPosts(String email) {
-        return userMapper.getUserPosts(email);
+    public List<Board> getUserBoardTitles(String email) {
+        System.out.println("🟢 [게시물 조회 요청] email: " + email);
+        return userMapper.findBoardsByUserEmail(email);
     }
-
 
     // 🔹 회원탈퇴 요청 저장
     public void requestAccountDeletion(String email, String reason) {
@@ -194,17 +257,18 @@ public class UserService {
         userMapper.markUserNotificationAsRead(notificationId, email);
     }
 
-    // 🔹 관심 레시피 조회
-    public List<Recipe> getWishlist(String email) {
-        return userMapper.getWishlist(email);
+    /** ✅ 유저 즐겨찾기 관련 기능 **/
+
+    // 유저의 즐겨찾기 목록 조회
+    public List<Favorite> getFavoritesByUser(Long userId) {
+        return userMapper.getFavoritesByUserId(userId);
     }
 
-    // 🔹 관심 레시피 삭제
-    public boolean removeWishlist(Long id, String email) {
-        int deletedRows = userMapper.deleteWishlistItem(id, email);
-        return deletedRows > 0;  // 삭제된 행 개수를 기준으로 성공 여부 반환
+    // 즐겨찾기 삭제
+    @Transactional
+    public void removeFavorite(Long userId, Long recipeId) {
+        userMapper.removeFavorite(userId, recipeId);
     }
-
 
     // 🔹 1:1 문의 등록
     public void insertInquiry(Inquiry inquiry) {

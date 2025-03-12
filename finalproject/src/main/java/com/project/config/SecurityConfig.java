@@ -1,9 +1,8 @@
 package com.project.config;
 
-import com.project.service.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.project.service.CustomUserDetailsService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,13 +29,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors().and()
-            .csrf().disable()
+            .csrf().disable()  // ✅ CSRF 비활성화 (PATCH 요청이 차단될 수 있음)
             .authorizeHttpRequests()
                 .requestMatchers("/user/login", "/user/register", "/user/find-id",  
                         "/user/send-verification-code",  
                         "/user/reset-password", "/user/verify-email",  
                         "/user/confirm-email" ).permitAll()
-                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ `hasRole("ADMIN")` → `hasAuthority("ROLE_ADMIN")`
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ 관리자 권한 필요
                 .requestMatchers("/user/**").authenticated()
                 .anyRequest().authenticated()
             .and()
@@ -41,8 +44,11 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
+        System.out.println("✅ Security 필터가 적용되었습니다."); // 🔍 디버깅 로그 추가
+
         return http.build();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -1,0 +1,121 @@
+package com.project.mapper;
+
+import com.project.model.*;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface AdminMapper {
+
+    // 🔹 전체 회원 조회
+    @Select("SELECT * FROM users WHERE role = 'USER'")
+    List<User> getAllUsers();
+
+    // 🔹 회원 삭제
+    @Delete("DELETE FROM users WHERE email = #{email}")
+    void deleteUser(@Param("email") String email);
+
+    // 🔹 회원탈퇴 요청 목록 조회
+    @Select("SELECT * FROM user_deletion_requests")
+    List<UserDeletionRequest> getAllDeletionRequests();
+
+    // 🔹 회원탈퇴 요청 승인 (회원 삭제 후 요청 삭제)
+    @Delete("DELETE FROM users WHERE email = #{email}")
+    void approveDeletionRequest(@Param("email") String email);
+ // 🔹 회원탈퇴 요청 승인 (회원 삭제 후 요청 목록에서도 제거)
+    @Delete("DELETE FROM user_deletion_requests WHERE email = #{email}")
+    void deleteUserDeletionRequest(@Param("email") String email);
+    // 🔹 1:1 문의 전체 목록 조회
+    @Select("SELECT * FROM inquiries")
+    List<Inquiry> getAllInquiries();
+
+    // 🔹 1:1 문의 답변 등록
+    @Update("UPDATE inquiries SET reply = #{reply} WHERE id = #{inquiryId}")
+    void replyToInquiry(@Param("inquiryId") Long inquiryId, @Param("reply") String reply);
+
+    // 🔹 1:1 문의 답변 삭제
+
+
+    // ✅ 수정 코드 (모델과 컨트롤러에 맞게 `id`로 변경)
+    @Update("UPDATE inquiries SET reply = NULL WHERE id = #{id}")
+    void deleteInquiryReply(@Param("id") int id);
+
+
+ // 🔹 관리자 게시물 목록 조회 (수정)
+    @Select("SELECT * FROM admin_posts")
+    List<AdminPost> getAllPosts();
+
+ /** ✅ 일반 레시피 (Recipes) 관리 **/
+    
+    // 모든 레시피 조회
+    @Select("SELECT * FROM Recipes")
+    List<Recipe> getAllRecipes();
+
+    // 특정 레시피 조회
+    @Select("SELECT * FROM Recipes WHERE recipes_id = #{id}")
+    Recipe getRecipeById(Long id);
+
+    // 레시피 등록 (관리자)
+    @Insert("INSERT INTO Recipes (foodName, foodImg, step1, step2, step3, step4, step5, step6, stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, view, foodTime, category_id, weatherId) " +
+            "VALUES (#{foodName}, #{foodImg}, #{step1}, #{step2}, #{step3}, #{step4}, #{step5}, #{step6}, #{stepImg1}, #{stepImg2}, #{stepImg3}, #{stepImg4}, #{stepImg5}, #{stepImg6}, 0, #{foodTime}, #{categoryId}, #{weatherId})")
+    void addRecipe(Recipe recipe);
+
+ 
+
+    // ✅ 레시피 업데이트
+    @Update("UPDATE Recipes SET foodName = #{foodName}, foodImg = #{foodImg}, step1 = #{step1}, step2 = #{step2}, step3 = #{step3}, " +
+            "step4 = #{step4}, step5 = #{step5}, step6 = #{step6}, stepImg1 = #{stepImg1}, stepImg2 = #{stepImg2}, " +
+            "stepImg3 = #{stepImg3}, stepImg4 = #{stepImg4}, stepImg5 = #{stepImg5}, stepImg6 = #{stepImg6}, " +
+            "foodTime = #{foodTime}, category_id = #{categoryId}, weatherId = #{weatherId} WHERE recipes_id = #{recipesId}")
+    void updateRecipe(Recipe recipe);
+    // 레시피 삭제 (관리자)
+    @Delete("DELETE FROM Recipes WHERE recipes_id = #{id}")
+    void deleteRecipe(Long id);
+
+    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+    
+    // 승인 대기 중인 유저 레시피 조회
+    @Select("SELECT * FROM User_Recipes WHERE status = 'off'")
+    List<UserRecipe> getPendingUserRecipes();
+
+    // 특정 유저 레시피 조회
+    @Select("SELECT * FROM User_Recipes WHERE user_recipes_id = #{id}")
+    UserRecipe getUserRecipeById(Long id);
+
+    // 유저 레시피 승인 (status 변경)
+    @Update("UPDATE User_Recipes SET status = 'on' WHERE user_recipes_id = #{id}")
+    void approveUserRecipe(Long id);
+
+    // 유저 레시피 거절 (삭제)
+    @Delete("DELETE FROM User_Recipes WHERE user_recipes_id = #{id}")
+    void rejectUserRecipe(Long id);
+
+
+    // 🔹 특정 유저에게 알림 전송
+    @Insert("INSERT INTO notifications (receiver_email, message, is_read, created_at) VALUES (#{email}, #{message}, FALSE, NOW())")
+    void sendUserNotification(@Param("email") String email, @Param("message") String message);
+
+    // 🔹 게시물 삭제 (관리자 게시판)
+    @Delete("DELETE FROM admin_posts WHERE id = #{postId}")
+    void deletePost(@Param("postId") Long postId);
+
+    // 🔹 관리자 알림 목록 조회
+    @Select("SELECT * FROM notifications WHERE receiver_email = #{email}")
+    List<Notification> getAdminNotifications(@Param("email") String email);
+
+    // 🔹 관리자 알림 읽음 처리
+    @Update("UPDATE notifications SET is_read = TRUE WHERE id = #{notificationId}")
+    void markAdminNotificationAsRead(@Param("notificationId") Long notificationId);
+
+    // 🔹 관리자 알림 삭제
+    @Delete("DELETE FROM notifications WHERE id = #{notificationId}")
+    void deleteAdminNotification(@Param("notificationId") Long notificationId);
+    
+    @Select("SELECT COUNT(*) > 0 FROM categories WHERE category_id = #{categoryId}")
+    boolean checkCategoryExists(int categoryId);
+
+    @Select("SELECT COUNT(*) > 0 FROM weather_data WHERE weatherid = #{weatherId}")
+    boolean checkWeatherExists(int weatherId);
+
+}

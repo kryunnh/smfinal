@@ -1,14 +1,31 @@
 package com.project.mapper;
 
-import com.project.model.TarotCard;
-import org.apache.ibatis.annotations.*;
-
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import com.project.model.TarotCard;
 
 @Mapper
 public interface TarotMapper {
 
-    // 🔹 모든 타로 카드 조회
-    @Select("SELECT * FROM tarot_cards")
-    List<TarotCard> getAllTarotCards();
+    // ✅ 랜덤 타로 카드 4장 가져오기
+    @Select("SELECT id, name, 'https://example.com/card-back.jpg' AS backImage FROM tarot_cards ORDER BY RAND() LIMIT #{count}")
+    List<Map<String, Object>> getRandomTarotCards(@Param("count") int count);
+
+    // ✅ 오늘 선택한 횟수 확인
+    @Select("SELECT COUNT(*) FROM tarot_history WHERE user_email = #{email} AND DATE(drawn_at) = CURDATE()")
+    int countTodaySelections(@Param("email") String email);
+
+    // ✅ 타로 카드 선택 저장
+    @Insert("INSERT INTO tarot_history (user_email, tarot_card_id) VALUES (#{email}, #{tarotCardId})")
+    void insertTarotSelection(@Param("email") String email, @Param("tarotCardId") int tarotCardId);
+
+    // ✅ 선택한 타로 카드 정보 가져오기
+    @Select("SELECT id, name, description FROM tarot_cards WHERE id = #{tarotCardId}")
+    TarotCard getTarotCardById(@Param("tarotCardId") int tarotCardId);
 }

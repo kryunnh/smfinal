@@ -1,0 +1,102 @@
+package com.project.mapper;
+
+import com.project.model.*;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface AdminMapper {
+
+    // 🔹 전체 회원 조회
+    @Select("SELECT * FROM users WHERE role = 'USER'")
+    List<User> getAllUsers();
+
+    // 🔹 회원 삭제
+    @Delete("DELETE FROM users WHERE email = #{email}")
+    void deleteUser(@Param("email") String email);
+
+    // 🔹 회원탈퇴 요청 목록 조회
+    @Select("SELECT * FROM user_deletion_requests")
+    List<UserDeletionRequest> getAllDeletionRequests();
+
+    // 🔹 회원탈퇴 요청 승인 (회원 삭제 후 요청 삭제)
+    @Delete("DELETE FROM users WHERE email = #{email}")
+    void approveDeletionRequest(@Param("email") String email);
+ // 🔹 회원탈퇴 요청 승인 (회원 삭제 후 요청 목록에서도 제거)
+    @Delete("DELETE FROM user_deletion_requests WHERE email = #{email}")
+    void deleteUserDeletionRequest(@Param("email") String email);
+    // 🔹 1:1 문의 전체 목록 조회
+    @Select("SELECT * FROM inquiries")
+    List<Inquiry> getAllInquiries();
+
+    // 🔹 1:1 문의 답변 등록
+    @Update("UPDATE inquiries SET reply = #{reply} WHERE id = #{inquiryId}")
+    void replyToInquiry(@Param("inquiryId") Long inquiryId, @Param("reply") String reply);
+
+    // 🔹 1:1 문의 답변 삭제
+    @Update("UPDATE inquiries SET reply = NULL WHERE id = #{inquiryId}")
+    void deleteInquiryReply(@Param("inquiryId") Long inquiryId);
+
+ // 🔹 관리자 게시물 목록 조회 (수정)
+    @Select("SELECT * FROM admin_posts")
+    List<AdminPost> getAllPosts();
+
+    // 🔹 레시피 목록 조회 (수정)
+    @Select("SELECT * FROM recipes")
+    List<Recipe> getAllRecipes();
+
+    // 🔹 레시피 수정 (수정)
+    @Update("UPDATE recipes SET name = #{name}, description = #{description}, image_url = #{imageUrl}, category = #{category} WHERE id = #{id}")
+    void updateRecipe(Recipe recipe);
+
+
+    // 🔹 레시피 등록
+    @Insert("INSERT INTO recipes (user_email, name, description, image_url, recipe_url, category, created_at) " +
+            "VALUES (#{userEmail}, #{name}, #{description}, #{imageUrl}, #{recipeUrl}, #{category}, NOW())")
+    void insertRecipe(Recipe recipe);
+
+    // 🔹 레시피 삭제
+    @Delete("DELETE FROM recipes WHERE id = #{recipeId}")
+    void deleteRecipe(@Param("recipeId") Long recipeId);
+
+    // 🔹 공모전 목록 조회
+    @Select("SELECT * FROM admin_contests")
+    List<AdminContest> getAllContests();
+
+    // 🔹 공모전 승인
+    @Update("UPDATE admin_contests SET status = 'APPROVED' WHERE id = #{id}")
+    void approveContest(Long id);
+
+    // 🔹 공모전 거절
+    @Update("UPDATE admin_contests SET status = 'REJECTED' WHERE id = #{id}")
+    void rejectContest(Long id);
+
+
+    // 🔹 공모전 삭제
+    @Delete("DELETE FROM admin_contests WHERE id = #{id}")
+    void deleteContest(Long id);
+
+    @Select("SELECT * FROM admin_contests WHERE id = #{id}")
+    AdminContest findContestById(@Param("id") Long id);
+
+    // 🔹 특정 유저에게 알림 전송
+    @Insert("INSERT INTO notifications (receiver_email, message, is_read, created_at) VALUES (#{email}, #{message}, FALSE, NOW())")
+    void sendUserNotification(@Param("email") String email, @Param("message") String message);
+
+    // 🔹 게시물 삭제 (관리자 게시판)
+    @Delete("DELETE FROM admin_posts WHERE id = #{postId}")
+    void deletePost(@Param("postId") Long postId);
+
+    // 🔹 관리자 알림 목록 조회
+    @Select("SELECT * FROM notifications WHERE receiver_email = #{email}")
+    List<Notification> getAdminNotifications(@Param("email") String email);
+
+    // 🔹 관리자 알림 읽음 처리
+    @Update("UPDATE notifications SET is_read = TRUE WHERE id = #{notificationId}")
+    void markAdminNotificationAsRead(@Param("notificationId") Long notificationId);
+
+    // 🔹 관리자 알림 삭제
+    @Delete("DELETE FROM notifications WHERE id = #{notificationId}")
+    void deleteAdminNotification(@Param("notificationId") Long notificationId);
+}
