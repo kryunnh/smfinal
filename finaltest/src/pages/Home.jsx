@@ -9,6 +9,17 @@ export default function Home(){
     const [weather, setWeather] = useState({});
     const [error, setError] = useState(null);
     const [recipes, setRecipes] = useState([]);
+    const [currentDate, setCurrentDate] = useState("");
+
+    useEffect(()=>{
+      const now = new Date();
+      setCurrentDate(now.toLocaleDateString("ko-KR",{
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+      }));
+    })
 
     useEffect(() => {
         const fetchWeather = async () => {
@@ -128,11 +139,16 @@ export default function Home(){
                     </div>
               </div>
               <div className="weather"> 
-                <a>Today</a>
+                <div className="weather-head">
+                <h3>Today</h3>
+                <p>{currentDate}</p>
+                </div>
+                <div className="weather-card">
                 {error && <p className="error">{error}</p>}
                 {Object.keys(weather).length > 0 && (
                 <p>{weather.temperature} {weather.precipitation} {renderWeatherIcon(weather.precipitation)}  </p>
                 )}
+                </div>
               </div>
             </div>
         </div>

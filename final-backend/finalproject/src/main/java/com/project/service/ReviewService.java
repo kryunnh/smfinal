@@ -23,28 +23,24 @@ public class ReviewService {
 	
 	public void addReview(Review review, Long userId) {
 	    if (userId != null) {
-	        review.setUsersId(userId);  // 사용자 ID 설정
-	        reviewMapper.insertReview(review);  // 리뷰 삽입
+	        review.setUsersId(userId);  
+	        reviewMapper.insertReview(review);  
 	    } else {
 	        throw new RuntimeException("사용자를 찾을 수 없습니다.");
 	    }
 	}
 	
-	public void putReview(Review review, Long userId) {
-		if(userId != null) {
-			review.setUsersId(userId);
-			reviewMapper.putReview(review);
-		}else {
-			throw new RuntimeException("사용자를 찾을 수 없습니다.");
-		}
-	}
+	 public void putReview(Review review, String email) {
+	        review.setEmail(email);
+	        reviewMapper.putReview(review);
+	    }
 	
-	public void deleteReview(Review review, Long userId) {
-		if(userId != null) {
-			review.setUsersId(userId);
-			reviewMapper.deleteReview(review);
-		}else {
-			throw new RuntimeException("사용자를 찾을 수 없습니다.");
-		}
-	}
+	 public void deleteReview(Long reviewId) {
+	        reviewMapper.deleteReview(reviewId);
+	    }
+
+	    public Review getReviewById(Long reviewId) {
+	        return reviewMapper.getReviewById(reviewId);
+	    }
+
 }

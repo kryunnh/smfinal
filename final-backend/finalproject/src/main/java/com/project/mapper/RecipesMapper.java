@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.project.model.Ingredients;
 import com.project.model.Recipes;
+import com.project.model.Review;
 
 public interface RecipesMapper {
 
@@ -47,6 +48,7 @@ public interface RecipesMapper {
     List<Recipes> getWeatherRecipes(@Param("precipitation") String precipitation);
 
 
-    
+    @Select("SELECT * FROM Recipes WHERE recipes_id = #{recipeId}")
+    Recipes findByRecipeId(long recipeId);
    
 }

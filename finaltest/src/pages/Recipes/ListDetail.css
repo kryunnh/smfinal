@@ -1,0 +1,136 @@
+.recipe-detail-main p{
+    margin-top: 5%;
+}
+
+.recipe-detail-main{
+    align-items: center; 
+}
+
+.recipe-view{
+    text-align: right;
+    font-size: small;
+    margin-right: 10%;
+}
+.recipe-header{
+    text-align: center;
+}
+
+.recipe-header img{
+    width: 500px;
+    height: 300px;
+}
+
+.ingredient-table h2{
+    text-align: left;
+    margin-left: 14%;
+}
+
+.ingredient-table a{
+    cursor: pointer;
+    color: #FFA575;
+    border: 1px solid #FFA575;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.ingredient-table td{
+    padding: 15px 0;
+}
+
+table{
+    width: 100%;
+}
+
+
+.recipe-step{
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+ 
+    
+}
+.recipe-step p{
+    margin: 0;
+}
+
+.recipe-step img{
+    width: 300px;
+    height: auto;
+}
+
+.recommend-recipe{
+    display: flex;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 60px;
+}
+
+.recommend-recipe img{
+    width: 100px;
+    height: 100px;
+}
+
+.recommend-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    height: 200px;
+    width: 200px;
+}
+
+.recommend-recipe-container {
+    overflow-x: auto; /* 가로 스크롤 */
+    white-space: nowrap;
+    padding: 10px 0;
+}
+
+
+.recommend-card h3{
+    overflow: hidden;
+}
+
+.review ul{
+    list-style-type: none;
+}
+
+.review h2{
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.review-head{
+    margin-bottom: 30px;
+}
+
+.review-content{
+    display: flex;
+    align-items: center;
+}
+
+.review-content textarea{
+    margin: 0;
+    height: 83px;
+    width: 1400px;
+    resize: none;
+    padding: 10px 10px;
+}
+
+.review-content button{
+    height: 106px;
+    padding: 10px 20px;
+    text-align: center;
+    align-items: center;
+}
+
+.review-rating{
+    display: flex;
+    justify-content: end;
+}
+
+.review-edit{
+    right: 0;
+}

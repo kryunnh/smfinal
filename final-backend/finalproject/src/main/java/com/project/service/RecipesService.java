@@ -47,6 +47,11 @@ public class RecipesService {
 		return recipe;
 	}
 	
+	 public Recipes findByRecipeId(long recipeId) {
+	        return recipesMapper.findByRecipeId(recipeId);
+	    }
+
+	
 	public List<Ingredients> getIngredientsByRecipeId(long recipesId) {
 		 List<Ingredients> ingredients = recipesMapper.findIngredientsByRecipeId(recipesId);
 		    

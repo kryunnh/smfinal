@@ -54,3 +54,15 @@
     width: 150px;
     height: 150px;
   }
+
+  .weather{
+    border-radius: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+
+  .weather-head p{
+    font-size: 12px;
+  }
+  

@@ -57,16 +57,20 @@ public class ReviewController {
         }
         User user = userService.findByUserEmail(email);
         Recipes recipe = recipesService.findById(review.getRecipesId());
+        
+        
         if (recipe != null) {
+        	review.setUsersId(user.getId());  
             reviewService.addReview(review, user.getId());
             return review;
         } else {
             throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
         }
+        
 	}
 	
 	@PutMapping("/api/review/{id}")
-	public Review putReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
+	public Review putReview(@RequestHeader("Authorization") String token,@PathVariable long id, @RequestBody Review review) {
 		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 		Claims claims;
 		try {
@@ -81,38 +85,47 @@ public class ReviewController {
 			throw new RuntimeException("로그인이 필요합니다.");
 		}
 			User user = userService.findByUserEmail(email);
-			Recipes recipe = recipesService.findById(review.getRecipesId());
-			if(recipe != null) {
-				reviewService.putReview(review, user.getId());
-				return review;
-			}else {
-				throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
-			}
+			Recipes recipe = recipesService.findByRecipeId(review.getRecipesId());
+			
+			if (review.getEmail() == null) {
+		        review.setEmail(user.getEmail());
+		    }
+			
+			if (!review.getEmail().equals(user.getEmail())) {
+		        throw new RuntimeException("해당 사용자가 작성한 리뷰만 삭제할 수 있습니다.");
+		    }
+			review.setReviewId(id);
+		    review.setUsersId(user.getId());  
+		    reviewService.putReview(review, user.getEmail());
+		    
+		    return review;
 	}
 	
 	
 	@DeleteMapping("/api/review/{id}")
-	public Review deleteReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
-		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
-		Claims claims;
-		try {
-			claims = jwtUtil.extractAllClaims(jwtToken);
-		}catch(Exception e) {
-			throw new RuntimeException("유효하지 않은 토큰입니다.");
-		}
-		String email = claims.getSubject();
-		
-		if(email == null) {
-			throw new RuntimeException("로그인이 필요합니다.");
-		}
-			User user = userService.findByUserEmail(email);
-			Recipes recipe = recipesService.findById(review.getRecipesId());
-			if(recipe != null) {
-				reviewService.deleteReview(review, user.getId());
-				return review;
-			}else {
-				throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
-			}
-		}
-}
+	public Review deleteReview(@RequestHeader("Authorization") String token, @PathVariable long id) {
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	        claims = jwtUtil.extractAllClaims(jwtToken);
+	    } catch (Exception e) {
+	        throw new RuntimeException("유효하지 않은 토큰입니다.");
+	    }
+	    
+	    String email = claims.getSubject();
+	    if (email == null) {
+	        throw new RuntimeException("로그인이 필요합니다.");
+	    }
+	    
+	    User user = userService.findByUserEmail(email);
+	    Review review = reviewService.getReviewById(id);
+	    
+	    
+	    if (!review.getEmail().equals(user.getEmail())) {
+	        throw new RuntimeException("해당 사용자가 작성한 리뷰만 삭제할 수 있습니다.");
+	    }
 
+	    reviewService.deleteReview(id);
+	    return review;
+	}
+}
