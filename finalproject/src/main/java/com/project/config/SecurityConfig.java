@@ -31,11 +31,14 @@ public class SecurityConfig {
             .cors().and()
             .csrf().disable()  // ✅ CSRF 비활성화 (PATCH 요청이 차단될 수 있음)
             .authorizeHttpRequests()
-                .requestMatchers("/user/login", "/user/register", "/user/find-id",  
-                        "/user/send-verification-code",  
-                        "/user/reset-password", "/user/verify-email",  
-                        "/user/confirm-email" ).permitAll()
+            .requestMatchers(HttpMethod.GET, "/user/get-hashed-password").permitAll()
+            .requestMatchers("/user/login", "/user/register", "/user/find-id",  
+                    "/user/send-verification-code",  
+                    "/user/reset-password", "/user/verify-email",  
+                    "/user/confirm-email", "/user/check-email","/user/check-phone").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ 관리자 권한 필요
+                .requestMatchers("/user/update").authenticated()
+                .requestMatchers("/user/inquiries").authenticated() // 🔥 추가
                 .requestMatchers("/user/**").authenticated()
                 .anyRequest().authenticated()
             .and()

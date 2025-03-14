@@ -25,8 +25,13 @@
 	</section>
 	<section name="java.lang.Class">
 		<list key="findhistory">
-			<item value="getUserByEmail"/>
+			<item value="UserService"/>
+			<item value="findByEmail"/>
 			<item value="validateUser"/>
+			<item value="getHashedPasswordByEmail"/>
+			<item value="isVerified"/>
+			<item value="findLatestVerificationCode"/>
+			<item value="getUserByEmail"/>
 			<item value="getuserby"/>
 			<item value="board"/>
 			<item value="Recipe"/>
@@ -35,7 +40,6 @@
 			<item value="getAllContests"/>
 			<item value="approveContest"/>
 			<item value="findContestById"/>
-			<item value="admincon"/>
 		</list>
 	</section>
 </section>

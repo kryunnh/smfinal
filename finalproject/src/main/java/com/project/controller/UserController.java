@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.config.JwtUtil;
 import com.project.model.Board;
@@ -32,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     private final UserService userService;
@@ -39,7 +42,8 @@ public class UserController {
     private final EmailService emailService;
 
     
-    // ✅ 1️⃣ 이메일 인증 코드 요청
+
+    // ✅ 이메일 인증번호 전송
     @PostMapping("/verify-email")
     public ResponseEntity<String> sendVerificationEmail(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -47,16 +51,17 @@ public class UserController {
         return ResponseEntity.ok("이메일 인증 코드가 전송되었습니다.");
     }
 
- // ✅ 이메일 인증만 수행 (회원가입 X)
+    // ✅ 이메일 인증번호 확인
     @PostMapping("/confirm-email")
     public ResponseEntity<String> confirmEmail(@RequestBody Map<String, String> request) {
         String email = request.get("email");
-        String verificationCode = request.get("verificationCode");
+        String code = request.get("code"); // ✅ 여기서 code로 변경
 
-        userService.verifyEmail(email, verificationCode);
+        userService.verifyEmail(email, code); // ✅ 서비스에서도 code로 변경
 
         return ResponseEntity.ok("Email verified successfully.");
     }
+
 
     // ✅ 1. 🔹 아이디 찾기 (이름 + 휴대폰 번호)
     @PostMapping("/find-id")
@@ -84,24 +89,55 @@ public class UserController {
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
-        String phoneNumber = request.get("phoneNumber");
-        String verificationCode = request.get("verificationCode");
         String newPassword = request.get("newPassword");
 
-        userService.resetPassword(email, phoneNumber, verificationCode, newPassword);
+        userService.resetPassword(email, newPassword);
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        try {
-            userService.registerUser(user);
-            return ResponseEntity.ok("회원가입이 완료되었습니다.");
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        System.out.println("✅ 회원가입 요청 데이터: " + user);
+
+        if (user.getIsVerified() == null) {
+            System.out.println("🚨 isVerified 값이 null임!!");
+        } else {
+            System.out.println("🔹 isVerified 값: " + user.getIsVerified());
         }
+
+        // ✅ isVerified 값이 null이거나 false라면 403 오류 반환
+        if (user.getIsVerified() == null || !user.getIsVerified()) {
+            System.out.println("🚨 이메일 인증 안됨! → 403 반환");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("이메일 인증을 완료한 사용자만 회원가입할 수 있습니다.");
+        }
+
+        // ✅ 회원가입 진행
+        userService.registerUser(user);
+        return ResponseEntity.ok("회원가입 성공!");
     }
 
+
+
+
+
+    // ✅ 이메일 중복 확인 API
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmailExists(@RequestParam String email) {
+        boolean exists = userService.checkEmailExists(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+
+
+    // ✅ 휴대폰 번호 중복 확인 API
+    @GetMapping("/check-phone")
+    public ResponseEntity<Boolean> checkPhoneExists(@RequestParam String phoneNumber) {
+        boolean exists = userService.checkPhoneExists(phoneNumber);
+        return ResponseEntity.ok(exists);
+    }
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
         User validUser = userService.validateUser(user.getEmail(), user.getPassword());
@@ -121,6 +157,19 @@ public class UserController {
         response.put("user", validUser);
 
         return ResponseEntity.ok(response);
+    }
+    // ✅ 로그인 시 암호화된 비밀번호 조회
+    @GetMapping("/get-hashed-password")
+    public ResponseEntity<?> getHashedPassword(@RequestParam String email) {
+        System.out.println("📡 [백엔드] 로그인 시 비밀번호 조회 요청 - 이메일: " + email);
+        
+        String hashedPassword = userService.getHashedPasswordByEmail(email);
+        if (hashedPassword == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일이 존재하지 않습니다.");
+        }
+
+        System.out.println("🔹 [백엔드] 조회된 해시된 비밀번호: " + hashedPassword);
+        return ResponseEntity.ok(Map.of("password", hashedPassword));
     }
 //    @PostMapping("/login")
 //    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
@@ -146,10 +195,34 @@ public class UserController {
 
     // ✅ 7. 🔹 본인 정보 수정
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody User user) {
-        userService.updateUser(user);
-        return ResponseEntity.ok("User updated successfully");
+    public ResponseEntity<String> updateUser(
+            @RequestPart("email") String email,
+            @RequestPart(value = "password", required = false) String password,
+            @RequestPart("name") String name,
+            @RequestPart("phoneNumber") String phoneNumber,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+
+        // ✅ 요청 데이터 디버깅 로그 추가
+        System.out.println("📡 [Backend] 회원 정보 수정 요청:");
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + password);
+        System.out.println("Name: " + name);
+        System.out.println("PhoneNumber: " + phoneNumber);
+        if (file != null) {
+            System.out.println("File Name: " + file.getOriginalFilename());
+        } else {
+            System.out.println("File: 없음");
+        }
+
+        try {
+            userService.updateUser(email, password, name, phoneNumber, file);
+            return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다.");
+        } catch (RuntimeException e) {
+            System.err.println("❌ [Error] 회원 정보 수정 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 처리 중 오류 발생: " + e.getMessage());
+        }
     }
+
 
  // ✅ 8. 🔹 회원 탈퇴 요청
     @PostMapping("/request-deletion")
@@ -178,7 +251,12 @@ public class UserController {
         userService.markUserNotificationAsRead(Long.parseLong(request.get("notificationId")), request.get("email"));
         return ResponseEntity.ok("Notification read");
     }
-
+    // ✅ 특정 알림 삭제 API
+    @DeleteMapping("/notifications/{id}")
+    public String deleteUserNotification(@PathVariable Long id) {
+        userService.deleteUserNotification(id);
+        return "알림이 삭제되었습니다.";
+    }
     /** ✅ 유저 즐겨찾기 관련 기능 **/
 
     // 유저의 즐겨찾기 목록 조회 (마이페이지에서)
@@ -195,23 +273,49 @@ public class UserController {
     }
 
     // ✅ 13. 🔹 1:1 문의 등록
+ // ✅ 1:1 문의 등록
     @PostMapping("/inquiries")
     public ResponseEntity<String> createInquiry(@RequestBody Inquiry inquiry) {
+        if (inquiry.getUserEmail() == null || inquiry.getTitle() == null || inquiry.getContent() == null) {
+            return ResponseEntity.badRequest().body("모든 필드를 입력해주세요.");
+        }
+
         userService.insertInquiry(inquiry);
         return ResponseEntity.ok("Inquiry successfully created.");
     }
-
     // ✅ 14. 🔹 1:1 문의 조회
     @GetMapping("/inquiries/list")
     public ResponseEntity<?> getUserInquiries(@RequestParam String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일을 입력해야 합니다.");
+        }
         List<Inquiry> inquiries = userService.getUserInquiries(email);
         return ResponseEntity.ok(inquiries);
     }
+    // ✅ 특정 문의 조회 API
+    @GetMapping("/inquiries/{id}")
+    public ResponseEntity<?> getInquiryById(@PathVariable Long id) {
+        Inquiry inquiry = userService.getInquiryById(id);
 
+        if (inquiry == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("❌ 해당 ID의 문의가 존재하지 않습니다.");
+        }
+
+        return ResponseEntity.ok(inquiry);
+    }
     // ✅ 15. 🔹 특정 1:1 문의 삭제
     @DeleteMapping("/inquiries/delete")
     public ResponseEntity<String> deleteInquiry(@RequestBody Map<String, String> request) {
-        userService.deleteInquiry(Long.parseLong(request.get("id")), request.get("email"));
+        Long inquiryId = Long.parseLong(request.get("id"));
+        String email = request.get("email");
+
+        // ✅ 사용자가 해당 문의의 작성자인지 확인
+        if (!userService.isInquiryOwner(inquiryId, email)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
+        }
+
+        userService.deleteInquiry(inquiryId, email);
         return ResponseEntity.ok("문의가 삭제되었습니다.");
     }
 
