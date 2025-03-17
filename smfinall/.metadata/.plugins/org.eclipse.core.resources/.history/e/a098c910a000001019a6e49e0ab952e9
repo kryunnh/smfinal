@@ -1,0 +1,13 @@
+package com.project.model;
+
+import lombok.Data;
+
+@Data
+public class krhLikeVO {
+	private int boardId; //게시판 아이디 
+    private long userId; //회원 아이디
+    private String likeType; // "like", "dislike", "none"
+    private int likeCount;
+    private int dislikeCount;
+    private String userEmail;
+}

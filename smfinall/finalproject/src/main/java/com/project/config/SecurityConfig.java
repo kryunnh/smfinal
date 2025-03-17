@@ -14,10 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomUserDetailsService customUserDetailsService;
@@ -31,22 +33,25 @@ public class SecurityConfig {
                 .requestMatchers("/user/login", "/user/register", "/user/find-id",  
                         "/user/send-verification-code",  
                         "/user/reset-password", "/user/verify-email",  
-                        "/user/confirm-email", "/api/recipes","/api/recipes/popular",
-                        "/api/recipes/search","/api/recipes/**",
-                        "/api/recipes/{id}/increase-view","/api/main/popular", 
+                        "/user/confirm-email", "/api/recipes", "/api/recipes/popular",
+                        "/api/recipes/search", "/api/recipes/**", "/api/review/{id}",
+                        "/api/recipes/{id}/increase-view", "/api/main/popular", 
                         "/api/main/recent", "/chatbot/ask", "/api/board", "/api/board/{boardId}",
-                        "/api/club", "/api/club/tag","/api/club/{clubId}/send-application",
-                        "/api/club/{tagId}","/api/club/search","/api/club/{clubId}",
-                        "/api/comment","/api/comment/reply" ).permitAll()
-                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ `hasRole("ADMIN")` → `hasAuthority("ROLE_ADMIN")`
-                .requestMatchers("/user/**").authenticated()
+                        "/api/club", "/api/club/tags", "/api/club/{clubId}/send-application",
+                        "/api/club/tags/{tagId}", "/api/club/search", "/api/club/{clubId}",
+                        "/api/board/{boardId}/comments", "/api/board/comment/{commentId}/replies", 
+                        "/api/weather/recipe", "/api/board/{boardId}/incrementviews","/uploads/**")
+                    .permitAll()
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // Admin role
+                .requestMatchers("/user/**", "/api/recipes/{id}/favorite", "/api/review").authenticated()
+                .requestMatchers("/uploads/**").permitAll()  // /uploads/** 경로에 대한 접근 허용
                 .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
+        
         return http.build();
     }
 
@@ -67,4 +72,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    // ResourceHandler to serve /uploads folder
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
+    }
 }
+

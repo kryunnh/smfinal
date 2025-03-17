@@ -10,6 +10,7 @@ public class krhBoardVO {
 	String title; //제목
 	String content; //내용
 	LocalDateTime createdAt; //작성 시간
+	LocalDateTime updatedAt; //수정 시간
 	int views; //조회수
 	String author; //작성자 이름
 	long authorId; //작성자 아이디 (구분값)

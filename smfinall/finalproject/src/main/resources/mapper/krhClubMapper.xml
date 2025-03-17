@@ -4,12 +4,13 @@
 <mapper namespace="com.project.mapper.krhClubMapper">
 	<!--클럽 전체 목록 조회-->
 	<select id="clubList" resultType="com.project.model.krhClubVO">
-		select * from club
+	    SELECT *
+	    FROM club
 	</select>
 	
 	<!--클럽 태그 10개 조회-->
 	<select id="tagList" resultType="com.project.model.krhTagVO">
-	  	SELECT t.tagName, COUNT(*) AS tagCount
+	  	SELECT t.tagName, t.tagId, COUNT(*) AS tagCount
 	    FROM tag t
 	    JOIN clubtag ct ON t.tagId = ct.tagId
 	    GROUP BY t.tagId
@@ -35,28 +36,31 @@
 	
 
 	<!-- 동호회 삽입 -->
-    <insert id="insertClub" useGeneratedKeys="true" keyProperty="clubId" parameterType="com.project.model.krhClubVO">
-        INSERT INTO club (clubName, clubFeatures, location, date, recruiterEmail, clubImage, clubUrl)
-        VALUES (#{clubName}, #{clubFeatures}, #{location}, #{date}, #{recruiterEmail}, #{clubImage}, #{clubUrl})
-    </insert>
+	<insert id="insertClub" useGeneratedKeys="true" keyProperty="clubId" parameterType="com.project.model.krhClubVO">
+	    INSERT INTO club (clubName, clubFeatures, location, date, recruiterEmail, clubImage, clubUrl, createdAt)
+	    VALUES (#{clubName}, #{clubFeatures}, #{location}, #{date}, #{recruiterEmail}, #{clubImage}, #{clubUrl}, now())
+	</insert>
+	
+	<!-- 태그 삽입 (존재하지 않으면 삽입) -->
+	<insert id="insertTagIfNotExist" parameterType="com.project.model.krhClubVO">
+	    <foreach collection="hashtags" item="hashtag" separator=",">
+	        INSERT INTO tag (tagName)
+	        SELECT #{hashtag}
+	        FROM DUAL
+	        WHERE NOT EXISTS (SELECT 1 FROM tag WHERE tagName = #{hashtag});
+	    </foreach>
+	</insert>
+	
+	<!-- 게시물과 해시태그 연결 -->
+	<insert id="linkPostHashtags">
+	    <foreach collection="hashtags" item="hashtag" separator=",">
+	        INSERT INTO clubtag (clubId, tagId)
+	        SELECT #{clubId}, t.tagId
+	        FROM tag t
+	        WHERE t.tagName = #{hashtag};
+	    </foreach>
+	</insert>
 
-    <!-- 태그 삽입 (존재하지 않으면 삽입) -->
-    <insert id="insertTagIfNotExist" parameterType="com.project.model.krhTagVO">
-        <foreach collection="hashtags" item="hashtag" separator=";">
-            INSERT INTO tag (tagName) VALUES (#{hashtag});
-            ON DUPLICATE KEY UPDATE tagName = tagName;
-        </foreach>
-    </insert>
-
- 	<!-- 게시물과 해시태그 연결 -->
-    <insert id="linkPostHashtags">
-        <foreach collection="hashtags" item="hashtag" separator=";">
-            INSERT INTO clubtag (clubId,tagId)
-            SELECT #{clubId}, t.tagId
-            FROM tag t
-            WHERE t.tagName = #{hashtag};
-        </foreach>
-    </insert>
 	
 	<!--클럽 상세보기-->
 	<select id="getClubById" parameterType="int" resultType="com.project.model.krhClubVO">

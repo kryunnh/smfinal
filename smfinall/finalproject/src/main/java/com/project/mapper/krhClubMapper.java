@@ -28,10 +28,10 @@ public interface krhClubMapper {
     void insertClub(krhClubVO krhclubVO);
 
     // 해시태그 삽입
-    void insertHashtags(List<String> hashtags);
+    void insertTagIfNotExist(krhClubVO krhclubVO);
 
     // 게시물과 해시태그 연결
-    void linkClubHashtags(int clubId, List<String> hashtags);
+    void linkPostHashtags(int clubId, List<String> hashtags);
     
     //클럽 단건 조회
     krhClubVO getClubById(int clubId);

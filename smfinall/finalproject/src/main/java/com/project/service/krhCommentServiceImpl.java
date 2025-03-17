@@ -29,15 +29,15 @@ public class krhCommentServiceImpl implements krhCommentService {
 	}
 
 	@Override
-	public void addComment(Map<String, Object> params) {
+	public void addComment(krhCommentVO krhcommentVo) {
 		// TODO Auto-generated method stub
-		krhcommentMapper.addComment(params);
+		krhcommentMapper.addComment(krhcommentVo);
 	}
 
 	@Override
-	public void addReply(Map<String, Object> params) {
+	public void addReply(krhCommentVO krhcommentVo) {
 		// TODO Auto-generated method stub
-		krhcommentMapper.addReply(params);
+		krhcommentMapper.addReply(krhcommentVo);
 	}
 
 	@Override
@@ -47,9 +47,33 @@ public class krhCommentServiceImpl implements krhCommentService {
 	}
 
 	@Override
-	public void updateComment(Map<String, Object> params) {
+	public void updateComment(krhCommentVO krhcommentVo) {
 		// TODO Auto-generated method stub
-		krhcommentMapper.updateComment(params);
+		krhcommentMapper.updateComment(krhcommentVo);
+	}
+
+	@Override
+	public void deleteReply(int replyId) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.deleteReply(replyId);
+	}
+
+	@Override
+	public krhCommentVO findByCommentId(int commentId) {
+		// TODO Auto-generated method stub
+		return krhcommentMapper.findByCommentId(commentId);
+	}
+
+	@Override
+	public void updateCommentToDeleted(int commentId) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.updateCommentToDeleted(commentId);
+	}
+
+	@Override
+	public void updateReply(krhCommentVO krhcommentVo) {
+		// TODO Auto-generated method stub
+		krhcommentMapper.updateReply(krhcommentVo);
 	}
 	
 	

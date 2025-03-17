@@ -1,0 +1,18 @@
+package com.project.model;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class krhClubVO {
+    private int clubId; //자동생성
+    private String clubName;
+    private String clubFeatures;
+    private String location;
+    private String date;
+    private String recruiterEmail;
+    private String clubImage;
+    private String status;
+    private List<String> hashtags;
+}

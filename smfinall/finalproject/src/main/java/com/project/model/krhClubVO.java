@@ -1,6 +1,10 @@
 package com.project.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -10,12 +14,12 @@ public class krhClubVO {
     private String clubName;
     private String clubFeatures;
     private String location;
-    private String date;
+    private LocalDate date;
     private String recruiterEmail;
     private String clubImage;
     private String status;
-    private int recruiterId;
-    
     private List<String> hashtags;
-
+    private LocalDateTime createdAt;  // 작성 시간
+    private String clubUrl;
+    
 }

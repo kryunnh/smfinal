@@ -29,6 +29,8 @@ public class Recipes {
 	 private String ingredientNames;
 	 private List<Ingredients> ingredients; 
 	 
+	 private String userName; //김륜하 씀
+	 
 	 public List<Ingredients> getIngredients() {
 	        return ingredients;
 	    }

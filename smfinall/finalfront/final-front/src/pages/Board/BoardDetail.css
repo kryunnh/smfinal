@@ -1,0 +1,65 @@
+.page{
+    width:1400px;
+    text-align: center;
+    justify-self: center;
+}
+
+.big-title{
+    text-align: center;
+    color:#FFA575;
+    margin-top: 100px; /*제목으로부터 위, 헤더쪽에 넣어도 될듯*/
+    margin-bottom:80px; /*제목으로부터 아래*/
+}
+
+.view-board{
+    padding:15px;
+    marging:0;
+    background-color: #FFD2B9;
+    text-align: left;
+    border-radius: 10px;
+}
+
+.view-title{
+    padding:20px;
+    font-size: 25px;
+    font-weight: bold;
+}
+.view-views{
+    padding:20px;
+    display: inline-block;
+}
+.view-createdAt{
+    padding:20px;
+    display: inline-block;
+}
+
+.view-author{
+    padding:20px;
+    display: inline-block;
+}
+.view-content{
+    min-height:400px;
+    padding:40px;
+    font-size: 20px;
+    text-align: left;
+}
+
+.button-group{
+    margin-top:30px;
+    margin-bottom:80px;
+    text-align: right;
+}
+
+.button-group button{
+    background-color: #FFA575;
+    margin-left: 10px;
+    border-radius: 20px;
+    border: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.button-group button:hover{
+    cursor: pointer;
+    background-color: #ff9d68;
+}

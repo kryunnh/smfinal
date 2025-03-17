@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.mapper.krhBoardMapper;
 import com.project.mapper.krhClubMapper;
 import com.project.model.krhApplicationRequestVO;
+import com.project.model.krhBoardVO;
 import com.project.model.krhClubVO;
 import com.project.model.krhTagVO;
 
@@ -50,16 +52,20 @@ public class krhClubServiceImpl implements krhClubService{
 	}
 
 	@Override
-	@Transactional
-	public void createClub(krhClubVO krhclubVO) {
-		// TODO Auto-generated method stub
-		krhclubMapper.insertClub(krhclubVO);
-		if(krhclubVO.getHashtags()!=null&&!krhclubVO.getHashtags().isEmpty()) {
-			krhclubMapper.insertHashtags(krhclubVO.getHashtags());
-			krhclubMapper.linkClubHashtags(krhclubVO.getClubId(), krhclubVO.getHashtags());
-		}
-	}
+	  @Transactional
+	    public void createClub(krhClubVO krhclubVO) {
+	        // 동호회 정보 삽입
+	        krhclubMapper.insertClub(krhclubVO);
 
+	        // 해시태그가 있을 경우 처리
+	        if (krhclubVO.getHashtags() != null && !krhclubVO.getHashtags().isEmpty()) {
+	            // 태그 삽입 (중복 방지)
+	            krhclubMapper.insertTagIfNotExist(krhclubVO);
+
+	            // 클럽과 태그 연결
+	            krhclubMapper.linkPostHashtags(krhclubVO.getClubId(), krhclubVO.getHashtags());
+	        }
+	    }
 	//단건조회
 	@Override
 	public krhClubVO getClubById(int clubId) {

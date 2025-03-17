@@ -32,20 +32,26 @@ public interface krhBoardMapper {
 	void insertBoard(krhBoardVO board);
 	
 	//게시글 수정
-	void updateBoard(krhBoardVO board);
+	int updateBoard(krhBoardVO board);
 	
 	//게시글 신고
 	void reportBoard(krhReportVO report);
 	
 	//유저의 좋아요 상태 확인 
-	String getLikeStatus(@Param("boardId") int boardId, @Param("userId") int userId);
+	String getLikeStatus(@Param("boardId") int boardId, @Param("userEmail") String userEmail);
 	
 	//좋아요 싫어요 상태 업데이트
-	void updateLikeStatus(@Param("boardId") int boardId, @Param("userId") int userId, @Param("status") String status);
+	void updateLikeStatus(@Param("boardId") int boardId, @Param("userEmail") String userEmail, @Param("status") String status);
 	
 	// 좋아요 갯수
 	int getLikeCount(int boardId);
 	
 	//싫어요 갯수
 	int getDislikeCount(int boardId);
+	
+	//좋아요 싫어요 취소
+	void removeLikeStatus(@Param("boardId") int boardId, @Param("userEmail") String userEmail);
+
+	boolean isBoardReported(int boardId, long reporterId);
+	
 }

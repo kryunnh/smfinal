@@ -25,7 +25,7 @@ public interface krhClubService {
 
 	// 동호회 생성
 	void createClub(krhClubVO krhclubVO);
-	
+
 	//동호회 단건 조회
 	krhClubVO getClubById(int clubId);
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.mapper.krhBoardMapper;
 import com.project.mapper.krhMainMapper;
@@ -95,10 +96,15 @@ public class krhBoardServiceImpl implements krhBoardService{
 	}
 	
 	//게시글 수정
+	@Transactional
 	@Override
 	public void updateBoard(krhBoardVO board) {
-		// TODO Auto-generated method stub
-		krhboardMapper.updateBoard(board);
+		System.out.println("게시글 수정 시작: " + board);
+	    int result = krhboardMapper.updateBoard(board);
+	    System.out.println("수정된 게시글 수: " + result);
+	    if (result == 0) {
+	        throw new RuntimeException("게시글 수정에 실패했습니다.");
+	    }
 	}
 
 	//게시글 신고
@@ -108,33 +114,37 @@ public class krhBoardServiceImpl implements krhBoardService{
 		krhboardMapper.reportBoard(report);
 	}
 	
-	//좋아요 갯수
 	@Override
-	public int getLikeCount(int boardId) {
+	public boolean isBoardReported(int boardId, long reporterId) {
 		// TODO Auto-generated method stub
-		return krhboardMapper.getLikeCount(boardId);
+		return krhboardMapper.isBoardReported(boardId, reporterId);
 	}
 	
-	//싫어요 갯수
-	@Override
-	public int getDislikeCount(int boardId) {
-		// TODO Auto-generated method stub
-		return krhboardMapper.getDislikeCount(boardId);
-	}
+	 // 좋아요 상태 업데이트
+    public void updateLikeStatus(int boardId, String userEmail, String likeType) {
+        // 기존에 좋아요 상태가 있는지 확인하고 업데이트
+        krhboardMapper.updateLikeStatus(boardId, userEmail, likeType);
+    }
 
-	//좋아요 상태 확인
-	@Override
-	public String getLikeStatus(int boardId, int userId) {
-		// TODO Auto-generated method stub
-		return krhboardMapper.getLikeStatus(boardId, userId);
-	}
+    // 좋아요/싫어요 취소
+    public void removeLikeStatus(int boardId, String userEmail) {
+        // 좋아요 또는 싫어요를 취소
+    	krhboardMapper.removeLikeStatus(boardId, userEmail);
+    }
 
-	//좋아요 업데이트
-	@Override
-	public void updateLikeStatus(int boardId, int userId, String status) {
-		// TODO Auto-generated method stub
-		krhboardMapper.updateLikeStatus(boardId, userId, status);
-	}
+    // 좋아요 상태 조회
+    public String getLikeStatus(int boardId, String userEmail) {
+        return krhboardMapper.getLikeStatus(boardId, userEmail);
+    }
 
+    // 좋아요 카운트 조회
+    public int getLikeCount(int boardId) {
+        return krhboardMapper.getLikeCount(boardId);
+    }
+
+    // 싫어요 카운트 조회
+    public int getDislikeCount(int boardId) {
+        return krhboardMapper.getDislikeCount(boardId);
+    }
 
 }

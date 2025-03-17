@@ -38,12 +38,13 @@
 	
 	<!--요리 고민방 단건 수정-->
 	<update id="updateBoard" parameterType="com.project.model.krhBoardVO">
-		update board set title=#{title}, content=#{content} where boardId=#{boardId}
+		update board 
+		set title=#{title}, content=#{content}, updatedAt=now() where boardId=#{boardId}
 	</update>
 	
 	<!--요리 고민방 단건 추가 -->
 	<insert id="insertBoard" parameterType="com.project.model.krhBoardVO">
-		insert into board(title, author, authorId, content, authorEmail, createdAt) values (#{title}, #{author}, #{authorId], #{content}, #{authorEmail}, now())
+		insert into board(title, author, authorId, content, authorEmail, createdAt) values (#{title}, #{author}, #{authorId}, #{content}, #{authorEmail}, now())
 	</insert>
 	
 	<!--요리 고민방 단건 삭제 
@@ -51,7 +52,7 @@
 		select authorEmail from board where boardId=#{boardId}
 	</select>-->
 	
-	<delete id="deleteBoard" parameterType="int">
+	<delete id="deleteBoard" parameterType="map">
 		delete from board where boardId=#{boardId} and authorEmail=#{authorEmail}
 	</delete>
 	
@@ -60,24 +61,39 @@
 		insert into reports(boardId, reporterId, reporter, reason, description, reportedAt) values(#{boardId}, #{reporterId}, #{reporter}, #{reason}, #{description}, now())
 	</insert>
 	
-	<!-- 유저의 좋아요 상태 확인 -->
-	<select id="getLikeStatus" resultType="String">
-		select likeType from boardLike where boardId=#{boardId} and userId=#{id}
+	<!--신고한 사람인지 확인하기 -->
+	<select id="isBoardReported" resultType="boolean">
+	    SELECT COUNT(*) > 0
+	    FROM reports
+	    WHERE boardId = #{boardId} AND reporterId = #{reporterId}
 	</select>
+
+	<!-- 좋아요 상태 업데이트 -->
+	<insert id="updateLikeStatus">
+	    INSERT INTO boardLike(boardId, userEmail, likeType)
+	    VALUES (#{boardId}, #{userEmail}, #{status})
+	    ON DUPLICATE KEY UPDATE likeType = #{status}
+	</insert>
 	
-	<!-- 좋아요/싫어요 상태 업데이트 -->
-	<update id="updateLikeStauts">
-		insert into boardLike(boardId, userId, likeType) values(#{boardId}, #{id}, #{status})
-		on duplicate key update likeType=#{status}
+	<!-- 좋아요/싫어요 취소 -->
+	<update id="removeLikeStatus">
+	    UPDATE boardLike
+	    SET likeType = 'none'
+	    WHERE boardId = #{boardId} AND userEmail = #{userEmail}
 	</update>
 	
-	<!-- 좋아요 갯수 -->
-	<select id="getLikeCount" resultType="int">
-		select count(*) from boardLike where boardId=#{boardId} and likeType='like'
+	<!-- 좋아요 상태 조회 -->
+	<select id="getLikeStatus" resultType="String">
+	    SELECT likeType FROM boardLike WHERE boardId = #{boardId} AND userEmail = #{userEmail}
 	</select>
 	
-	<!-- 싫어요 갯수 -->
+	<!-- 좋아요 카운트 -->
+	<select id="getLikeCount" resultType="int">
+	    SELECT COUNT(*) FROM boardLike WHERE boardId = #{boardId} AND likeType = 'like'
+	</select>
+	
+	<!-- 싫어요 카운트 -->
 	<select id="getDislikeCount" resultType="int">
-		select count(*) from boardLike where boardId=#{boardId} and likeType='dislike'
+	    SELECT COUNT(*) FROM boardLike WHERE boardId = #{boardId} AND likeType = 'dislike'
 	</select>
 </mapper>

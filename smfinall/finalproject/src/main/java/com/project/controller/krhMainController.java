@@ -10,7 +10,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,7 @@ import com.project.service.krhMainService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
 
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/api/main")
 public class krhMainController {
@@ -60,28 +63,35 @@ public class krhMainController {
 
 	//관심 목록에 있는 레시피들이 가장 많이 속한 카테고리 속 레시피 추천
 	@GetMapping("/recommend")
-	public List<Recipes> getRecommendedRecipes(@RequestHeader("Authorization") String token){
-		String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
-		Claims claims;
-		try {
-			claims=jwtUtil.extractClaim(jwtToken, null);
-		}catch(Exception e){
-			throw new RuntimeException("유효하지 않은 토큰입니다.");
-		}
-		
-		String email = claims.getSubject();
-		if(email==null) {
-			throw new RuntimeException("로그인이 필요합니다.");
-		}
-		
-		User user=userService.findByUserEmail(email);
-		
-		// 사용자가 존재하지 않을 경우 예외 처리
+	public List<Recipes> getRecommendedRecipes(@RequestHeader("Authorization") String token) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims  claims;
+        try {
+            claims = jwtUtil.extractAllClaims(jwtToken); 
+        } catch (Exception e) {
+            throw new RuntimeException("유효하지 않은 토큰입니다.");
+        }
+
+        String email = claims.getSubject(); 
+
+        if (email == null) {
+            throw new RuntimeException("로그인이 필요합니다.");
+        }
+
+	    // 이메일로 사용자 찾기
+	    User user = userService.findByUserEmail(email);
 	    if (user == null) {
 	        throw new RuntimeException("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
-	    
-		long userId=user.getId();
-		return krhmainService.getRecommendedRecipes(userId);
+
+	    // userId 추출
+	    long userId = user.getId();
+	    System.out.println("JWT Token: " + jwtToken);
+	    System.out.println("Claims: " + claims);
+	    System.out.println("Extracted Email: " + email);
+	    System.out.println("찾은 사용자: " + user);
+	    // 사용자 추천 레시피 가져오기
+	    return krhmainService.getRecommendedRecipes(userId);
 	}
+
 }

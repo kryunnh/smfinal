@@ -1,0 +1,129 @@
+
+.club-page {
+    width: 1400px;
+    text-align: center;
+    justify-self: center;
+    margin: 0 auto;
+  }
+  
+  .tag-list{
+    margin-bottom:80px;
+  }
+  .tag-list button{
+    font-family: "Gothic A1", serif;
+    font-size:18px;
+  }
+  .search-container {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 80px;
+  }
+  
+  .search-container .search {
+    border-radius: 20px;
+    padding: 10px 100px 10px 10px;
+    text-align: left;
+    border: 1px solid black;
+  }
+
+  .search-btn{
+    margin-left: 20px;
+    background-color: #FFA575;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+}
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 항목 */
+    gap: 60px; /* 항목 간의 간격 */
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #FFD2B9;
+    border-radius: 5px;
+  }
+  
+  p {
+    margin: 5px 0;
+  }
+  
+  /* 반응형 디자인 추가 */
+  @media (max-width: 1200px) {
+    .club-page {
+      width: 100%; /* 화면이 좁아지면 너비를 100%로 설정 */
+    }
+  
+    ul {
+      grid-template-columns: repeat(2, 1fr); /* 화면이 작으면 2개씩 표시 */
+      gap: 30px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .club-page {
+      width: 100%; /* 화면이 좁아지면 너비를 100%로 설정 */
+    }
+  
+    ul {
+      grid-template-columns: 1fr; /* 화면이 더 작으면 1개씩 표시 */
+      gap: 20px;
+    }
+  
+    .search-container {
+      justify-content: center; /* 작은 화면에서는 검색창을 가운데 정렬 */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .big-title {
+      font-size: 1.5em; /* 작은 화면에서는 제목 크기 줄이기 */
+    }
+  
+    .search-container .search {
+      padding: 10px 50px 10px 10px; /* 작은 화면에서 검색창 크기 조정 */
+    }
+  
+    .load-more-btn {
+      font-size: 1em; /* 더보기 버튼 크기 조정 */
+    }
+  }
+  
+  .add-club-btn{
+    padding: 10px 20px;
+    border: none;
+    background-color: #FFA575;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color:black;
+  }
+  
+  .add-club-btn:hover{
+    background-color: #ff9d68;
+  }
+
+  .load-more-btn{
+    padding: 10px 20px;
+    border: none;
+    background-color: #FFA575;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color:black;
+    margin-top: 80px;
+  }
+  
+  .load-more-btn:hover{
+    background-color: #ff9d68;
+  }
+  
+  .add-club{
+  margin-top: 80px;
+    text-align: right;
+  }

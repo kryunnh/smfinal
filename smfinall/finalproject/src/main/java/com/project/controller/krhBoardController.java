@@ -1,23 +1,33 @@
 package com.project.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.config.JwtUtil;
 import com.project.model.User;
 import com.project.model.krhBoardVO;
+import com.project.model.krhCommentVO;
 import com.project.model.krhLikeVO;
 import com.project.model.krhReportVO;
 import com.project.service.UserService;
 import com.project.service.krhBoardService;
+import com.project.service.krhCommentService;
+
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
-
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/api/board")
 public class krhBoardController {
@@ -28,6 +38,9 @@ public class krhBoardController {
 	private UserService userService;
 	@Autowired
 	private JwtUtil jwtUtil;
+	@Autowired
+	private krhCommentService krhcommentService;
+
 	
     //게시글 목록 조회
     @GetMapping
@@ -43,8 +56,13 @@ public class krhBoardController {
     //게시글 단건 조회
     @GetMapping("/{boardId}")
     public ResponseEntity<krhBoardVO> getBoardById(@PathVariable int boardId) {
-        krhboardService.incrementViews(boardId);
         return ResponseEntity.ok(krhboardService.getBoardById(boardId));
+    }
+    
+    @GetMapping("/{boardId}/incrementviews")
+    public ResponseEntity<Void> incrementViews(@PathVariable int boardId) {
+        krhboardService.incrementViews(boardId);
+        return ResponseEntity.ok().build();
     }
 
     //게시글 삭제
@@ -53,7 +71,7 @@ public class krhBoardController {
     	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
 		Claims claims;
 		try {
-			claims=jwtUtil.extractClaim(jwtToken, null);
+			claims = jwtUtil.extractAllClaims(jwtToken); 
 		}catch(Exception e){
 			throw new RuntimeException("유효하지 않은 토큰입니다.");
 		}
@@ -74,11 +92,11 @@ public class krhBoardController {
     
     //게시글 추가
     @PostMapping("/add")
-    public ResponseEntity<String> insertBoard(@RequestBody krhBoardVO krhboardVo, @RequestHeader("Authorization") String token ) {
+    public ResponseEntity<String> insertBoard(@RequestBody krhBoardVO krhboardVo, @RequestHeader("Authorization") String token) {
     	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
 		Claims claims;
 		try {
-			claims=jwtUtil.extractClaim(jwtToken, null);
+			claims = jwtUtil.extractAllClaims(jwtToken); 
 		}catch(Exception e){
 			throw new RuntimeException("유효하지 않은 토큰입니다.");
 		}
@@ -117,12 +135,13 @@ public class krhBoardController {
     	String jwtToken = token.startsWith("Bearer ") ? token.substring(7):token;
 		Claims claims;
 		try {
-			claims=jwtUtil.extractClaim(jwtToken, null);
+			claims = jwtUtil.extractAllClaims(jwtToken); 
 		}catch(Exception e){
 			throw new RuntimeException("유효하지 않은 토큰입니다.");
 		}
 		
 		String email = claims.getSubject();
+		
 		if(email==null) {
 			throw new RuntimeException("로그인이 필요합니다.");
 		}
@@ -131,6 +150,7 @@ public class krhBoardController {
 	    if (!email.equals(krhboardVo.getAuthorEmail())) {
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 작성한 게시물만 수정할 수 있습니다.");
 	    }
+	    
 	    // 게시글 수정
         try {
             krhboardService.updateBoard(krhboardVo);
@@ -138,50 +158,420 @@ public class krhBoardController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 수정에 실패했습니다.");
         }
-        
     }
     
     //신고하기
     @PostMapping("/{boardId}/report")
-    public ResponseEntity<String> reportBoard(
-            @PathVariable int boardId,
-            @RequestBody krhReportVO report,
-            HttpSession session) {
+    public ResponseEntity<String> reportBoard(@PathVariable int boardId, @RequestBody krhReportVO report, @RequestHeader("Authorization") String token) {
         try {
-            Integer reporterId = (Integer) session.getAttribute("id");
-            if (reporterId == null) {
-                return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+            String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            Claims claims = jwtUtil.extractAllClaims(jwtToken); // JWT에서 클레임 추출
+            String email = claims.getSubject();
+
+            if (email == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
             }
-            report.setBoardId(boardId);
+
+            User user = userService.findByUserEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+            }
+
+            long reporterId = user.getId();
+            report.setReporter(email);
             report.setReporterId(reporterId);
+            report.setBoardId(boardId);
+
+            boolean isReported = krhboardService.isBoardReported(boardId, reporterId); // 중복 신고 체크
+            if (isReported) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 신고한 게시물입니다.");
+            }
+
             krhboardService.reportBoard(report);
             return ResponseEntity.ok("게시물이 성공적으로 신고되었습니다.");
         } catch (Exception e) {
-            return new ResponseEntity<>("신고 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신고 처리 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }   
+
+	
+	//댓글 목록 구현
+    @GetMapping("/{boardId}/comments")
+    public ResponseEntity<List<krhCommentVO>> commentList(@PathVariable int boardId) {
+        List<krhCommentVO> comments = krhcommentService.commentList(boardId);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+	
+    //대댓글 목록 구현
+    @GetMapping("/comment/{commentId}/replies")
+    public ResponseEntity<?> commentListReply(@PathVariable Integer commentId) {
+        if (commentId == null || commentId <= 0) {
+            return ResponseEntity.badRequest().body("❌ 잘못된 요청: commentId가 없습니다.");
+        }
+
+        List<krhCommentVO> replies = krhcommentService.commentListReply(commentId);
+        if (replies == null || replies.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList()); // 빈 배열 반환
+        }
+        return ResponseEntity.ok(replies);
     }
     
-    //좋아요 상태 확인
-    @GetMapping("/{boardId}/likestatus")
-    public ResponseEntity<krhLikeVO> getLikeStatus(@PathVariable int boardId, HttpSession session){
-    	int userId = (int)session.getAttribute("id");
-    	String likeStatus = krhboardService.getLikeStatus(boardId, userId);
-        int likeCount = krhboardService.getLikeCount(boardId);
-        int dislikeCount = krhboardService.getDislikeCount(boardId);
+	//댓글 추가 (로그인된 사용자만 가능)
+	@PostMapping("/{boardId}/addcomment")
+	public ResponseEntity<String> addComment(@PathVariable int boardId, @RequestBody krhCommentVO krhcommentVo, @RequestHeader("Authorization") String token) {
+	    // JWT 토큰에서 사용자 이메일 추출
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+	    }
+
+	    String email = claims.getSubject();
+	    
+	    if (email == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+
+	    // 사용자 정보 가져오기
+	    User user = userService.findByUserEmail(email);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+
+	    // 댓글 정보를 VO에 담기
+	    krhcommentVo.setBoardId(boardId);
+	    krhcommentVo.setAuthor(user.getName());
+	    krhcommentVo.setAuthorId(user.getId());
+	    krhcommentVo.setReplyId(0);  // 기본 댓글은 replyId가 0
+	    krhcommentVo.setAuthorEmail(email);
+	    
+	    // 댓글 추가 서비스 호출
+	    try {
+	        krhcommentService.addComment(krhcommentVo);
+	        return ResponseEntity.ok("댓글이 성공적으로 추가되었습니다.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
+	    }
+	}
+	
+	//대댓글 추가 (로그인된 사용자만 가능)
+	@PostMapping("/{boardId}/addreply")
+	public ResponseEntity<String> addReply(@PathVariable int boardId, @RequestBody krhCommentVO krhcommentVo, @RequestHeader("Authorization") String token) {
+		// JWT 토큰에서 사용자 이메일 추출
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+	    }
+
+	    String email = claims.getSubject();
+	    
+	    if (email == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+	    if (krhcommentVo.getReplyId() == 0) {
+            return ResponseEntity.badRequest().body("대댓글은 반드시 부모 댓글 ID가 있어야 합니다.");
+        }
+	    // 사용자 정보 가져오기
+	    User user = userService.findByUserEmail(email);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+	    
+	    // 대댓글 정보를 VO에 담기
+	    krhcommentVo.setBoardId(boardId);
+	    krhcommentVo.setAuthor(user.getName());
+	    krhcommentVo.setAuthorId(user.getId());
+	    krhcommentVo.setAuthorEmail(email);
+	    
+	    // 부모 댓글 ID가 0이면 오류 처리 (대댓글은 반드시 부모 댓글 ID가 있어야 함)
+        if (krhcommentVo.getReplyId() == 0) {
+            return ResponseEntity.badRequest().body("대댓글은 반드시 부모 댓글 ID가 있어야 합니다.");
+        }
         
-        krhLikeVO boardLikeVO = new krhLikeVO(boardId, userId, likeStatus, likeCount, dislikeCount);
+	    // 대댓글 추가 서비스 호출
+	    try {
+	        krhcommentService.addReply(krhcommentVo);
+	        return ResponseEntity.ok("대댓글이 성공적으로 추가되었습니다.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("대댓글 추가 중 오류가 발생했습니다.");
+	    }
+	}
+	//댓글 삭제 (해당 사용자만 가능)
+	@DeleteMapping("/{boardId}/deletecomment/{commentId}")
+	public ResponseEntity<String> deleteComment(@PathVariable int boardId, 
+		    @PathVariable int commentId, 
+		    @RequestHeader("Authorization") String token){
+		  // JWT 토큰에서 사용자 이메일 추출
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+	    }
 
-        return new ResponseEntity<>(boardLikeVO, HttpStatus.OK);  // 상태 코드 200 OK 반환
-    }
-    
-    @PostMapping("/{boardId}/like")
-    public ResponseEntity<String> updateLikeStatus(@PathVariable int boardId, @RequestBody krhLikeVO boardLikeVO, HttpSession session) {
-        int userId = (int) session.getAttribute("id");  // HttpSession에서 userId 가져오기
-        String status = boardLikeVO.getLikeType();
+	    String email = claims.getSubject();
+	    if (email == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
 
-        krhboardService.updateLikeStatus(boardId, userId, status);
+	    // 사용자 정보 가져오기
+	    User user = userService.findByUserEmail(email);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+	    
+        // 댓글 또는 대댓글 정보 조회
+        krhCommentVO comment = krhcommentService.findByCommentId(commentId);
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다.");
+        }
 
-        // 응답으로 "Success" 메시지와 함께 200 OK 상태 코드 반환
-        return new ResponseEntity<>("Like status updated successfully", HttpStatus.OK);
-    }
-}
+        // 댓글 작성자가 아닌 경우 삭제 불가
+        if (comment.getAuthorId() != user.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 댓글만 삭제할 수 있습니다.");
+        }
+
+        // 댓글에 대댓글이 달려있는지 확인
+        List<krhCommentVO> replies = krhcommentService.commentListReply(commentId);
+        
+        if (replies.isEmpty()) {
+            // 대댓글이 없으면 댓글을 완전히 삭제
+        	krhcommentService.deleteComment(commentId);
+        } else {
+            // 대댓글이 있으면 댓글 내용을 '삭제된 댓글'로 변경
+        	krhcommentService.updateCommentToDeleted(commentId);
+        }
+
+        return ResponseEntity.ok("댓글/대댓글이 성공적으로 삭제되었습니다.");
+	}
+   
+	//대댓글 삭제
+	@DeleteMapping("/{boardId}/deletereply/{commentId}")
+	public ResponseEntity<String> deleteReply(
+	    @PathVariable int boardId, 
+	    @PathVariable int commentId, 
+	    @RequestHeader("Authorization") String token) 
+	{
+	    // JWT 토큰에서 사용자 이메일 추출
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+	    }
+	
+	    String email = claims.getSubject();
+	    if (email == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+	
+	    // 사용자 정보 가져오기
+	    User user = userService.findByUserEmail(email);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+	
+	    // 대댓글 정보 조회 (작성자 확인용)
+	    krhCommentVO reply = krhcommentService.findByCommentId(commentId);
+	    if (reply == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("대댓글을 찾을 수 없습니다.");
+	    }
+	
+	    // 대댓글 작성자가 아닌 경우 삭제 불가
+	    if (reply.getAuthorId() != user.getId()) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 대댓글만 삭제할 수 있습니다.");
+	    }
+	
+	    // 대댓글 삭제
+	    krhcommentService.deleteReply(commentId);
+	
+	    return ResponseEntity.ok("대댓글이 성공적으로 삭제되었습니다.");
+	}
+
+	// 댓글 수정 (해당 사용자만 가능)
+	@PutMapping("/{boardId}/updatecomment/{commentId}")
+	public ResponseEntity<String> updateComment(
+	    @PathVariable int boardId, 
+	    @PathVariable int commentId, 
+	    @RequestBody krhCommentVO krhCommentVo, 
+	    @RequestHeader("Authorization") String token) 
+	{
+	    // JWT 토큰에서 사용자 이메일 추출
+	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	    Claims claims;
+	    try {
+	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+	    }
+
+	    String email = claims.getSubject();
+	    if (email == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+
+	    // 사용자 정보 가져오기
+	    User user = userService.findByUserEmail(email);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+	    }
+
+	    // 댓글 정보 조회 (작성자 확인용)
+	    krhCommentVO comment = krhcommentService.findByCommentId(commentId);
+	    if (comment == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다.");
+	    }
+
+	    // 댓글 작성자가 아닌 경우 수정 불가
+	    if (comment.getAuthorId() != user.getId()) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 댓글만 수정할 수 있습니다.");
+	    }
+
+	    // 댓글 수정
+	    comment.setContent(krhCommentVo.getContent());  // 수정된 내용으로 변경
+	    try {
+	        krhcommentService.updateComment(comment);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 수정 중 오류가 발생했습니다.");
+	    }
+
+	    return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
+	}
+	
+	// 대댓글 수정 (해당 사용자만 가능)
+		@PutMapping("/{boardId}/updatereply/{commentId}")
+		public ResponseEntity<String> updateReply(
+		    @PathVariable int boardId, 
+		    @PathVariable int commentId, 
+		    @RequestBody krhCommentVO krhCommentVo, 
+		    @RequestHeader("Authorization") String token) 
+		{
+		    // JWT 토큰에서 사용자 이메일 추출
+		    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		    Claims claims;
+		    try {
+		    	claims = jwtUtil.extractAllClaims(jwtToken); 
+		    } catch (Exception e) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+		    }
+
+		    String email = claims.getSubject();
+		    if (email == null) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+		    }
+
+		    // 사용자 정보 가져오기
+		    User user = userService.findByUserEmail(email);
+		    if (user == null) {
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+		    }
+
+		    // 댓글 정보 조회 (작성자 확인용)
+		    krhCommentVO comment = krhcommentService.findByCommentId(commentId);
+		    if (comment == null) {
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다.");
+		    }
+
+		    // 댓글 작성자가 아닌 경우 수정 불가
+		    if (comment.getAuthorId() != user.getId()) {
+		        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("본인 댓글만 수정할 수 있습니다.");
+		    }
+
+		    // 댓글 수정
+		    comment.setContent(krhCommentVo.getContent());  // 수정된 내용으로 변경
+		    try {
+		        krhcommentService.updateReply(comment);
+		    } catch (Exception e) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 수정 중 오류가 발생했습니다.");
+		    }
+
+		    return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
+		}
+
+		    @PostMapping("/{boardId}/like")
+		    public ResponseEntity<String> updateLikeStatus(@PathVariable int boardId, 
+		                                                   @RequestBody krhLikeVO boardLikeVO, 
+		                                                   @RequestHeader("Authorization") String token) {
+		        String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		        Claims claims;
+
+		        try {
+		            claims = jwtUtil.extractAllClaims(jwtToken); // JWT에서 클레임 추출
+		        } catch (Exception e) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+		        }
+
+		        String email = claims.getSubject(); // 로그인한 사용자 이메일
+
+		        if (email == null) {
+		            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인이 필요합니다.");
+		        }
+
+		        // 요청받은 좋아요/싫어요 상태
+		        String likeType = boardLikeVO.getLikeType();
+		        
+		        if ("like".equals(likeType) || "dislike".equals(likeType)) {
+		            krhboardService.updateLikeStatus(boardId, email, likeType);  // 좋아요/싫어요 상태 업데이트
+		            System.out.println(email);
+		            return ResponseEntity.ok("좋아요 상태가 업데이트되었습니다.");
+		        } else {
+		            return ResponseEntity.badRequest().body("잘못된 요청입니다.");
+		        }
+		    }
+
+		    @PostMapping("/{boardId}/removeLike")
+		    public ResponseEntity<String> removeLikeStatus(@PathVariable int boardId,
+		                                                   @RequestHeader("Authorization") String token) {
+		        String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		        Claims claims;
+
+		        try {
+		            claims = jwtUtil.extractAllClaims(jwtToken);
+		        } catch (Exception e) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+		        }
+
+		        String email = claims.getSubject(); // 로그인한 사용자 이메일
+
+		        if (email == null) {
+		            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인이 필요합니다.");
+		        }
+
+		        // 좋아요/싫어요 취소
+		        krhboardService.removeLikeStatus(boardId, email);
+		        return ResponseEntity.ok("좋아요 상태가 취소되었습니다.");
+		    }
+
+		    @GetMapping("/{boardId}/likestatus")
+		    public ResponseEntity<Map<String, Object>> getLikeStatus(@PathVariable int boardId,
+		                                                              @RequestHeader("Authorization") String token) {
+		        String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		        Claims claims;
+
+		        try {
+		            claims = jwtUtil.extractAllClaims(jwtToken);
+		        } catch (Exception e) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		        }
+
+		        String email = claims.getSubject();
+
+		        Map<String, Object> response = new HashMap<>();
+		        String likeStatus = krhboardService.getLikeStatus(boardId, email);
+		        int likeCount = krhboardService.getLikeCount(boardId);
+		        int dislikeCount = krhboardService.getDislikeCount(boardId);
+
+		        response.put("likeStatus", likeStatus);
+		        response.put("likeCount", likeCount);
+		        response.put("dislikeCount", dislikeCount);
+
+		        return ResponseEntity.ok(response);
+		    }
+		}

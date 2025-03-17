@@ -38,16 +38,12 @@ public interface krhBoardService {
 	//게시글 신고
 	void reportBoard(krhReportVO report);
 	
-
-    // 유저의 좋아요 상태 확인
-    String getLikeStatus(int boardId, int userId);
-
-    // 좋아요/싫어요 상태 업데이트
-    void updateLikeStatus(int boardId, int userId, String status);
-    
-	// 좋아요 갯수
-	int getLikeCount(int boardId);
+	boolean isBoardReported(int boardId, long reporterId);
 	
-	//싫어요 갯수
+	//좋아요 싫어요 관련
+	void updateLikeStatus(int boardId, String userEmail, String likeType);
+	void removeLikeStatus(int boardId, String userEmail);
+	String getLikeStatus(int boardId, String userEmail);
+	int getLikeCount(int boardId);
 	int getDislikeCount(int boardId);
 }

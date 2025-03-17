@@ -1,0 +1,104 @@
+/*전체 페이지 규격*/
+.page{
+    width: 1400px;
+    text-align: center;
+    justify-self: center;
+    margin: 0 auto;
+}
+table{
+    text-align: center;
+    border-collapse: collapse;
+}
+
+/*제목*/
+.big-title{
+    text-align: center;
+    color:#FFA575;
+    margin-top: 100px; /*제목으로부터 위, 헤더쪽에 넣어도 될듯*/
+    margin-bottom:80px; /*제목으로부터 아래*/
+}
+
+.tdz td{
+    border-bottom: 1px solid rgb(150, 150, 150);
+    padding:25px;
+}
+
+.tdz tr{
+    transition: background-color 0.3s ease; /* border-color 변경 시 부드럽게 애니메이션 적용 */
+}
+.tdz tr:hover{
+    cursor: pointer;
+    background-color: #FFD2B9;
+    color:#5E5E5E;
+}
+
+.board-paging{
+    margin-top:80px; /*본문과의 거리*/
+    text-align: center;
+    margin-bottom:100px; /*푸터와의 거리*/
+}
+
+.board-paging button{
+    border-radius: 10px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* border-color 변경 시 부드럽게 애니메이션 적용 */
+}
+
+.board-paging button:hover {
+    background-color: #FFA575;
+    cursor: pointer;
+  }
+
+.board-paging button:disabled {
+  background-color: #e0e0e0;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
+
+.search-container{
+    margin-bottom:40px;
+    text-align: right;
+}
+
+.search-container .search{
+    border-radius: 20px;
+    padding: 10px 100px 10px 10px;
+    text-align: left;
+    border:1px solid black;
+}
+
+.search-btn{
+    margin-left: 20px;
+    background-color: #FFA575;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+}
+
+.search-btn:hover{
+    cursor: pointer;
+}
+
+.write-btn{
+    background-color: #FFA575;
+    padding: 10px 20px;
+    text-align: right;
+    border-radius: 20px;
+    border: none;
+}
+
+.write-button-container{
+    margin-top:40px;
+    text-align: right;
+}
+
+.write-btn:hover{
+    cursor: pointer;
+}
+
+.replies{
+    background-color: #F7F7F7;
+    padding:20px;
+}

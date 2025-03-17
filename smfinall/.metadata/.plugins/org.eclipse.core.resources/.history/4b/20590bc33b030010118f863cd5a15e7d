@@ -1,0 +1,37 @@
+package com.project.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+@RestController
+public class krhFileController {
+	 private final Path uploadPath = Paths.get(System.getProperty("user.home") + "/uploads/");
+
+	    @GetMapping("/uploads/{clubUrl}")
+	    public ResponseEntity<Resource> serveFile(@PathVariable String clubUrl) {
+	        try {
+	            Path file = uploadPath.resolve(clubUrl);
+	            Resource resource = new UrlResource(file.toUri());
+	            if (resource.exists() && resource.isReadable()) {
+	                return ResponseEntity.ok()
+	                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+	                        .body(resource);
+	            } else {
+	                return ResponseEntity.notFound().build();
+	            }
+	        } catch (Exception e) {
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
+}

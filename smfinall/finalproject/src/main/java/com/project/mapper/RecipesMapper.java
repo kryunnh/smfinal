@@ -3,15 +3,16 @@ package com.project.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.mybatis.spring.annotation.MapperScan;
 
 import com.project.model.Ingredients;
 import com.project.model.Recipes;
 
 public interface RecipesMapper {
-
     @Select("SELECT r.*, c.category_name AS categoryName FROM Recipes r LEFT JOIN Categories c ON r.category_id = c.category_id ORDER BY RAND()")
     List<Recipes> getAllRecipes();
 

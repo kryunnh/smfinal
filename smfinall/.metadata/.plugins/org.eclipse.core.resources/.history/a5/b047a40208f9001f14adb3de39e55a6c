@@ -1,8 +1,0 @@
-package com.project.service;
-
-import org.apache.ibatis.annotations.Mapper;
-
-@Mapper
-public class UserMapper {
-
-}

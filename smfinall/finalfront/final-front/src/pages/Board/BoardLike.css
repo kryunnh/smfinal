@@ -1,0 +1,31 @@
+.likedislike-content {
+    display: flex;             /* 가로로 정렬되도록 설정 */
+    align-items: center;       /* 세로 가운데 정렬 */
+    justify-content: center;   /* 가로 가운데 정렬 (필요시) */
+    margin-bottom:80px;
+    font-family: "Gothic A1", serif;
+    font-size: 30px;
+  }
+  
+  .likedislike-content button {
+    background-color:#EEEEEE;
+    border:none;
+    font-weight: bold;
+    font-size:40px;
+    font-family: "Gothic A1", serif;
+    align-items: center;
+    margin:0;
+    margin-right: 50px;
+    color: #5E5E5E;
+  }
+  
+  .likedislike-content button:hover {
+    cursor: pointer;
+  }
+  
+  .likedislike-content div{
+    display: inline-block;
+    font-size: 30px;
+    align-items: center;
+    margin:0;
+  }
