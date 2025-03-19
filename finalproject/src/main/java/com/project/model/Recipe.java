@@ -25,6 +25,28 @@ public class Recipe {
     private int foodTime;
     private int categoryId;
     private Integer weatherId;
+
+    // ✅ 올바른 생성자 추가 (컨트롤러와 일치하도록)
+    public Recipe(Long recipesId, String foodName, int foodTime, int categoryId, Integer weatherId) {
+        this.recipesId = recipesId;
+        this.foodName = foodName;
+        this.foodTime = foodTime;
+        this.categoryId = categoryId;
+        this.weatherId = weatherId;
+    }
+
+    public Recipe(String foodName, int foodTime, int categoryId, Integer weatherId) {
+        this.foodName = foodName;
+        this.foodTime = foodTime;
+        this.categoryId = categoryId;
+        this.weatherId = weatherId;
+    }
+
+    // 🔥 컨트롤러와 일치하는 생성자가 필요할 수도 있음
+    public Recipe(Long recipesId, String foodName, int foodTime, int categoryId) {
+        this.recipesId = recipesId;
+        this.foodName = foodName;
+        this.foodTime = foodTime;
+        this.categoryId = categoryId;
+    }
 }
-
-

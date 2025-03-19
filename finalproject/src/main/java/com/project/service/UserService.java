@@ -1,11 +1,13 @@
 package com.project.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -278,44 +280,33 @@ public class UserService {
     // 🔹 (본인) 유저 정보 수정
     @Transactional
     public void updateUser(String email, String password, String name, String phoneNumber, MultipartFile file) {
-        try {
-            User user = userMapper.findByEmail(email);
-            if (user == null) {
-                throw new RuntimeException("유저를 찾을 수 없습니다.");
-            }
-
-            // ✅ 비밀번호가 입력되었을 경우에만 암호화 후 업데이트
-            if (password != null && !password.isEmpty()) {
-                String encryptedPassword = passwordEncoder.encode(password);
-                user.setPassword(encryptedPassword); 
-            }
-
-            user.setName(name);
-            user.setPhoneNumber(phoneNumber);
-
-            // 🔹 파일이 있을 경우만 처리
-            if (file != null && !file.isEmpty()) {
-                String uploadDir = "C:/upload/";
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-                // 🔹 새로운 파일 저장
-                File saveFile = new File(uploadDir + file.getOriginalFilename());
-                file.transferTo(saveFile);
-                
-                // 🔹 이미지 경로 업데이트
-                user.setProfileImage(file.getOriginalFilename());
-            }
-
-            // 🔹 MyBatis를 통해 업데이트
-            userMapper.updateUser(user);
-
-        } catch (IOException e) {
-            throw new RuntimeException("파일 저장 중 오류 발생: " + e.getMessage());
+        User user = userMapper.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
+
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화 저장
+        }
+        user.setName(name);
+        user.setPhoneNumber(phoneNumber);
+
+        // ✅ 새로운 프로필 이미지를 업로드한 경우에만 변경
+        if (file != null && !file.isEmpty()) {
+            String uploadDir = "C:/upload/";  // ✅ 실제 저장 경로 확인
+            String newFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir + newFileName);
+            try {
+                file.transferTo(filePath.toFile());
+                user.setProfileImage(newFileName); // ✅ 파일명만 저장 (DB에 'uploads/' 없이 저장)
+            } catch (IOException e) {
+                throw new RuntimeException("파일 업로드 실패", e);
+            }
+        }
+
+        userMapper.updateUser(user);
     }
+
 
     public void insertPost(Post post) {
         userMapper.insertPost(post);

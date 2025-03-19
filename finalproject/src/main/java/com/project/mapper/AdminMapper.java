@@ -17,9 +17,8 @@ public interface AdminMapper {
     void deleteUser(@Param("email") String email);
 
     // 🔹 회원탈퇴 요청 목록 조회
-    @Select("SELECT * FROM user_deletion_requests")
+    @Select("SELECT id, email, reason, created_at FROM user_deletion_requests") // ✅ created_at 포함
     List<UserDeletionRequest> getAllDeletionRequests();
-
     // 🔹 회원탈퇴 요청 승인 (회원 삭제 후 요청 삭제)
     @Delete("DELETE FROM users WHERE email = #{email}")
     void approveDeletionRequest(@Param("email") String email);
@@ -48,30 +47,31 @@ public interface AdminMapper {
 
  /** ✅ 일반 레시피 (Recipes) 관리 **/
     
-    // 모든 레시피 조회
+    /** ✅ 1. 모든 레시피 가져오기 */
     @Select("SELECT * FROM Recipes")
     List<Recipe> getAllRecipes();
 
-    // 특정 레시피 조회
+    /** ✅ 2. 특정 레시피 조회 */
     @Select("SELECT * FROM Recipes WHERE recipes_id = #{id}")
-    Recipe getRecipeById(Long id);
+    Recipe getRecipeById(@Param("id") Long id);
 
-    // 레시피 등록 (관리자)
+    /** ✅ 3. 레시피 추가 */
     @Insert("INSERT INTO Recipes (foodName, foodImg, step1, step2, step3, step4, step5, step6, stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, view, foodTime, category_id, weatherId) " +
             "VALUES (#{foodName}, #{foodImg}, #{step1}, #{step2}, #{step3}, #{step4}, #{step5}, #{step6}, #{stepImg1}, #{stepImg2}, #{stepImg3}, #{stepImg4}, #{stepImg5}, #{stepImg6}, 0, #{foodTime}, #{categoryId}, #{weatherId})")
+    @Options(useGeneratedKeys = true, keyProperty = "recipesId")
     void addRecipe(Recipe recipe);
 
- 
-
-    // ✅ 레시피 업데이트
-    @Update("UPDATE Recipes SET foodName = #{foodName}, foodImg = #{foodImg}, step1 = #{step1}, step2 = #{step2}, step3 = #{step3}, " +
-            "step4 = #{step4}, step5 = #{step5}, step6 = #{step6}, stepImg1 = #{stepImg1}, stepImg2 = #{stepImg2}, " +
-            "stepImg3 = #{stepImg3}, stepImg4 = #{stepImg4}, stepImg5 = #{stepImg5}, stepImg6 = #{stepImg6}, " +
-            "foodTime = #{foodTime}, category_id = #{categoryId}, weatherId = #{weatherId} WHERE recipes_id = #{recipesId}")
-    void updateRecipe(Recipe recipe);
-    // 레시피 삭제 (관리자)
-    @Delete("DELETE FROM Recipes WHERE recipes_id = #{id}")
-    void deleteRecipe(Long id);
+    /** ✅ 4. 레시피 수정 */
+    @Update("UPDATE recipes SET foodName = #{foodName}, foodImg = #{foodImg}, foodTime = #{foodTime}, " +
+            "category_id = #{categoryId}, step1 = #{step1}, step2 = #{step2}, step3 = #{step3}, " +
+            "step4 = #{step4}, step5 = #{step5}, step6 = #{step6}, " +
+            "stepImg1 = #{stepImg1}, stepImg2 = #{stepImg2}, stepImg3 = #{stepImg3}, " +
+            "stepImg4 = #{stepImg4}, stepImg5 = #{stepImg5}, stepImg6 = #{stepImg6} " +
+            "WHERE recipes_id = #{recipesId}")
+    int updateRecipe(Recipe recipe);
+    /** ✅ 5. 레시피 삭제 */
+    @Delete("DELETE FROM Recipes WHERE recipes_id=#{id}")
+    void deleteRecipe(@Param("id") Long id);
 
     /** ✅ 유저 레시피 (User_Recipes) 관리 **/
     

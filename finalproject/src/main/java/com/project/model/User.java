@@ -1,7 +1,10 @@
 package com.project.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +18,8 @@ public class User {
     private String profileImage;
     private String role = "USER";
     private Boolean isVerified;  // ✅ Boolean으로 선언해야 함
-
+    private LocalDateTime createdAt;
+    
     // ✅ 생성자 추가
     public User(String email, String password, String name, String phoneNumber, String profileImage, Boolean isVerified) {
         this.email = email;

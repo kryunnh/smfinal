@@ -185,22 +185,28 @@ public class UserController {
  // ✅ 유저 정보 조회
     @GetMapping("/get-user")
     public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
-        try {
-            User user = userService.getUserByEmail(email);
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
         }
+
+        // ✅ 프로필 이미지가 존재할 경우, 전체 URL을 포함하여 응답
+        if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+            user.setProfileImage("http://localhost:8080/uploads/" + user.getProfileImage());
+        }
+
+        return ResponseEntity.ok(user);
     }
 
     // ✅ 7. 🔹 본인 정보 수정
+ // ✅ 회원 정보 수정 엔드포인트
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(
-            @RequestPart("email") String email,
-            @RequestPart(value = "password", required = false) String password,
-            @RequestPart("name") String name,
-            @RequestPart("phoneNumber") String phoneNumber,
-            @RequestPart(value = "file", required = false) MultipartFile file) {
+            @RequestParam("email") String email,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam("name") String name,
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
 
         // ✅ 요청 데이터 디버깅 로그 추가
         System.out.println("📡 [Backend] 회원 정보 수정 요청:");
@@ -222,6 +228,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 처리 중 오류 발생: " + e.getMessage());
         }
     }
+
 
 
  // ✅ 8. 🔹 회원 탈퇴 요청

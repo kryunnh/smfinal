@@ -13,11 +13,14 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:5173") // 프론트 주소 확인 후 맞게 변경
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedOrigins("http://localhost:5173") // ✅ 프론트엔드 주소
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS") // ✅ PUT 요청 허용
                         .allowedHeaders("*")
-                        .allowCredentials(true); // JWT 인증을 위한 쿠키 허용
+                        .allowCredentials(true); // ✅ 쿠키 포함 허용
             }
         };
     }
 }
+
+
+

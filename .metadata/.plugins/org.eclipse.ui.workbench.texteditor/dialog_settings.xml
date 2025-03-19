@@ -24,22 +24,23 @@
 		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.163636|0|WINDOWS|1|-14|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
 	</section>
 	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
 		<list key="findhistory">
+			<item value="/uploads/"/>
+			<item value="/uploads/{filename"/>
+			<item value="filename"/>
+			<item value="MediaType"/>
+			<item value="ng-boot-starter-web"/>
+			<item value="sendVerificationEmail"/>
+			<item value="updatePassword"/>
+			<item value="insertVerificationCode"/>
+			<item value="generateAndSaveVerificationCode"/>
+			<item value="updateVerificationCode"/>
+			<item value="getVerificationCode"/>
 			<item value="UserService"/>
 			<item value="findByEmail"/>
 			<item value="validateUser"/>
 			<item value="getHashedPasswordByEmail"/>
-			<item value="isVerified"/>
-			<item value="findLatestVerificationCode"/>
-			<item value="getUserByEmail"/>
-			<item value="getuserby"/>
-			<item value="board"/>
-			<item value="Recipe"/>
-			<item value="checkWeatherExists"/>
-			<item value="deleteRecipe"/>
-			<item value="getAllContests"/>
-			<item value="approveContest"/>
-			<item value="findContestById"/>
 		</list>
 	</section>
 </section>

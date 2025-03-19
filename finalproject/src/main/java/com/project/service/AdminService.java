@@ -2,11 +2,13 @@ package com.project.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.mapper.AdminMapper;
@@ -25,6 +27,8 @@ public class AdminService {
 
     private final AdminMapper adminMapper;
     private final JdbcTemplate jdbcTemplate;
+    private final String UPLOAD_DIR = "C:/upload/recipes/";
+    private final FileStorageService fileStorageService; // ✅ 파일 저장을 위한 서비스 (필요 시 구현)
     // ✅ 로그인할 때마다 login_history 테이블에 기록 추가
     public void saveLoginHistory(Long userId) {
         String sql = "INSERT INTO login_history (user_id) VALUES (?)";
@@ -54,7 +58,13 @@ public class AdminService {
 
     // 🔹 회원탈퇴 요청 목록 조회
     public List<UserDeletionRequest> getAllDeletionRequests() {
-        return adminMapper.getAllDeletionRequests();
+        List<UserDeletionRequest> requests = adminMapper.getAllDeletionRequests();
+
+        // ✅ 날짜 포맷을 문자열로 변환하여 응답
+        return requests.stream().map(request -> {
+            request.setCreatedAt(request.getCreatedAt()); // 그대로 유지
+            return request;
+        }).collect(Collectors.toList());
     }
 
     // 🔹 회원탈퇴 요청 승인
@@ -85,55 +95,90 @@ public class AdminService {
     }
 
     /** ✅ 일반 레시피 (Recipes) 관리 **/
-
+    /** ✅ 1. 모든 레시피 가져오기 */
     public List<Recipe> getAllRecipes() {
         return adminMapper.getAllRecipes();
     }
 
+    /** ✅ 2. 특정 레시피 조회 */
     public Recipe getRecipeById(Long id) {
         return adminMapper.getRecipeById(id);
     }
 
-    public void addRecipe(Recipe recipe) {
+    /** ✅ 레시피 추가 */
+    @Transactional
+    public void addRecipe(Recipe recipe, MultipartFile foodImg, 
+                          String step1, String step2, String step3, String step4, String step5, String step6,
+                          MultipartFile stepImg1, MultipartFile stepImg2, MultipartFile stepImg3, 
+                          MultipartFile stepImg4, MultipartFile stepImg5, MultipartFile stepImg6) {
+
+        // ✅ 이미지 파일 저장
+        if (foodImg != null && !foodImg.isEmpty()) {
+            String fileName = fileStorageService.storeFile(foodImg);
+            recipe.setFoodImg(fileName);
+        }
+
+        // ✅ 단계별 설명 저장
+        recipe.setStep1(step1);
+        recipe.setStep2(step2);
+        recipe.setStep3(step3);
+        recipe.setStep4(step4);
+        recipe.setStep5(step5);
+        recipe.setStep6(step6);
+
+        // ✅ 단계별 이미지 저장
+        if (stepImg1 != null) recipe.setStepImg1(fileStorageService.storeFile(stepImg1));
+        if (stepImg2 != null) recipe.setStepImg2(fileStorageService.storeFile(stepImg2));
+        if (stepImg3 != null) recipe.setStepImg3(fileStorageService.storeFile(stepImg3));
+        if (stepImg4 != null) recipe.setStepImg4(fileStorageService.storeFile(stepImg4));
+        if (stepImg5 != null) recipe.setStepImg5(fileStorageService.storeFile(stepImg5));
+        if (stepImg6 != null) recipe.setStepImg6(fileStorageService.storeFile(stepImg6));
+
+        // ✅ MyBatis를 이용한 레시피 저장
         adminMapper.addRecipe(recipe);
     }
-
+    // 레시피 수정
     @Transactional
-    public void updateRecipe(Recipe recipe) {
-        // ✅ weatherId 존재 여부 확인
-        Integer weatherId = recipe.getWeatherId(); // int → Integer 변경 (nullable 허용)
-        if (weatherId != null) {
-            int weatherCount = adminMapper.checkWeatherExists(weatherId);
-            if (weatherCount == 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 weatherId가 존재하지 않습니다.");
-            }
-        } else {
-            recipe.setWeatherId(null); // ✅ NULL 값 허용
+    public void updateRecipe(Recipe recipe, MultipartFile foodImg, 
+                             String step1, String step2, String step3, String step4, String step5, String step6,
+                             MultipartFile stepImg1, MultipartFile stepImg2, MultipartFile stepImg3, 
+                             MultipartFile stepImg4, MultipartFile stepImg5, MultipartFile stepImg6) {
+
+        // ✅ 기존 이미지 유지 + 새로운 이미지 업데이트
+        if (foodImg != null && !foodImg.isEmpty()) {
+            String imagePath = fileStorageService.storeFile(foodImg);
+            System.out.println("🟢 저장된 대표 이미지 경로: " + imagePath);
+            recipe.setFoodImg(imagePath);
         }
 
-     // ✅ category_id 존재 여부 확인
-        Integer categoryId = recipe.getCategoryId();
-        System.out.println("💡 DEBUG: 받은 category_id = " + categoryId);
+        // ✅ 단계별 설명 업데이트
+        recipe.setStep1(step1);
+        recipe.setStep2(step2);
+        recipe.setStep3(step3);
+        recipe.setStep4(step4);
+        recipe.setStep5(step5);
+        recipe.setStep6(step6);
 
-        if (categoryId == null || categoryId == 0) {  // 🔥 0일 경우도 예외 처리
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "category_id는 필수 입력값이며, 0이 될 수 없습니다.");
+        // ✅ 단계별 이미지 업데이트 (새로운 이미지가 있는 경우만 저장)
+        if (stepImg1 != null && !stepImg1.isEmpty()) recipe.setStepImg1(fileStorageService.storeFile(stepImg1));
+        if (stepImg2 != null && !stepImg2.isEmpty()) recipe.setStepImg2(fileStorageService.storeFile(stepImg2));
+        if (stepImg3 != null && !stepImg3.isEmpty()) recipe.setStepImg3(fileStorageService.storeFile(stepImg3));
+        if (stepImg4 != null && !stepImg4.isEmpty()) recipe.setStepImg4(fileStorageService.storeFile(stepImg4));
+        if (stepImg5 != null && !stepImg5.isEmpty()) recipe.setStepImg5(fileStorageService.storeFile(stepImg5));
+        if (stepImg6 != null && !stepImg6.isEmpty()) recipe.setStepImg6(fileStorageService.storeFile(stepImg6));
+
+        // ✅ DB 업데이트 실행 및 로그 출력
+        int updatedRows = adminMapper.updateRecipe(recipe);
+        System.out.println("🟢 업데이트된 행 수: " + updatedRows);
+        
+        if (updatedRows == 0) {
+            throw new RuntimeException("❌ 레시피 업데이트 실패! 해당 ID가 존재하지 않습니다.");
         }
-
-        int categoryCount = adminMapper.checkCategoryExists(categoryId);
-        System.out.println("💡 DEBUG: checkCategoryExists 결과 = " + categoryCount);
-
-        if (categoryCount == 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 category_id가 존재하지 않습니다.");
-        }
-        // ✅ 레시피 업데이트 수행
-        adminMapper.updateRecipe(recipe);
     }
-
-    
+    /** ✅ 5. 레시피 삭제 */
     public void deleteRecipe(Long id) {
         adminMapper.deleteRecipe(id);
     }
-
     /** ✅ 유저 레시피 (User_Recipes) 관리 **/
 
     // ✅ 전체 유저 레시피 조회

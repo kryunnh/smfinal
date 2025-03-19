@@ -13,10 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 import com.project.service.CustomUserDetailsService;
-
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,30 +31,53 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors().and()
-            .csrf().disable()  // ✅ CSRF 비활성화 (PATCH 요청이 차단될 수 있음)
+            .cors().configurationSource(corsConfigurationSource()) // ✅ CORS 설정 추가
+            .and()
+            .csrf().disable()  // ✅ CSRF 비활성화 (PUT, DELETE 요청 허용)
             .authorizeHttpRequests()
+            .requestMatchers("/api/uploads/**").permitAll()  // ✅ 수정
+            // 🔹 회원 관련 API 허용
             .requestMatchers(HttpMethod.GET, "/user/get-hashed-password").permitAll()
             .requestMatchers("/user/login", "/user/register", "/user/find-id",  
-                    "/user/send-verification-code",  
-                    "/user/reset-password", "/user/verify-email",  
-                    "/user/confirm-email", "/user/check-email","/user/check-phone").permitAll()
-                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // ✅ 관리자 권한 필요
-                .requestMatchers("/user/update").authenticated()
-                .requestMatchers("/user/inquiries").authenticated() // 🔥 추가
-                .requestMatchers("/user/**").authenticated()
-                .anyRequest().authenticated()
+                    "/user/send-verification-code", "/user/reset-password", 
+                    "/user/verify-email", "/user/confirm-email", "/user/check-email", "/user/check-phone").permitAll()
+
+            // 🔹 관리자 페이지 보호 (hasRole 사용)
+            .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ ROLE_ADMIN이 있어야 접근 가능
+
+            // 🔹 사용자 인증 필요 API
+            .requestMatchers("/user/update", "/user/inquiries", "/user/notifications/**", "/user/**").authenticated()
+
+            // ✅ 🔥 `/uploads/**` 경로 모든 사용자 허용 (프로필 이미지, 레시피 이미지 접근 가능)
+            .requestMatchers("/uploads/**").permitAll()
+
+            // 🔹 그 외 요청은 인증 필요
+            .anyRequest().authenticated()
+            
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        System.out.println("✅ Security 필터가 적용되었습니다."); // 🔍 디버깅 로그 추가
-
+        System.out.println("✅ Security 필터가 적용되었습니다.");
         return http.build();
     }
 
+    // ✅ 🔥 CORS 설정 추가 (프론트엔드 PUT 요청 포함 허용)
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // 프론트엔드 주소
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type")); // ✅ 프론트엔드에서 토큰 접근 허용
+        configuration.setAllowCredentials(true); // 인증 포함 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
