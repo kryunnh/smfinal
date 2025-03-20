@@ -1,6 +1,7 @@
 package com.project.model;
 
 import lombok.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +27,9 @@ public class Recipe {
     private int categoryId;
     private Integer weatherId;
 
+    // ✅ 해당 레시피의 재료 리스트 추가
+    private List<Ingredient> ingredients;
+
     // ✅ 올바른 생성자 추가 (컨트롤러와 일치하도록)
     public Recipe(Long recipesId, String foodName, int foodTime, int categoryId, Integer weatherId) {
         this.recipesId = recipesId;
@@ -42,7 +46,6 @@ public class Recipe {
         this.weatherId = weatherId;
     }
 
-    // 🔥 컨트롤러와 일치하는 생성자가 필요할 수도 있음
     public Recipe(Long recipesId, String foodName, int foodTime, int categoryId) {
         this.recipesId = recipesId;
         this.foodName = foodName;

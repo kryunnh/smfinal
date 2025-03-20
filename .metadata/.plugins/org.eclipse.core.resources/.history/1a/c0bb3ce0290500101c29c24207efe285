@@ -1,0 +1,11 @@
+package com.project.model;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Ingredient {
+    private Long ingredientId;
+    private String name;
+}

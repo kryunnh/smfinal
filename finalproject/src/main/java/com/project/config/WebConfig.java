@@ -6,11 +6,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("/uploads/**")
-	            .addResourceLocations("file:///C:/upload/"); // ✅ "file:///" 를 정확히 추가
-	}
-
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///C:/project/uploads/")
+                .setCachePeriod(3600) // ✅ 캐시 설정 추가
+                .resourceChain(true);
+    }
 }
+
