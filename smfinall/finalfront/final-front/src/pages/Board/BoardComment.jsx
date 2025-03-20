@@ -305,8 +305,10 @@ const toggleEditReply = (commentId, replyId, content) => {
                 ) : (
                   <p>{comment.content}</p>
                 )}
-                <span className="createdAt">{comment.createdAt}</span>
-                <span className="createdAt">수정됨: {comment.updatedAt}</span>
+                <br/>
+                <p className="createdAt">
+                  {comment.createdAt}
+                </p>
                 
                 <div className="boardcomment-button">
                   {comment.authorEmail === userEmail && (
@@ -324,7 +326,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                     <div key={reply.commentId} className="reply-item" style={{ paddingLeft: "20px" }}>
                       <span>{reply.author}</span>
                       {isEditingReply === reply.commentId ? (
-                        <form
+                        <form style={{ width: "100%", display: "flex", alignItems: "center" }}
                           onSubmit={(e) => {
                             e.preventDefault();
                             handleEditReply(comment.commentId, reply.commentId, editReplyContent[reply.commentId]);
@@ -339,8 +341,9 @@ const toggleEditReply = (commentId, replyId, content) => {
                               })
                             }
                             rows="3"
+                            style={{ flex: "1", minHeight: "80px", resize: "vertical" }}
                           />
-                          <button type="submit">저장</button>
+                          <button type="submit" style={{ backgroundColor: "#FFA575", cursor: "pointer" }}>저장</button>
                           <button type="button" onClick={() => setIsEditingReply(null)}>
                             취소
                           </button>
@@ -348,8 +351,9 @@ const toggleEditReply = (commentId, replyId, content) => {
                       ) : (
                         <p>{reply.content}</p>
                       )}
+                      <br/>
+                        <p className="createdAt">{reply.createdAt}</p>
                       <div className="boardcomment-button">
-                        <span className="createdAt">{reply.createdAt}</span> <span className="createdAt">수정됨: {reply.updatedAt}</span>
                         {reply.authorEmail === userEmail && (
                           <button onClick={() => handleDeleteReply(comment.commentId, reply.commentId)}>삭제</button>
                         )}

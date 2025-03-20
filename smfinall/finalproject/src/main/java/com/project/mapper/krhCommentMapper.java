@@ -39,4 +39,6 @@ public interface krhCommentMapper {
 		
 		//대댓글 수정
 		void updateReply(krhCommentVO krhcommentVo);
+
+		krhCommentVO getCommentById(int replyId);
 }

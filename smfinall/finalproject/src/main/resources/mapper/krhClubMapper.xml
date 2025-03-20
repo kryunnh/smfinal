@@ -74,7 +74,7 @@
 	
 	<!--클럽 신청-->
 	<insert id="insertApplication" parameterType="com.project.model.krhApplicationRequestVO">
-		insert into applications(clubId, applicantName, applicantEmail, applicantAge, applicantGender,date) 
-		values(#{clubId}, #{applicantName}, #{applicantEmail}, #{applicantAge}, #{applicantGender},now())
+		insert into applications (clubId, applicantName, applicantEmail, applicantAge, applicantGender, applyDate, privacyAgreement)
+    	values (#{clubId}, #{applicantName}, #{applicantEmail}, #{applicantAge}, #{applicantGender}, now(), #{privacyAgreement})
 	</insert>
 </mapper>

@@ -147,4 +147,11 @@ public class krhBoardServiceImpl implements krhBoardService{
         return krhboardMapper.getDislikeCount(boardId);
     }
 
+	@Override
+	public String getUserbyBoardId(int boardId) {
+		// TODO Auto-generated method stub
+		return krhboardMapper.getUserbyBoardId(boardId);
+	}
+
+    
 }

@@ -66,4 +66,8 @@
 	    set content = #{content}, updatedAt = now()
 	    where commentId = #{commentId}
 	</update>
+	
+	<select id="getCommentById" parameterType="int" resultType="krhCommentVO">
+        SELECT * FROM comment WHERE replyId = #{replyId}
+    </select>
 </mapper>

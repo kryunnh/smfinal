@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.config.JwtUtil;
+import com.project.model.Notification;
 import com.project.model.User;
 import com.project.model.krhBoardVO;
 import com.project.model.krhCommentVO;
@@ -23,7 +24,7 @@ import com.project.model.krhReportVO;
 import com.project.service.UserService;
 import com.project.service.krhBoardService;
 import com.project.service.krhCommentService;
-
+import com.project.service.krhNotificationService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
@@ -41,6 +42,9 @@ public class krhBoardController {
 	@Autowired
 	private krhCommentService krhcommentService;
 
+	@Autowired
+	private krhNotificationService krhnotificationService;
+	
 	
     //게시글 목록 조회
     @GetMapping
@@ -247,60 +251,86 @@ public class krhBoardController {
 	    krhcommentVo.setReplyId(0);  // 기본 댓글은 replyId가 0
 	    krhcommentVo.setAuthorEmail(email);
 	    
-	    // 댓글 추가 서비스 호출
+	    String boardownerEmail=krhboardService.getUserbyBoardId(boardId);
+	    
 	    try {
+	        // 댓글 추가 서비스 호출
 	        krhcommentService.addComment(krhcommentVo);
+
+	        // 작성자와 게시물 주인이 다를 때만 알림 전송
+	        if (!email.equals(boardownerEmail)) {
+	            Notification notification = new Notification();
+	            notification.setReceiverEmail(boardownerEmail);  // 게시물 주인 이메일
+	            String message = user.getName() + "님이 회원님의 게시물에 댓글을 작성하였습니다";
+	            notification.setMessage(message);  // 알림 메시지 내용
+	            
+	            krhnotificationService.insertNotification(notification);
+	        }
+
 	        return ResponseEntity.ok("댓글이 성공적으로 추가되었습니다.");
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
 	    }
 	}
 	
-	//대댓글 추가 (로그인된 사용자만 가능)
+	//대댓글 추가
 	@PostMapping("/{boardId}/addreply")
 	public ResponseEntity<String> addReply(@PathVariable int boardId, @RequestBody krhCommentVO krhcommentVo, @RequestHeader("Authorization") String token) {
-		// JWT 토큰에서 사용자 이메일 추출
+	    // JWT 토큰에서 사용자 이메일 추출
 	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    Claims claims;
 	    try {
-	    	claims = jwtUtil.extractAllClaims(jwtToken); 
+	        claims = jwtUtil.extractAllClaims(jwtToken); 
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
 	    }
 
 	    String email = claims.getSubject();
-	    
+
 	    if (email == null) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	    }
+
 	    if (krhcommentVo.getReplyId() == 0) {
-            return ResponseEntity.badRequest().body("대댓글은 반드시 부모 댓글 ID가 있어야 합니다.");
-        }
+	        return ResponseEntity.badRequest().body("대댓글은 반드시 부모 댓글 ID가 있어야 합니다.");
+	    }
+
 	    // 사용자 정보 가져오기
 	    User user = userService.findByUserEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
-	    
+
+//	    // 부모 댓글의 작성자 이메일 조회 (부모 댓글의 ID를 사용하여 작성자 이메일 가져오기)
+//	    krhCommentVO parentComment = krhcommentService.getCommentById(krhcommentVo.getReplyId());
+//	    if (parentComment == null) {
+//	        return ResponseEntity.badRequest().body("부모 댓글을 찾을 수 없습니다.");
+//	    }
+//
+//	    String boardOwnerEmail = parentComment.getAuthorEmail(); // 부모 댓글의 작성자 이메일
+
 	    // 대댓글 정보를 VO에 담기
 	    krhcommentVo.setBoardId(boardId);
 	    krhcommentVo.setAuthor(user.getName());
 	    krhcommentVo.setAuthorId(user.getId());
 	    krhcommentVo.setAuthorEmail(email);
-	    
-	    // 부모 댓글 ID가 0이면 오류 처리 (대댓글은 반드시 부모 댓글 ID가 있어야 함)
-        if (krhcommentVo.getReplyId() == 0) {
-            return ResponseEntity.badRequest().body("대댓글은 반드시 부모 댓글 ID가 있어야 합니다.");
-        }
-        
+
+//	    // 알림 생성 (부모 댓글 작성자에게 알림)
+//	    Notification notification = new Notification();
+//	    notification.setReceiverEmail(boardOwnerEmail);  // 부모 댓글 작성자 이메일
+//	    String message = user.getName() + "님이 회원님의 댓글에 답글을 작성하였습니다."; // 댓글 주인 이름
+//	    notification.setMessage(message);  // 알림 메시지 내용
+
 	    // 대댓글 추가 서비스 호출
 	    try {
 	        krhcommentService.addReply(krhcommentVo);
+	        //krhnotificationService.insertNotification(notification); // 알림 전송
 	        return ResponseEntity.ok("대댓글이 성공적으로 추가되었습니다.");
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("대댓글 추가 중 오류가 발생했습니다.");
 	    }
 	}
+	
 	//댓글 삭제 (해당 사용자만 가능)
 	@DeleteMapping("/{boardId}/deletecomment/{commentId}")
 	public ResponseEntity<String> deleteComment(@PathVariable int boardId, 

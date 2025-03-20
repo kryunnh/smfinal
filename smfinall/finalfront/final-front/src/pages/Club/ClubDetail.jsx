@@ -9,6 +9,21 @@ const ClubDetail = () => {
   const [clubDetail, setClubDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
+  const token = localStorage.getItem("token");
+  const [isClosed, setIsClosed] = useState(false); // 모집 종료 여부 상태
+
+  let userEmail = null;
+  if (token) {
+    try {
+      // Base64URL → Base64 변환 (패딩 추가)
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const decodedToken = JSON.parse(atob(base64)); // 디코딩
+      userEmail = decodedToken.sub; // ✅ 이메일은 'sub' 필드에서 가져오기
+    } catch (error) {
+      console.error("토큰 디코딩 실패:", error);
+    }
+  }
 
   useEffect(() => {    
     const fetchClubDetail = async () => {
@@ -22,6 +37,13 @@ const ClubDetail = () => {
         setClubDetail(response.data);
         console.log(response.data);
         setLoading(false);
+        // 모집 마감 여부 확인 (현재 날짜와 비교)
+        const currentDate = new Date();
+        const clubDate = new Date(response.data.date); // 모집 종료 날짜
+        if (currentDate > clubDate) {
+          setIsClosed(true); // 모집 마감
+        }
+
       } catch (err) {
         console.error('동호회 정보를 불러오는 데 실패했습니다.', err);
         setError('동호회 정보를 불러오는 데 실패했습니다.');
@@ -30,6 +52,12 @@ const ClubDetail = () => {
     };
 
     fetchClubDetail();
+
+    // 로그인 상태 확인
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
   }, [clubId]);
 
   if (loading) {
@@ -87,8 +115,7 @@ const ClubDetail = () => {
           {/* 클럽 이미지 표시 */}
           {clubDetail.clubImage && (
             <img
-              style={{ width: "100%", height: "500px" }}
-              src={`http://localhost:8080/uploads/${clubDetail.clubImage}`}
+              src={`http://localhost:8080/uploads/clubimage/${clubDetail.clubImage}`}
               alt={`${clubDetail.clubName} 이미지`}
               className="club-image"
             />
@@ -106,7 +133,9 @@ const ClubDetail = () => {
             {/* 카카오맵 */}
             <KakaoMap location={clubDetail.location} />
             <h3 style={{ color: "#FFA575" }}>장소: {clubDetail.location}</h3>
-            <div style={{ color: "#5E5E5E", marginBottom: "80px" }}>자세한 주소는 모임 참여시 안내드립니다.</div>
+            <div style={{ color: "#5E5E5E", marginBottom: "80px" }}>
+              자세한 주소는 모임 참여시 안내드립니다.
+            </div>
           </div>
           <div className="clubdetail1">
             <h3 style={{ color: "#FFA575" }}>모집 일정</h3>
@@ -117,8 +146,19 @@ const ClubDetail = () => {
 
           {/* 돌아가기 및 모임 신청 버튼 */}
           <div className="button-container">
-            <button className="back-button" onClick={() => navigate('/clublist')}>돌아가기</button>
-            <button className="apply-button" onClick={() => navigate(`/club/${clubId}/apply`)}>신청하기</button>
+            <button className="back-button" onClick={() => navigate('/clublist')}>
+              돌아가기
+            </button>
+            {isLoggedIn && userEmail !== clubDetail.recruiterEmail &&!isClosed &&( // 로그인한 사용자와 주최자가 다를 때만 신청 버튼 보이기
+              <button className="apply-button" onClick={() => navigate(`/club/${clubDetail.clubId}/apply`)}>
+                신청하기
+              </button>
+            )}
+             {isClosed && ( // 모집 마감일 경우
+              <button className="apply-button" disabled style={{color:"black", backgroundColor:"#eeeeee"}}>
+                모집 마감
+              </button>
+            )}
           </div>
         </div>
       )}

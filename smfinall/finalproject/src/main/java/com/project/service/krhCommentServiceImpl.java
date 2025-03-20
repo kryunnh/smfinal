@@ -75,6 +75,13 @@ public class krhCommentServiceImpl implements krhCommentService {
 		// TODO Auto-generated method stub
 		krhcommentMapper.updateReply(krhcommentVo);
 	}
+
+	@Override
+	public krhCommentVO getCommentById(int replyId) {
+		// TODO Auto-generated method stub
+		return krhcommentMapper.getCommentById(replyId);
+	}
+	
 	
 	
 }

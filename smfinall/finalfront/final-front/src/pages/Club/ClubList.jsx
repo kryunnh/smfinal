@@ -13,7 +13,8 @@ const ClubList = () => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [itemsPerPage] = useState(6); // 페이지당 아이템 수
   const [selectedTagId, setSelectedTagId] = useState(null);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태
+  
   useEffect(() => {
     const fetchClubsAndTags = async () => {
       try {
@@ -31,6 +32,11 @@ const ClubList = () => {
     };
   
     fetchClubsAndTags();
+
+    const token = localStorage.getItem('token'); // JWT 토큰이 localStorage에 저장되어 있다고 가정
+    if (token) {
+      setIsLoggedIn(true); // 토큰이 있으면 로그인된 상태로 설정
+    }
   }, []);
 
   const handleSearchChange = (e) => {
@@ -144,12 +150,13 @@ const ClubList = () => {
             <li key={`${club.clubId}-${index}`}>
               <img
               style={{ width: "100%", height:"200px" }}
-              src={`http://localhost:8080/uploads/${club.clubImage}`}
+              src={`http://localhost:8080/uploads/clubimage/${club.clubImage}`}
               alt={`${club.clubName} 이미지`}
               className="club-image"
             />
               <h2>{club.clubName}</h2>
               <p>{club.location}</p>
+              <p>마감일: {club.date}</p>
               <Link to={`/club/${club.clubId}`} className="detail-link">상세보기</Link>
             </li>
           ))
@@ -163,10 +170,12 @@ const ClubList = () => {
         )}
       </div>
       <div className="add-club">
-        {/* 모임 추가 버튼 */}
-        <Link to="/clubwrite" className="add-club-btn">
-          모임 생성
-        </Link>
+       {/* 모임 추가 버튼: 로그인된 사용자만 보이도록 조건 추가 */}
+       {isLoggedIn && (
+          <Link to="/clubwrite" className="add-club-btn">
+            모임 생성
+          </Link>
+        )}
       </div>
     </div>
   );

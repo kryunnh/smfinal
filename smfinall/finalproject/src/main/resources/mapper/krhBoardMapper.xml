@@ -96,4 +96,9 @@
 	<select id="getDislikeCount" resultType="int">
 	    SELECT COUNT(*) FROM boardLike WHERE boardId = #{boardId} AND likeType = 'dislike'
 	</select>
+	
+	<!--게시글 주인 아이디 -->
+	<select id="getUserbyBoardId" parameterType="int" resultType="String">
+		select authorEmail from board where boardId=#{boardId}
+	</select>
 </mapper>

@@ -13,5 +13,5 @@ public class krhApplicationRequestVO {
 	    private String applicantGender; // 신청자 성별
 	    private LocalDateTime applyDate;// 신청 날짜
 	    private String recruiterEmail; //주최자 이메일
-
+	    private boolean privacyAgreement; // 개인정보 동의 여부
 }

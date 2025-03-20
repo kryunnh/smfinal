@@ -1,0 +1,27 @@
+/* 챗봇 버튼 스타일 */
+.chatbot-button {
+    position: fixed;
+    bottom: 40px;  /* 화면 하단 40px */
+    right: 40px;   /* 화면 우측 40px */
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 9999; /* 다른 요소들보다 위에 표시되도록 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    border-radius: 50%;
+    padding: 15px;
+  }
+  
+  /* 이미지 스타일 */
+  .chatbot-button img {
+    width: 50px;  /* 기본 이미지 크기 */
+    height: auto;  /* 비율을 유지하면서 높이는 자동으로 조정 */
+    transition: transform 0.3s ease-in-out;  /* 크기 변화에 부드러운 애니메이션 효과 추가 */
+  }
+  
+  /* hover 시 이미지 크기 증가 */
+  .chatbot-button:hover img {
+    transform: scale(1.2);  /* 이미지를 1.2배 크기로 확대 */
+  }
+  

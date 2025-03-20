@@ -1,0 +1,31 @@
+package com.project.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.krhUserRecipeMapper;
+import com.project.model.UserRecipe;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class krhUserServiceImpl implements krhUserRecipeService {
+	
+	@Autowired
+	private krhUserRecipeMapper userRecipeMapper;
+	
+	@Override
+	public void addUserRecipe(UserRecipe userRecipe, List<String> ingredients) {
+		// TODO Auto-generated method stub
+	userRecipeMapper.insertUserRecipe(userRecipe);
+
+    // 2. 재료가 없으면 추가 (중복 없이)
+    userRecipeMapper.insertIngredientsIfNotExist(ingredients);
+
+    // 3. 레시피와 재료 관계 추가
+    userRecipeMapper.linkUserRecipeIngredient(userRecipe.getUserRecipesId(), ingredients);
+	}
+
+}

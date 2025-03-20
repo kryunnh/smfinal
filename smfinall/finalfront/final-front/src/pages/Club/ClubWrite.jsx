@@ -62,8 +62,6 @@ const ClubWrite = () => {
       alert('모든 필드를 입력하세요.');
       return;
     }
-
-    // 해시태그를 쉼표로 구분된 문자열로 변환하고, 배열로 변환
     
     // 해시태그를 쉼표로 구분된 문자열로 변환하고, 배열로 변환
     const hashtags = tag.split(',').map(item => item.trim());

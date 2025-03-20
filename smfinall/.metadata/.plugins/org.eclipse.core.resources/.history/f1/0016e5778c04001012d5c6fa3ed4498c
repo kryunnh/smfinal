@@ -1,0 +1,5 @@
+package com.project.service;
+
+public class krhUserServiceImpl implements krhUserRecipeService {
+
+}

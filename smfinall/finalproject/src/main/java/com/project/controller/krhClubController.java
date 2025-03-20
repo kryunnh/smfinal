@@ -2,6 +2,7 @@ package com.project.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.io.File;
 import java.io.IOException;
 import java.io.IOException;
@@ -31,12 +32,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.config.JwtUtil;
+import com.project.model.Notification;
 import com.project.model.User;
 import com.project.model.krhApplicationRequestVO;
 import com.project.model.krhClubVO;
 import com.project.model.krhTagVO;
 import com.project.service.UserService;
 import com.project.service.krhClubService;
+import com.project.service.krhNotificationService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,6 +62,9 @@ public class krhClubController {
 	
 	@Autowired
 	private final UserService userService;
+	
+	@Autowired
+	private final krhNotificationService krhnotificationService;
 	
 	//전체 목록 조회
 	@GetMapping
@@ -198,39 +204,72 @@ public class krhClubController {
 	
 	//클럽 신청을 위한 주최자의 이메일 갖고오기
 	@PostMapping("/{clubId}/send-application")
-	public ResponseEntity<String> sendApplication(@PathVariable int clubId, @RequestBody krhApplicationRequestVO apvo){
-		// 요청 객체에 clubId 설정
-        apvo.setClubId(clubId);
-        apvo.setApplyDate(java.time.LocalDateTime.now()); //신청일자
-        
-        // 게시글(동호회) 작성자의 이메일 가져오기
-        String ownerEmail = krhclubService.getEmailbyId(clubId);
+	public ResponseEntity<String> sendApplication(@PathVariable int clubId, @RequestBody krhApplicationRequestVO apvo) {
+	    // 요청 객체에 clubId 설정
+	    apvo.setClubId(clubId);
+	    apvo.setApplyDate(LocalDateTime.now());
+	    System.out.println(apvo);
 
-        if (ownerEmail == null) {
-            return ResponseEntity.badRequest().body("해당 동호회 정보를 찾을 수 없습니다.");
-        }
+	    try {
+	        // 게시글(동호회) 작성자의 이메일 가져오기
+	        String ownerEmail = krhclubService.getEmailbyId(clubId);
 
-        // 신청 데이터 저장
-        krhclubService.insertApplication(apvo);
-        // 이메일 전송
-        sendEmail(ownerEmail, apvo);
+	        if (ownerEmail == null) {
+	            return ResponseEntity.badRequest().body("해당 동호회 정보를 찾을 수 없습니다.");
+	        }
 
-        return ResponseEntity.ok("신청이 완료되었습니다!");
-    }
+	        // 신청 데이터 저장
+	        krhclubService.insertApplication(apvo);
+	        
+	        Notification notification = new Notification();
+	        notification.setReceiverEmail(ownerEmail);  // 주최자 이메일
+	        String message = apvo.getApplicantName() + "님이 회원님의 모임에 참가 신청하셨습니다. 이메일 "+ownerEmail+" 을 통해 확인 부탁드립니다.";
+	        notification.setMessage(message);  // 알림 메시지 내용
+	        krhnotificationService.insertNotification(notification);  // 알림 DB에 저장
+	        // 이메일 전송
+	        sendEmail(ownerEmail, apvo);
 
-    // 이메일 보내기
-    private void sendEmail(String ownerEmail, krhApplicationRequestVO apvo) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(ownerEmail);
-        message.setSubject("[냠냠] 회원님의 모임에 새로운 신청이 도착했습니다!");
-        message.setText(
-        		"신청자 정보"+"\n\n\n" +
-                "이름: " + apvo.getApplicantName() + "\n" +
-                "이메일: " + apvo.getApplicantEmail() + "\n" +
-                "나이: " + apvo.getApplicantAge() + "\n" +
-                "성별: " + apvo.getApplicantGender() + "\n" +
-                "신청 일자: " + apvo.getApplyDate()
-        );
-        mailSender.send(message);
-    }
+	        // 성공적인 신청 처리
+	        return ResponseEntity.ok("신청이 완료되었습니다!");
+
+	    } catch (Exception e) {
+	        // 예외 발생 시 로그 출력
+	        System.out.println("오류 발생: " + e.getMessage());
+	        e.printStackTrace();  // 예외의 자세한 정보도 출력
+
+	        // 클라이언트에게 오류 메시지 반환
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신청 처리 중 오류가 발생했습니다.");
+	    }
+	}
+
+	// 이메일 보내기
+	private void sendEmail(String ownerEmail, krhApplicationRequestVO apvo) {
+	    try {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(ownerEmail);
+	        message.setSubject("[냠냠] 회원님의 모임에 새로운 신청이 도착했습니다!");
+	        message.setText(
+	        		"안녕하세요 모임 담당자님,\r\n"
+	        		+ "\r\n"
+	        		+ apvo.getApplicantName() + "님이 모임에 신청하셨습니다. 아래는 신청자 정보입니다:\n\n"
+	                + "신청자 정보\n\n"
+	                + "이름: " + apvo.getApplicantName() + "\n"
+	                + "이메일: " + apvo.getApplicantEmail() + "\n"
+	                + "나이: " + apvo.getApplicantAge() + "세\n"
+	                + "성별: " + apvo.getApplicantGender() + "\n"
+	                + "신청 일자: " + (apvo.getApplyDate() != null ? apvo.getApplyDate().toString() : "정보 없음") + "\n"
+	                + "개인 정보 동의 여부: " + (apvo.isPrivacyAgreement() ? "동의함" : "동의하지 않음") + "\n\n"
+	                + "신청자 정보 확인 후, 모임 진행에 필요한 조치를 취해 주세요.\n\n"
+	                + "감사합니다."
+	        );
+	        mailSender.send(message);
+	        System.out.println("이메일이 성공적으로 발송되었습니다.");
+
+	    } catch (Exception e) {
+	        // 이메일 발송 중 예외 발생 시 로그 출력
+	        System.out.println("이메일 발송 오류: " + e.getMessage());
+	        e.printStackTrace();  // 예외의 자세한 정보도 출력
+	    }
+	}
+
 }

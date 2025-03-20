@@ -2988,3 +2988,409 @@ Caused by: org.codehaus.plexus.util.xml.pull.XmlPullParserException: expected ST
 2025-03-17 23:27:58,590 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-03-17 23:27:58,606 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 9 resources from src\main\resources to target\classes
 2025-03-17 23:27:58,615 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 11:46:58,639 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-03-18 11:47:28,392 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 11:47:28,523 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 9 resources from src\main\resources to target\classes
+2025-03-18 11:47:28,556 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 11:47:37,080 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 11:47:37,137 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 9 resources from src\main\resources to target\classes
+2025-03-18 11:47:37,152 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 11:50:45,695 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-03-18 11:52:05,957 [Worker-0: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 11:52:06,031 [Worker-0: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 9 resources from src\main\resources to target\classes
+2025-03-18 11:52:06,049 [Worker-0: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 13:05:02,308 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-03-18 13:33:57,639 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 13:33:57,788 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 11 resources from src\main\resources to target\classes
+2025-03-18 13:33:57,827 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:02:01,984 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:02:02,107 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 14:02:02,122 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:03:26,407 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 14:03:26,409 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:03:26,420 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:33:54,258 [Worker-31: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:33:54,363 [Worker-31: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 14:33:54,374 [Worker-31: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:38:50,323 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:38:50,354 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 14:38:50,368 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:38:53,546 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 14:38:53,546 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:38:53,551 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:41:54,872 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:41:54,942 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 14:41:54,952 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 14:42:53,395 [Worker-40: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 14:42:53,484 [Worker-40: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 14:42:53,495 [Worker-40: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:00:22,591 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 15:00:22,597 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:00:22,612 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:01:44,651 [Worker-48: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:01:45,019 [Worker-48: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 15:01:45,028 [Worker-48: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:06:11,666 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:06:11,704 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 15:06:11,714 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:10:48,446 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:10:48,489 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 12 resources from src\main\resources to target\classes
+2025-03-18 15:10:48,499 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:19:36,100 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 15:19:36,101 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:19:36,131 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:22:44,014 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:22:44,100 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:22:44,115 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:24:13,470 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:24:13,530 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:24:13,540 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:25:25,248 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:25:25,277 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:25:25,289 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:25:31,229 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:25:31,277 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:25:31,290 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:26:09,276 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:26:09,381 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:26:09,394 [Worker-56: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:26:18,244 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:26:18,353 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:26:18,366 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:26:28,030 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:26:28,467 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:26:28,492 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:26:49,358 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:26:49,555 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:26:49,567 [Worker-58: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:27:44,870 [Worker-61: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:27:44,949 [Worker-61: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:27:44,959 [Worker-61: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:28:32,832 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:28:33,417 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:28:33,528 [Worker-60: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:35:22,913 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:35:23,065 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:35:23,077 [Worker-50: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:36:56,315 [Worker-50: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:36:56,555 [Worker-50: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:36:56,566 [Worker-50: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:41:55,565 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:41:55,717 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:41:55,731 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:49:06,687 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:49:06,972 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:49:06,983 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:49:58,876 [Worker-68: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:49:59,742 [Worker-68: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:49:59,755 [Worker-68: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:51:04,671 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:51:04,712 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:51:04,723 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:52:23,994 [Worker-71: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:52:24,037 [Worker-71: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:52:24,046 [Worker-71: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:54:57,760 [Worker-67: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:54:57,983 [Worker-67: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:54:57,996 [Worker-67: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:55:08,385 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:55:08,446 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:55:08,458 [Worker-64: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:55:40,224 [Worker-69: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 15:55:40,313 [Worker-69: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 15:55:40,339 [Worker-69: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 15:59:55,207 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-03-18 16:42:14,325 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:42:14,757 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:42:14,773 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:42:54,702 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:42:54,729 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:42:54,739 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:42:57,158 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:42:57,178 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:42:57,190 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:43:05,095 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:43:05,124 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:43:05,134 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:44:51,050 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 16:44:51,051 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:44:51,069 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:45:15,990 [Worker-17: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:45:16,065 [Worker-17: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:45:16,076 [Worker-17: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:53:31,087 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:53:31,125 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:53:31,138 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 16:55:22,163 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 16:55:22,386 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 16:55:22,398 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:03:03,360 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 17:03:03,498 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 17:03:03,509 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:46:31,854 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 17:46:31,956 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 17:46:32,015 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:47:45,385 [Worker-30: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.maven.ide.eclipse.wtp.WarLifecycleMapping lifecycle mapping for MavenProject: com.project:finalproject:0.0.1-SNAPSHOT @ C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\pom.xml.
+2025-03-18 17:48:01,142 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 17:48:01,143 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 17:48:01,150 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:48:01,153 [Worker-30: Building] INFO  o.e.m.w.i.f.ResourceFilteringBuildParticipant - Changed resources require a complete clean of filtered resources of finalproject
+2025-03-18 17:48:01,155 [Worker-30: Building] INFO  o.e.m.w.i.f.ResourceFilteringBuildParticipant - Executing resource filtering for finalproject
+2025-03-18 17:48:21,103 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 17:48:21,598 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 17:48:21,882 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:53:27,374 [Worker-40: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 17:53:27,438 [Worker-40: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 17:53:27,449 [Worker-40: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:54:40,144 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.maven.ide.eclipse.wtp.WarLifecycleMapping lifecycle mapping for MavenProject: com.project:finalproject:0.0.1-SNAPSHOT @ C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\pom.xml.
+2025-03-18 17:54:42,119 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 17:54:42,120 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-18 17:54:42,125 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-18 17:54:42,125 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.e.m.w.i.f.ResourceFilteringBuildParticipant - Changed resources require a complete clean of filtered resources of finalproject
+2025-03-18 17:54:42,125 [Worker-36: Launching finalproject - FinalprojectApplication] INFO  o.e.m.w.i.f.ResourceFilteringBuildParticipant - Executing resource filtering for finalproject
+2025-03-18 22:09:20,651 [Worker-48: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-18 22:09:20,924 [Worker-48: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-18 22:09:20,935 [Worker-48: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 14:03:47,894 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-03-19 14:15:33,849 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 14:15:33,896 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-19 14:15:33,918 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 14:25:02,906 [Worker-13: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 14:25:02,998 [Worker-13: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 13 resources from src\main\resources to target\classes
+2025-03-19 14:25:03,028 [Worker-13: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 14:36:16,633 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-19 14:36:16,634 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 14:36:16,641 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:15:50,853 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:15:50,871 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:15:50,882 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:34:20,212 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:34:20,291 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:34:20,303 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:34:30,594 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:34:30,611 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:34:30,624 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:34:44,281 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:34:44,308 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:34:44,317 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:36:10,702 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:36:10,737 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:36:10,746 [Worker-31: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:36:20,467 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:36:20,482 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:36:20,492 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:38:06,497 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:38:06,545 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:38:06,556 [Worker-30: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:38:07,834 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:38:07,860 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:38:07,870 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:38:45,358 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:38:45,376 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:38:45,387 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:47:50,692 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:47:50,716 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:47:50,739 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:48:11,568 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:48:11,630 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:48:11,640 [Worker-33: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:51:08,966 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:51:09,078 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:51:09,090 [Worker-35: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:55:05,843 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:55:05,875 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:55:05,885 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 15:55:29,881 [Worker-35: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 15:55:29,995 [Worker-35: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 15:55:30,090 [Worker-35: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:00:52,548 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:00:52,705 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:00:52,717 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:01:04,167 [Worker-43: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:01:04,190 [Worker-43: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:01:04,202 [Worker-43: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:05:50,508 [Worker-45: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:05:50,565 [Worker-45: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:05:50,574 [Worker-45: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:19:10,481 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:19:10,560 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:19:10,569 [Worker-54: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:27:25,118 [Worker-57: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:27:25,213 [Worker-57: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:27:25,222 [Worker-57: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:29:56,904 [Worker-62: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:29:56,969 [Worker-62: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:29:56,983 [Worker-62: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 16:33:40,583 [Worker-65: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 16:33:40,912 [Worker-65: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 16:33:40,925 [Worker-65: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:39:40,744 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:39:45,277 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 17:39:45,289 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:54:03,462 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-19 17:54:03,466 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:54:03,487 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:55:12,456 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-19 17:55:12,457 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:55:12,465 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:56:37,649 [Worker-90: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:56:37,838 [Worker-90: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 17:56:37,846 [Worker-90: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:57:09,710 [Worker-91: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:57:09,744 [Worker-91: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 17:57:09,752 [Worker-91: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:57:22,373 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:57:22,387 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 17:57:22,396 [Worker-84: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 17:58:50,233 [Worker-85: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 17:58:50,443 [Worker-85: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 17:58:50,457 [Worker-85: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 18:06:27,054 [Worker-85: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 18:06:39,010 [Worker-85: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 14 resources from src\main\resources to target\classes
+2025-03-19 18:06:39,052 [Worker-85: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 18:25:15,906 [Worker-105: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 18:25:16,186 [Worker-105: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 23 resources from src\main\resources to target\classes
+2025-03-19 18:25:16,309 [Worker-105: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 18:25:19,340 [Worker-100: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-19 18:25:19,340 [Worker-100: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 9 resources from src\main\resources to target\classes
+2025-03-19 18:25:19,349 [Worker-100: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-19 18:25:26,565 [Worker-103: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-19 18:25:26,658 [Worker-103: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 23 resources from src\main\resources to target\classes
+2025-03-19 18:25:26,674 [Worker-103: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:06:25,812 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-03-20 13:18:51,215 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:18:51,265 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 23 resources from src\main\resources to target\classes
+2025-03-20 13:18:51,294 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:19:14,613 [Worker-11: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:19:14,646 [Worker-11: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 42 resources from src\main\resources to target\classes
+2025-03-20 13:19:15,209 [Worker-11: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:22:04,291 [Worker-15: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:22:04,573 [Worker-15: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 42 resources from src\main\resources to target\classes
+2025-03-20 13:22:04,600 [Worker-15: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:28:15,012 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:28:15,205 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 48 resources from src\main\resources to target\classes
+2025-03-20 13:28:15,323 [Worker-22: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:28:20,400 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:28:20,401 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 25 resources from src\main\resources to target\classes
+2025-03-20 13:28:20,421 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:31:52,010 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:31:52,014 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:31:52,046 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:31:58,668 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:31:58,669 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 13:31:58,884 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:33:50,749 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:33:50,750 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:33:50,775 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:37:08,881 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:37:08,882 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 6 resources from src\main\resources to target\classes
+2025-03-20 13:37:08,951 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:37:15,274 [Worker-26: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:37:15,427 [Worker-26: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 57 resources from src\main\resources to target\classes
+2025-03-20 13:37:15,465 [Worker-26: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:40:15,530 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:40:15,531 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:40:15,538 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:40:24,417 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:40:24,418 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 13:40:24,599 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:42:10,537 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:42:10,538 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:42:10,595 [Worker-34: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:42:32,714 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:42:32,715 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 13:42:32,857 [Worker-32: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:46:55,324 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:46:55,477 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 66 resources from src\main\resources to target\classes
+2025-03-20 13:46:55,600 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:48:48,568 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:48:48,569 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:48:48,650 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:49:02,445 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:49:02,615 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 66 resources from src\main\resources to target\classes
+2025-03-20 13:49:02,648 [Worker-37: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:49:07,532 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:49:07,533 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 13:49:07,537 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:52:24,268 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:52:24,269 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:52:24,313 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:53:00,108 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 13:53:00,109 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 13:53:00,685 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 13:53:13,103 [Worker-37: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 13:53:14,262 [Worker-37: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 69 resources from src\main\resources to target\classes
+2025-03-20 13:53:14,308 [Worker-37: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:01:15,755 [Worker-49: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:01:15,756 [Worker-49: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:01:15,855 [Worker-49: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:02:03,262 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:02:03,263 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 3 resources from src\main\resources to target\classes
+2025-03-20 14:02:03,975 [Worker-44: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:25:00,722 [Worker-65: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:25:00,728 [Worker-65: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:25:00,951 [Worker-65: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:32:21,830 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:32:21,835 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:32:22,056 [Worker-66: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:36:08,589 [Worker-73: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:36:08,590 [Worker-73: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:36:08,860 [Worker-73: Launching finalproject - FinalprojectApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:41:45,724 [Worker-77: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:41:45,728 [Worker-77: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:41:46,035 [Worker-77: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:45:11,881 [Worker-78: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-03-20 14:45:11,886 [Worker-78: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 14:45:12,361 [Worker-78: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 14:49:55,323 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-03-20 15:05:14,509 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:05:14,906 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 72 resources from src\main\resources to target\classes
+2025-03-20 15:05:15,033 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:09:06,957 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:09:07,189 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:09:08,415 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:09:31,078 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:09:31,108 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:09:31,164 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:09:55,154 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:09:55,241 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:09:55,305 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:10:20,387 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:10:20,474 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:10:20,513 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:10:44,669 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:10:44,692 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:10:44,736 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:10:50,843 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:10:50,896 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:10:50,947 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:11:00,448 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:11:00,556 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:11:00,612 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:11:11,323 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:11:11,512 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:11:11,570 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:12:07,965 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:12:08,074 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:12:08,126 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:16:10,578 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:16:10,671 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:16:10,719 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:26:05,081 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:26:05,180 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:26:05,235 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:29:52,660 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:29:52,795 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:29:52,839 [Worker-24: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:30:37,283 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:30:37,431 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:30:37,483 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:32:42,782 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:32:42,940 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:32:43,005 [Worker-27: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:34:19,177 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:34:19,383 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:34:19,464 [Worker-28: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources
+2025-03-20 15:34:23,664 [Worker-26: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-20 15:34:24,955 [Worker-26: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 84 resources from src\main\resources to target\classes
+2025-03-20 15:34:25,006 [Worker-26: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\SpringTool\workspace-spring-tool-suite-4-4.16.1.RELEASE\smfinall\finalproject\src\test\resources

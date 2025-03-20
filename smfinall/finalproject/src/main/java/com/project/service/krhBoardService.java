@@ -46,4 +46,6 @@ public interface krhBoardService {
 	String getLikeStatus(int boardId, String userEmail);
 	int getLikeCount(int boardId);
 	int getDislikeCount(int boardId);
+	
+	String getUserbyBoardId(int boardId);
 }

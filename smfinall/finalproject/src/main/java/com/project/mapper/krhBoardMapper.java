@@ -54,4 +54,5 @@ public interface krhBoardMapper {
 
 	boolean isBoardReported(int boardId, long reporterId);
 	
+	String getUserbyBoardId(int boardId);
 }
