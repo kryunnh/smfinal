@@ -59,7 +59,7 @@ public class RecipesService {
 	    }
 	
 	 public void addFavorite(Recipes recipe, String email) {
-		    User user = userService.findByUserEmail(email); // 사용자 정보 가져오기
+		    User user = userService.getUserByEmail(email); // 사용자 정보 가져오기
 		    if (user != null) {
 		        recipesMapper.addFavoriteList(recipe.getRecipesId(), user.getId());
 		    } else {
@@ -69,7 +69,7 @@ public class RecipesService {
 	
 	 @Transactional
 	public void deleteFavorite(Recipes recipe, String email) {
-		 User user = userService.findByUserEmail(email);
+		 User user = userService.getUserByEmail(email);
 		 if(user != null) {
 			 long userId = user.getId();  
 		     long recipeId = recipe.getRecipesId();  

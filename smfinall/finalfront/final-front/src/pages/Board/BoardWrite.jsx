@@ -11,14 +11,11 @@ const BoardWrite = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Image.configure({
-        inline: true,
-        allowBase64: true,
-      }),
+      Image.configure({ inline: true }) // allowBase64 제거
     ],
     editorProps: {
       attributes: {
-        class: 'tiptap-editor', // 에디터에 클래스 지정
+        class: 'tiptap-editor',
       },
     },
   });
@@ -26,30 +23,30 @@ const BoardWrite = () => {
   const token = localStorage.getItem('token'); // 토큰 가져오기
 
   // 이미지 업로드 처리
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0]; // 선택한 이미지 파일
-
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file); // 파일 추가
-
-      // 이미지 업로드 요청
-      axios
-        .post('http://localhost:8080/api/board/uploadImage', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`, // 인증 토큰
-          },
-        })
-        .then((response) => {
-          const imageUrl = response.data.imageUrl; // 서버에서 받은 이미지 URL
-          // 에디터에 이미지 삽입
-          editor.chain().focus().setImage({ src: imageUrl }).run();
-        })
-        .catch((error) => {
-          console.error('이미지 업로드 실패:', error);
-          alert('이미지 업로드 실패');
-        });
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+  
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await axios.post("http://localhost:8080/uploads/boardimage", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
+      if (response.data.filename) {
+        const fileName = response.data.filename;
+        
+        // 📌 UUID 적용된 파일명으로 이미지 URL 삽입
+        editor.chain().focus().insertContent(`<img src="http://localhost:8080/uploads/boardimage/${fileName}" alt="Uploaded image"/>`).run();
+      } else {
+        alert("이미지 업로드 실패");
+      }
+    } catch (error) {
+      console.error("이미지 업로드 에러:", error);
+      alert("이미지 업로드 중 문제가 발생했습니다.");
     }
   };
 
@@ -113,12 +110,12 @@ const BoardWrite = () => {
         <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>1. List</button>
 
         <button className="image-upload-btn" onClick={() => document.getElementById('file-upload').click()}>
-          🖼 이미지 추가
+          🖼️
         </button>
         <input
           id="file-upload"
           type="file"
-          style={{ display: 'none' }}
+          style={{ display: 'none'}}
           onChange={handleImageUpload}
           accept="image/*"
         />
@@ -126,13 +123,14 @@ const BoardWrite = () => {
 
       {/* 에디터 내용 */}
       <EditorContent editor={editor} className="boardwrite-content" />
-    <div className="button-container">
-      {/* 게시글 저장 버튼 */}
-      <button onClick={handleGoToBoardList} className="board-goback">
-        돌아가기
-      </button>
-      <button className="save-btn" onClick={handleSubmit}>게시글 등록</button>
-    </div>
+
+      <div className="button-container">
+        {/* 게시글 저장 버튼 */}
+        <button onClick={handleGoToBoardList} className="board-goback">
+          돌아가기
+        </button>
+        <button className="save-btn" onClick={handleSubmit}>게시글 등록</button>
+      </div>
     </div>
   );
 };

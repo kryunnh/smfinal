@@ -58,7 +58,7 @@
 	
 	<!--요리 고민방 신고하기-->
 	<insert id="reportBoard" parameterType="com.project.model.krhReportVO">
-		insert into reports(boardId, reporterId, reporter, reason, description, reportedAt) values(#{boardId}, #{reporterId}, #{reporter}, #{reason}, #{description}, now())
+		insert into reports(boardId, reporterId, reporter, reason, reportedAt) values(#{boardId}, #{reporterId}, #{reporter}, #{reason}, now())
 	</insert>
 	
 	<!--신고한 사람인지 확인하기 -->

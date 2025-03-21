@@ -28,7 +28,12 @@ public class JwtUtil {
     public boolean validateToken(String token, String email) {
         return (extractEmail(token).equals(email)) && !isTokenExpired(token);
     }
-
+    
+    // ✅ 토큰에서 이메일(username) 추출
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+    
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

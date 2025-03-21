@@ -26,7 +26,7 @@ import com.project.service.krhUserRecipeService;
 
 import lombok.AllArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/urecipe")
@@ -80,7 +80,7 @@ public class krhUserRecipeController {
 	    }
 	    
 	    // 이메일로 사용자 정보 조회
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    
 	    // 사용자가 존재하지 않을 경우
 	    if (user == null) {

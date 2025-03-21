@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './ChallengeForm.css';
 
 const RecipeForm = () => {
     const [recipeName, setRecipeName] = useState('');
@@ -19,6 +21,8 @@ const RecipeForm = () => {
     const [stepImg4, setStepImg4] = useState(null);
     const [stepImg5, setStepImg5] = useState(null);
     const [stepImg6, setStepImg6] = useState(null);
+
+    const navigate = useNavigate();
 
     // 재료 변경 핸들러
     const handleIngredientChange = (index, value) => {
@@ -71,38 +75,38 @@ const RecipeForm = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log("레시피 등록 성공:", response.data);
+            alert("맛있는 도전하기를 완료하였습니다!");
+            navigate('/');
         } catch (error) {
             console.error("서버 오류:", error);
-            formData.forEach((value, key) => {
-                console.log(key, value);
-              });
         }
     };
 
     return (
         <div className="recipe-form">
-            <h2>레시피 등록</h2>
-            <div className="input-field">
+            <h2 className="big-title">레시피 등록</h2>
+            <div>
                 <label>레시피 이름</label>
                 <input
                     type="text"
                     value={recipeName}
                     onChange={(e) => setRecipeName(e.target.value)}
                     required
+                     className="input-field"
                 />
             </div>
-            <div className="input-field">
+            <div>
                 <label>조리 시간</label>
                 <input
                     type="text"
                     value={cookingTime}
                     onChange={(e) => setCookingTime(e.target.value)}
                     required
+                     className="input-field"
                 />
             </div>
-            <div className="input-field">
-                <label>카테고리</label>
+            <div>
+                <label >카테고리</label>
                 <div>
                     <input
                         type="radio"
@@ -144,13 +148,14 @@ const RecipeForm = () => {
                     <label>양식</label>
                 </div>
             </div>
-            <div className="input-field">
-                <label>레시피 이미지</label>
+            <div>
+                <label>레시피 대표 이미지</label>
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setFoodImg(e.target.files[0])}
                     required
+                     className="input-field"
                 />
             </div>
             <div className="input-field">
@@ -171,6 +176,8 @@ const RecipeForm = () => {
             </div>
             <div className="input-field">
                 <label>조리 과정</label>
+                <br/>
+                단계 1
                 <input
                     type="text"
                     value={step1}
@@ -178,12 +185,14 @@ const RecipeForm = () => {
                     placeholder="1단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setStepImg1(e.target.files[0])}
                     required
                 />
+                단계 2
                 <input
                     type="text"
                     value={step2}
@@ -191,12 +200,14 @@ const RecipeForm = () => {
                     placeholder="2단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setStepImg2(e.target.files[0])}
                     required
                 />
+                단계 3
                 <input
                     type="text"
                     value={step3}
@@ -204,12 +215,14 @@ const RecipeForm = () => {
                     placeholder="3단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setStepImg3(e.target.files[0])}
                     required
                 />
+                단계 4
                 <input
                     type="text"
                     value={step4}
@@ -217,12 +230,14 @@ const RecipeForm = () => {
                     placeholder="4단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setStepImg4(e.target.files[0])}
                     required
                 />
+                단계 5
                 <input
                     type="text"
                     value={step5}
@@ -230,12 +245,14 @@ const RecipeForm = () => {
                     placeholder="5단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setStepImg5(e.target.files[0])}
                     required
                 />
+                단계 6
                 <input
                     type="text"
                     value={step6}
@@ -243,6 +260,7 @@ const RecipeForm = () => {
                     placeholder="6단계"
                     required
                 />
+                이미지 추가
                 <input
                     type="file"
                     accept="image/*"

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/chatbot")
-@CrossOrigin(origins = "http://localhost:5174") 
+@CrossOrigin(origins = "http://localhost:5173") 
 public class ChatbotController {
 
     private static final String API_URL = "https://983ktt5pc1.apigw.ntruss.com/custom/v1/17127/404267835521b93069c5fcde86845534c2f0b03b4d77cb911cd61fc9b84b2082";

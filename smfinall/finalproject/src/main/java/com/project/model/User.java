@@ -1,6 +1,10 @@
 package com.project.model;
 
-import lombok.*;
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -13,16 +17,17 @@ public class User {
     private String phoneNumber;
     private String profileImage;
     private String role = "USER";
-    private boolean isVerified;
-
-    // ✅ 추가할 생성자 (에러 해결)
-    public User(String email, String password, String name, String phoneNumber, String profileImage) {
+    private Boolean isVerified;  // ✅ Boolean으로 선언해야 함
+    private LocalDateTime createdAt;
+    
+    // ✅ 생성자 추가
+    public User(String email, String password, String name, String phoneNumber, String profileImage, Boolean isVerified) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profileImage = profileImage;
         this.role = "USER";
-        this.isVerified = false;
+        this.isVerified = isVerified;
     }
 }

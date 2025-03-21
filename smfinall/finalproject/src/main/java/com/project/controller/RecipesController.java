@@ -23,7 +23,7 @@ import com.project.service.UserService;
 
 import io.jsonwebtoken.Claims;
 
-@CrossOrigin(origins= "http://localhost:5174")
+@CrossOrigin(origins= "http://localhost:5173")
 @RestController
 public class RecipesController {
 	@Autowired
@@ -89,7 +89,7 @@ public class RecipesController {
             throw new RuntimeException("로그인이 필요합니다.");
         }
 
-        User user = userService.findByUserEmail(email); 
+        User user = userService.getUserByEmail(email); 
         Recipes recipe = recipesService.findById(id);
         if (recipe != null) {
             recipesService.addFavorite(recipe, email); 
@@ -115,7 +115,7 @@ public class RecipesController {
             throw new RuntimeException("로그인이 필요합니다.");
         }
 
-        User user = userService.findByUserEmail(email);
+        User user = userService.getUserByEmail(email);
         Recipes recipe = recipesService.findById(id);
 
         if (recipe != null) {

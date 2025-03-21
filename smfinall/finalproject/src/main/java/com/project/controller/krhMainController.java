@@ -28,7 +28,7 @@ import com.project.service.krhMainService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
 
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/main")
 public class krhMainController {
@@ -79,7 +79,7 @@ public class krhMainController {
         }
 
 	    // 이메일로 사용자 찾기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        throw new RuntimeException("해당 이메일로 등록된 사용자가 없습니다.");
 	    }

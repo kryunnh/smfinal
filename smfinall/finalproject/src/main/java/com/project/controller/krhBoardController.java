@@ -28,7 +28,7 @@ import com.project.service.krhNotificationService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpSession;
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/board")
 public class krhBoardController {
@@ -110,7 +110,7 @@ public class krhBoardController {
 			throw new RuntimeException("로그인이 필요합니다.");
 		}
 
-		User user = userService.findByUserEmail(email);
+		User user = userService.getUserByEmail(email);
 		// 사용자가 존재하지 않을 경우 예외 처리
 	    if (user == null) {
 	        throw new RuntimeException("해당 이메일로 등록된 사용자가 없습니다.");
@@ -176,7 +176,7 @@ public class krhBoardController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
             }
 
-            User user = userService.findByUserEmail(email);
+            User user = userService.getUserByEmail(email);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
             }
@@ -239,7 +239,7 @@ public class krhBoardController {
 	    }
 
 	    // 사용자 정보 가져오기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
@@ -296,7 +296,7 @@ public class krhBoardController {
 	    }
 
 	    // 사용자 정보 가져오기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
@@ -351,7 +351,7 @@ public class krhBoardController {
 	    }
 
 	    // 사용자 정보 가져오기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
@@ -403,7 +403,7 @@ public class krhBoardController {
 	    }
 	
 	    // 사용자 정보 가져오기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
@@ -448,7 +448,7 @@ public class krhBoardController {
 	    }
 
 	    // 사용자 정보 가져오기
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
@@ -498,7 +498,7 @@ public class krhBoardController {
 		    }
 
 		    // 사용자 정보 가져오기
-		    User user = userService.findByUserEmail(email);
+		    User user = userService.getUserByEmail(email);
 		    if (user == null) {
 		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 		    }

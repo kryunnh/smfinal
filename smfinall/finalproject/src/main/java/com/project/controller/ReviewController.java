@@ -21,7 +21,7 @@ import com.project.service.UserService;
 
 import io.jsonwebtoken.Claims;
 
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class ReviewController {
 	@Autowired
@@ -53,7 +53,7 @@ public class ReviewController {
         if (email == null) {
             throw new RuntimeException("로그인이 필요합니다.");
         }
-        User user = userService.findByUserEmail(email);
+        User user = userService.getUserByEmail(email);
         Recipes recipe = recipesService.findById(review.getRecipesId());
         if (recipe != null) {
             reviewService.addReview(review, user.getId());
