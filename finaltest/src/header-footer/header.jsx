@@ -58,6 +58,13 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
         }
     }, [isLoggedIn]);
 
+
+    const handlePageClick = (path) => {
+        if (location.pathname === path) {
+            window.location.reload(); // 이미 해당 페이지가 활성화되어 있으면 새로고침
+        }
+    };
+
     return (
         <header className="header">
             <div className="header-logo">
@@ -80,20 +87,34 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                 <div className="category-dropdown"
                     onMouseEnter={()=>setIsDropDown(true)}
                     onMouseLeave={()=>setIsDropDown(false)}>
-                    <Link to="/list" className={location.pathname === "/list" ? "active" : ""}>▼ 레시피 목록</Link>
+                    <Link to="/list" className={location.pathname === "/list" ? "active" : ""}
+                        onClick={() => handlePageClick("/list")
+                    }>▼ 레시피 목록</Link>
                     {isDropDown && (
                         <div className="dropdown">
-                            <Link to={'/Korean'} className={location.pathname === "/Korean" ? "active" : ""}>한식</Link>
-                            <Link to={'/Chinese'} className={location.pathname === "/Chinese" ? "active" : ""}>중식</Link>
-                            <Link to={'/Japanese'} className={location.pathname === "/Japanese" ? "active" : ""}>일식</Link>
-                            <Link to={'/Western'} className={location.pathname === "/Western" ? "active" : ""}>양식</Link>
-                            <Link to={'/Popular'} className={location.pathname === "/Popular" ? "active" : ""}>인기 레시피</Link>
-                            <Link to={'/Challenge'} className={location.pathname === "/Challenge" ? "active" : ""}>맛있는 도전</Link>
+                            <Link to={'/Korean'} className={location.pathname === "/Korean" ? "active" : ""}
+                            onClick={() => handlePageClick("/Korean")}
+                            >한식</Link>
+                            <Link to={'/Chinese'} className={location.pathname === "/Chinese" ? "active" : ""}
+                            onClick={() => handlePageClick("/Chinese")}
+                            >중식</Link>
+                            <Link to={'/Japanese'} className={location.pathname === "/Japanese" ? "active" : ""}
+                            onClick={() => handlePageClick("/Japnese")}
+                            >일식</Link>
+                            <Link to={'/Western'} className={location.pathname === "/Western" ? "active" : ""}
+                            onClick={() => handlePageClick("/Western")}
+                            >양식</Link>
+                            <Link to={'/Popular'} className={location.pathname === "/Popular" ? "active" : ""}
+                            onClick={() => handlePageClick("/Popular")}
+                            >인기 레시피</Link>
+                            <Link to={'/Challenge'} className={location.pathname === "/Challenge" ? "active" : ""}
+                            onClick={() => handlePageClick("/Challenge")}
+                            >맛있는 도전</Link>
                         </div>
                     )}
                 </div>
             <Link to="/" className={location.pathname === "/" ? "active" : ""}>다함께 요리하자</Link>
-            <Link to="/" className={location.pathname === "/" ? "active" : ""}>맛있는 도전하기</Link>
+            <Link to="/challengeForm" className={location.pathname === "/challengeForm" ? "active" : ""}>맛있는 도전하기</Link>
             <Link to="/" className={location.pathname === "/" ? "active" : ""}>요리 고민방</Link>
             <Link to="/" className={location.pathname === "/" ? "active" : ""}>요리 고민방</Link>
             <div className="mypage">

@@ -8,12 +8,15 @@ import './Japanese.css';
 export default function Japanese(){
     const [query, setQuery] = useState('');
     const [category, setCategory] = useState('');
-    const [recipes, setRecipes] = useState([]);
     const [visibleCount, setVisibleCount] = useState(6);
     const [favorites, setFavorites] = useState({});
     const [isSearching, setIsSearching] = useState(false);
     const [filteredRecipes, setFilteredRecipes] = useState([]); 
     const [token, setToken] = useState(localStorage.getItem('token')); 
+    const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+    
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'ko-KR';
     
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -24,7 +27,7 @@ export default function Japanese(){
         if (token) {
             axios.get(`http://localhost:8080/api/recipes`)
                 .then(response => {
-                    setRecipes(response.data);
+                    setFilteredRecipes(response.data);
                 })
                 .catch(error => {
                     console.log("데이터를 불러오는 중 오류 발생:", error);
@@ -32,7 +35,7 @@ export default function Japanese(){
                     localStorage.removeItem('token');
                     setToken(null);  // 토큰 상태 초기화
                 });
-                axios.get(`http://localhost:8080/user/favorites`, {
+                axios.get(`http://localhost:8080/api/recipes/favorites`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(response => {
@@ -59,7 +62,6 @@ export default function Japanese(){
                 .then(response => {
                     console.log(response.data);
                     const japanesRecipes = response.data.filter(recipe => recipe.categoryName === '일식');
-                    setRecipes(japanesRecipes); 
                     setFilteredRecipes(japanesRecipes);
                 })
                 .catch(error => {
@@ -107,47 +109,62 @@ export default function Japanese(){
     }
 
     const handelSearch = () => {
-        setIsSearching(true);
-        if (!query.trim()) {
-            setFilteredRecipes(recipes); 
+        let searchUrl = `http://localhost:8080/api/recipes/search?query=${query}&category=${category}`;
+            setIsSearching(true); // 검색 시작
+    
+        axios.get(searchUrl)
+            .then(response => {
+                console.log("검색 결과:", response.data);
+                setFilteredRecipes(response.data); // 검색 결과만 표시
+            })
+            .catch(error => {
+                console.log("에러:", error);
+                setFilteredRecipes([]); // 검색 실패 시 목록 비우기
+            });
+    };
+ 
+    const startVoiceSearch = ()=>{
+        if (!category) {
+            alert("카테고리를 선택해 주세요.");
             return;
         }
 
-        const result = recipes.filter(recipe => {
-            const foodName = recipe.foodName || "";
-            const ingredientNames = recipe.ingredients.map(ingredient => ingredient.name); 
-
-        return foodName.includes(query) || ingredientNames.some(name => name.includes(query));
-    });
-        setFilteredRecipes(result);
-
-        if (result.length === 0) {
-            console.log("검색 결과 없음");
+        if (isVoiceSearchActive) {
+            recognition.stop();
+            setIsVoiceSearchActive(false);
+        } else {
+            recognition.start();
+            setIsVoiceSearchActive(true);
         }
     };
-    //     let searchUrl = `http://localhost:8080/api/recipes/search?`;
-    //     if(query){
-    //         searchUrl += `query=${query}`;
-    //     }
-    //     if(category){
-    //         searchUrl += `&category=${category}`;
-    //     }
-    //     axios.get(searchUrl)
-    //         .then(response=>{
-    //             console.log("검색 결과 : ", response.data);
-    //             setRecipes(response.data);
-                
-    //         })
-    //         .catch(error=>{
-    //             console.log("에러 : ",error);
-    //             setRecipes([]);
-    //         })
-    // }
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const cleanedText = transcript.replace(/\.$/, '');
+        setQuery(cleanedText);
+        handleVoiceSearch(cleanedText);
+
+        recognition.stop();
+        setIsVoiceSearchActive(false);
+    };
+
+    const handleVoiceSearch = (recognizedText) =>{
+        const searchUrl = `http://localhost:8080/api/recipes/search?query=${recognizedText}&category=${category}`;
+        axios.get(searchUrl)
+            .then(response =>{
+                setFilteredRecipes(response.data);
+            })
+            .catch(error =>{
+                console.log("검색 오류 :", error);
+                setFilteredRecipes([]);
+            });
+    };
 
     return (
         <div className="recipe-main">
             <h1>일식</h1>
             <div className='recipe-search'>
+            <button onClick={startVoiceSearch}> {isVoiceSearchActive ? "🔴 인식 중" : "🎤 시작"}</button>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">분류 선택</option>
                     <option value="음식명">음식명</option>

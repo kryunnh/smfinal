@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class Post { //추후 삭제해야함
     private Long id;
     private String userEmail;
     private String title;

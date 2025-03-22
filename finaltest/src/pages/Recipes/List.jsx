@@ -11,12 +11,17 @@ export default function List() {
     const [favorites, setFavorites] = useState({});
     const [isSearching, setIsSearching] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('token')); 
+    const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+    
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'ko-KR';
+
     
     useEffect(() => {
         const token = localStorage.getItem('token');
         setToken(token);
         
-    
+        
         // 유효하지 않은 토큰 처리 (예: 만료된 토큰)
         if (token) {
             axios.get(`http://localhost:8080/api/recipes`)
@@ -29,7 +34,7 @@ export default function List() {
                     localStorage.removeItem('token');
                     setToken(null);  // 토큰 상태 초기화
                 });
-                axios.get(`http://localhost:8080/user/favorites`, {
+                axios.get(`http://localhost:8080/api/recipes/favorites`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(response => {
@@ -48,29 +53,27 @@ export default function List() {
                 // 토큰이 없으면 즐겨찾기 정보를 초기화
                 setFavorites({});
             }
-    }, []);
-
-    useEffect(() => {
-        const fetchRecipes = () => {
-            axios.get('http://localhost:8080/api/recipes') // axios GET 요청
+        }, []);
+        
+        useEffect(() => {
+            axios.get(`http://localhost:8080/api/recipes`)
                 .then(response => {
                     console.log(response.data);
-                    setRecipes(response.data); // 데이터 상태 설정
+                    setRecipes(response.data);
                 })
                 .catch(error => {
-                    console.error("데이터를 불러오는 중 오류 발생:", error);
+                    console.error("레시피 목록 불러오기 실패:", error);
                 });
-        };
-        fetchRecipes();
-    }, []);
-
-    
-
-    const handleClick = (recipesId) =>{
-        console.log("클릭된 레시피 ID: ", recipesId); 
-        axios.put(`http://localhost:8080/api/recipes/${recipesId}/increase-view`)
-        .then(response =>{
-            console.log("조회수 증가 : ", response.data);
+        }, []);
+        
+        
+        
+        
+        const handleClick = (recipesId) =>{
+            console.log("클릭된 레시피 ID: ", recipesId); 
+            axios.put(`http://localhost:8080/api/recipes/${recipesId}/increase-view`)
+            .then(response =>{
+                console.log("조회수 증가 : ", response.data);
 
         })
         .catch(error =>{
@@ -123,12 +126,49 @@ export default function List() {
                 setRecipes([]); // 검색 실패 시 목록 비우기
             });
     };
-   
+
+    const startVoiceSearch = ()=>{
+        if (!category) {
+            alert("카테고리를 선택해 주세요.");
+            return;
+        }
+
+        if (isVoiceSearchActive) {
+            recognition.stop();
+            setIsVoiceSearchActive(false);
+        } else {
+            recognition.start();
+            setIsVoiceSearchActive(true);
+        }
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const cleanedText = transcript.replace(/\.$/, '');
+        setQuery(cleanedText);
+        handleVoiceSearch(cleanedText);
+
+        recognition.stop();
+        setIsVoiceSearchActive(false);
+    };
+
+    const handleVoiceSearch = (recognizedText) =>{
+        const searchUrl = `http://localhost:8080/api/recipes/search?query=${recognizedText}&category=${category}`;
+        axios.get(searchUrl)
+            .then(response =>{
+                setRecipes(response.data);
+            })
+            .catch(error =>{
+                console.log("검색 오류 :", error);
+                setRecipes([]);
+            });
+    };
 
     return (
         <div className="recipe-main">
             <h1>레시피 목록</h1>
             <div className='recipe-search'>
+                <button onClick={startVoiceSearch}> {isVoiceSearchActive ? "🔴 인식 중" : "🎤 시작"}</button>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">분류 선택</option>
                     <option value="음식명">음식명</option>

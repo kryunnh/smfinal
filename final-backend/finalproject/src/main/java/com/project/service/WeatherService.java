@@ -24,7 +24,7 @@ public class WeatherService {
 	
 	@Autowired
 	private RecipesMapper recipesMapper;
-	
+	 
 
     public String getWeatherData(String baseDate, String baseTime, int nx, int ny, String authKey) {
     	String url = UriComponentsBuilder.fromUriString("https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst")

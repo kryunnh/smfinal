@@ -1,0 +1,18 @@
+package com.project.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.model.UserRecipe;
+
+@Service
+public class ljmUserRecipeService {
+
+    @Autowired
+    private ljmUserRecipeMapper ljmuserRecipeMapper;
+
+    public List<UserRecipe> getAllUserRecipes() {
+        return ljmuserRecipeMapper.getAllUserRecipes(); // 메소드 이름과 매핑이 맞도록 수정
+    }
+}

@@ -5,7 +5,9 @@
 .recipe-detail-main{
     align-items: center; 
 }
-
+.recipe-detail-main span{
+    font-size: 20px;
+}
 .recipe-view{
     text-align: right;
     font-size: small;

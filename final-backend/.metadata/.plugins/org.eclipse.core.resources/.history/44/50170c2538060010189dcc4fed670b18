@@ -1,0 +1,14 @@
+package com.project.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+@Mapper
+public interface ljmUserIngredientsMapper {
+	
+
+	 @Select("SELECT i.* FROM Ingredients i " +
+	            "JOIN Recipe_Ingredients ri ON i.ingredient_id = ri.ingredient_id " +
+	            "WHERE ri.user_recipes_id = #{userRecipesId}")
+	    List<Ingredients> getIngredientsByUserRecipeId(Long userRecipesId);
+}

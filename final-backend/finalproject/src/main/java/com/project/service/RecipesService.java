@@ -11,6 +11,7 @@ import com.project.model.Favorite;
 import com.project.model.Ingredients;
 import com.project.model.Recipes;
 import com.project.model.User;
+import com.project.model.UserRecipe;
 
 @Service
 public class RecipesService {
@@ -22,7 +23,7 @@ public class RecipesService {
 	
 	public List<Recipes> getAllRecipes(){
 		List<Recipes> recipes = recipesMapper.getAllRecipes();
-		
+		System.out.println("기본");
 		return recipes;
 	}
 	
@@ -64,7 +65,7 @@ public class RecipesService {
 	    }
 	
 	 public void addFavorite(Recipes recipe, String email) {
-		    User user = userService.findByUserEmail(email); // 사용자 정보 가져오기
+		    User user = userService.getUserByEmail(email); // 사용자 정보 가져오기
 		    if (user != null) {
 		        recipesMapper.addFavoriteList(recipe.getRecipesId(), user.getId());
 		    } else {
@@ -74,7 +75,7 @@ public class RecipesService {
 	
 	 @Transactional
 	public void deleteFavorite(Recipes recipe, String email) {
-		 User user = userService.findByUserEmail(email);
+		 User user = userService.getUserByEmail(email);
 		 if(user != null) {
 			 long userId = user.getId();  
 		     long recipeId = recipe.getRecipesId();  
@@ -99,6 +100,9 @@ public class RecipesService {
     	List<Recipes> recipes = recipesMapper.getWeatherRecipes(precipitation);
     	return recipes;
     }
+	
+
+	
 	
 }
 

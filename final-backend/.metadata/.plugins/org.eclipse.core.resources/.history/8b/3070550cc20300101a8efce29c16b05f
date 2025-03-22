@@ -1,0 +1,38 @@
+package com.project.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.service.RecipesService;
+
+import io.jsonwebtoken.io.IOException;
+
+@RestController
+@CrossOrigin(origins = "https://localhost.5173")
+public class ChallengeController {
+
+	
+	private static final String UPLOAD_DIR ="upload/";
+	
+	@PostMapping("/api/upload")
+	public String uploadFile(@RequestParam("file") MultipartFile file) {
+		try {
+			File uploadDir = new File(UPLOAD_DIR);
+			if(!uploadDir.exists()) {
+				uploadDir.mkdirs();
+			}
+		}
+		Path filePath = Path.get(UPLOAD_DIR + file.getOriginalFilename());
+		
+		File.write(filePath, file.getBytes());
+		
+		return "성공";
+	}catch(IOException e) {
+		e.printStackTrace();
+		return "실패";
+	}
+	
+}

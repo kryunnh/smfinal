@@ -17,6 +17,8 @@ import Login from './Login/Login'
 import RegisterModal from './Login/RegisterModal'
 import { useEffect, useState } from 'react'
 import MyPage from './pages/MyPage/MyPage'
+import RecipeForm from './pages/ChallengeForm/ChallengeForm'
+import ChallengeDetail from './pages/Challenge/ChallengeDetail'
 
 
 
@@ -46,12 +48,14 @@ function App() {
           <Route path="register" element={<RegisterModal/>}/>
           <Route path="List" element={<List />} />
           <Route path="List/:id" element={<ListDetail/>}/> 
+          <Route path="challenge/:id" element={<ChallengeDetail/>}/>
           <Route path="Korean" element={<Korean />} />
           <Route path="Japanese" element={<Japanese />} />
           <Route path="Chinese" element={<Chinese />} />
           <Route path="Western" element={<Western />} />
           <Route path="Popular" element={<Popular />} />
           <Route path="Challenge" element={<Challenge />} />
+          <Route path="challengeForm" element={<RecipeForm />}/>
 
           <Route path="/mypage/*" element={<MyPage />} />
           </Routes>

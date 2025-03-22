@@ -104,7 +104,7 @@ export default function ListDetail(){
 
 
         useEffect(()=>{
-            axios.get(`http://localhost:8080/api/review/${id}`)
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
             .then(response =>{
                 setReview(response.data);
             })
@@ -130,7 +130,7 @@ export default function ListDetail(){
 
         };
        
-        axios.post(`http://localhost:8080/api/review`, newReview, {
+        axios.post(`http://localhost:8080/api/recipes/review`, newReview, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export default function ListDetail(){
         .then(response => {
             console.log(response.data);
             
-            axios.get(`http://localhost:8080/api/review/${id}`)
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
                 .then(response => {
                     setReview(prevReviews => [...prevReviews, response.data]);
                     setContent(""); 
@@ -177,7 +177,7 @@ export default function ListDetail(){
             timestamp: currentTime,
         };
 
-        axios.put(`http://localhost:8080/api/review/${reviewId}`, updatedReview, {
+        axios.put(`http://localhost:8080/api/recipes/review/${reviewId}`, updatedReview, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -197,7 +197,7 @@ export default function ListDetail(){
     };
 
     const handleDeleteReview = (reviewId) => {
-        axios.delete(`http://localhost:8080/api/review/${reviewId}`, {
+        axios.delete(`http://localhost:8080/api/recipes/review/${reviewId}`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
             },
@@ -205,7 +205,7 @@ export default function ListDetail(){
         .then(response => {
             console.log("리뷰 삭제 완료:", response.data);
             
-            axios.get(`http://localhost:8080/api/review/${id}`)
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
                 .then(() => {
                     setReview(prevReview => prevReview.filter(r => r.reviewId !== reviewId));
                 })
@@ -227,7 +227,7 @@ export default function ListDetail(){
                     <p className="recipe-view">조회수 : {selectRecipes.view}</p>
                 <div className="recipe-header">
                     <img src={selectRecipes.foodImg} alt={selectRecipes.foodName} />
-                    <h1>{selectRecipes.foodName}</h1>
+                    <h1>{selectRecipes.foodName}<span>({selectRecipes.foodTime}분)</span></h1>
                     <h3>{selectRecipes.categoryName}</h3>
                     <br/>
                     <div className="ingredient-table">

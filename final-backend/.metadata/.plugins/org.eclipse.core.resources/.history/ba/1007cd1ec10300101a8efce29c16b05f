@@ -1,0 +1,23 @@
+package com.project.model;
+
+public class UserRecipes {
+	private Integer userRecipesId;  
+    private String foodName; 
+    private String foodImg;
+    private String step1;
+    private String step2;
+    private String step3;
+    private String step4;
+    private String step5;
+    private String step6;
+    private String stepImg1;
+    private String stepImg2;
+    private String stepImg3;
+    private String stepImg4;
+    private String stepImg5;
+    private String stepImg6;
+    private Integer view = 0; 
+    private Long usersId;
+    private Integer foodTime; 
+    private Integer categoryId; 
+}

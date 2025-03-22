@@ -1,0 +1,51 @@
+package com.project.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.mybatis.spring.annotation.MapperScan;
+
+import com.project.model.Ingredients;
+import com.project.model.Recipes;
+import com.project.model.UserRecipe;
+
+@Mapper
+@MapperScan("com.project.mapper")
+public interface ljmUserRecipeMapper {
+
+	
+
+	@Select("SELECT * FROM User_Recipes")
+    List<UserRecipe> getAllUserRecipes();
+
+    // 특정 레시피에 대한 재료 가져오기
+    @Select("SELECT i.* FROM Ingredients i " +
+            "JOIN Recipe_Ingredients ri ON i.ingredient_id = ri.ingredient_id " +
+            "WHERE ri.user_recipes_id = #{userRecipesId}")
+    List<Ingredients> getIngredientsByUserRecipeId(Long userRecipesId);
+    
+    @Select("SELECT i.* FROM Ingredients i JOIN Recipe_Ingredients ri ON i.ingredient_id = ri.ingredient_id WHERE ri.user_recipes_id = #{userRecipesId}")
+    List<Ingredients> findByIngredientsByUserRecipeId(@Param("userRecipesid") Long id);
+    
+    @Select("SELECT ur.*, c.category_name AS categoryName FROM User_Recipes ur JOIN Categories c ON ur.category_id = c.category_id WHERE ur.user_recipes_id = #{id}")
+    UserRecipe userFindById(@Param("id") Long id);
+    
+    @Select("SELECT ur.*, c.category_name AS categoryName FROM User_Recipes ur JOIN Categories c ON ur.category_id = c.category_id WHERE ur.user_recipes_id = #{id}")
+    UserRecipe findUserById(@Param("id") Long id);
+    
+    @Update("UPDATE User_Recipes SET view = view + 1 WHERE user_recipes_id = #{userRecipesId}")
+    void incrementUserViewCount(@Param("userRecipesId") Long userrecipesId);
+    
+    @Select("INSERT INTO favorite (user_recipes_id,user_id) VALUES (#{userRecipesId},#{userId})")
+    void addUserFavoriteList(@Param("userRecipesId") Long userRecipesId, @Param("userId") Long userId);
+    
+    @Delete("DELETE FROM favorite WHERE user_id = #{userId} AND user_recipes_id = #{userRecipesId}")
+    void deleteUserFavoriteList(@Param("userId") long userId, @Param("userRecipesId") long userRecipesId);
+    
+    
+    
+}

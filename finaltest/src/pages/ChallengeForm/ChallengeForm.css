@@ -1,0 +1,28 @@
+.recipe-form-container{
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-top:100px;
+}
+
+.userrecipesubmit, .add-ingredient-button{
+    padding: 10px 20px;
+    background-color: #FFA575;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.userrecipesubmit:hover{
+    background-color: #ff9d68;
+    cursor: pointer;
+}
+
+.add-ingredient-button:hover{
+    background-color: #ff9d68;
+    cursor: pointer;
+}
+
+
+.remove-ingredient-button:hover{
+    background-color: #d2d2d2;
+    cursor: pointer;
+}

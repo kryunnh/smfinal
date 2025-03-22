@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,9 +17,11 @@ import com.project.config.JwtUtil;
 import com.project.model.Recipes;
 import com.project.model.Review;
 import com.project.model.User;
+import com.project.model.UserRecipe;
 import com.project.service.RecipesService;
 import com.project.service.ReviewService;
 import com.project.service.UserService;
+import com.project.service.ljmUserRecipeService;
 
 import io.jsonwebtoken.Claims;
 
@@ -34,13 +36,20 @@ public class ReviewController {
 	private JwtUtil jwtUtil;
 	@Autowired
 	private RecipesService recipesService;
+	@Autowired
+	private ljmUserRecipeService ljmuserRecipeService;
 	
-	@GetMapping("/api/review/{id}")
+	@GetMapping("/api/recipes/review/{id}")
 	public List<Review> getAllReview(@PathVariable long id){
 		return reviewService.getAllReview(id);
 	}
 	
-	@PostMapping("/api/review")
+	@GetMapping("/api/userrecipes/review/{id}")
+	public List<Review> getAlluserReview(@PathVariable long id){
+		return reviewService.getAllUserReview(id);
+	}
+	
+	@PostMapping("/api/recipes/review")
 	public Review addReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
 		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    Claims  claims;
@@ -55,7 +64,7 @@ public class ReviewController {
         if (email == null) {
             throw new RuntimeException("로그인이 필요합니다.");
         }
-        User user = userService.findByUserEmail(email);
+        User user = userService.getUserByEmail(email);
         Recipes recipe = recipesService.findById(review.getRecipesId());
         
         
@@ -66,10 +75,35 @@ public class ReviewController {
         } else {
             throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
         }
-        
 	}
 	
-	@PutMapping("/api/review/{id}")
+	@PostMapping("/api/userrecipes/review")
+	public Review addUserReview(@RequestHeader("Authorization") String token, @RequestBody Review review) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		Claims claims;
+		try {
+			claims = jwtUtil.extractAllClaims(jwtToken);
+		}catch(Exception e) {
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		
+		String email = claims.getSubject();
+		if(email == null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+		User user = userService.getUserByEmail(email);
+		UserRecipe userRecipe =  ljmuserRecipeService.userRecipeById(review.getUserRecipesId());
+		
+		if( userRecipe != null) {
+			review.setUsersId(user.getId());
+			reviewService.addUserReview(review, user.getId());
+			return review;
+		}else {
+			throw new RuntimeException("해당 레시피를 찾을 수 없습니다.");
+		}
+	}
+	
+	@PutMapping("/api/recipes/review/{id}")
 	public Review putReview(@RequestHeader("Authorization") String token,@PathVariable long id, @RequestBody Review review) {
 		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 		Claims claims;
@@ -84,7 +118,7 @@ public class ReviewController {
 		if(email == null) {
 			throw new RuntimeException("로그인이 필요합니다.");
 		}
-			User user = userService.findByUserEmail(email);
+			User user = userService.getUserByEmail(email);
 			Recipes recipe = recipesService.findByRecipeId(review.getRecipesId());
 			
 			if (review.getEmail() == null) {
@@ -101,8 +135,38 @@ public class ReviewController {
 		    return review;
 	}
 	
+	@PutMapping("/api/userrecipes/review/{id}")
+	public Review PutUserReview(@RequestHeader("Authorization") String token, @PathVariable long id, @RequestBody Review review) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		Claims claims;
+		try {
+			claims = jwtUtil.extractAllClaims(jwtToken);
+		}catch(Exception e) {
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		String email = claims.getSubject();
+		if(email == null) {
+			throw new RuntimeException("로그인이 필요합니다.");
+		}
+		User user = userService.getUserByEmail(email);
+		UserRecipe userRecipe = ljmuserRecipeService.findByUserRecipeId(review.getUserRecipesId());
+		
+		if (review.getEmail() == null) {
+	        review.setEmail(user.getEmail());
+	    }
+		
+		if(review.getEmail() == null) {
+			throw new RuntimeException("해당 사용자가 작성한 리뷰만 삭제할 수 있습니다.");
+		}
+		review.setReviewId(id);
+		review.setUsersId(user.getId());
+		reviewService.putUserReview(review, user.getEmail());
+		
+		return review;
+	}
 	
-	@DeleteMapping("/api/review/{id}")
+	
+	@DeleteMapping("/api/recipes/review/{id}")
 	public Review deleteReview(@RequestHeader("Authorization") String token, @PathVariable long id) {
 	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    Claims claims;
@@ -117,7 +181,7 @@ public class ReviewController {
 	        throw new RuntimeException("로그인이 필요합니다.");
 	    }
 	    
-	    User user = userService.findByUserEmail(email);
+	    User user = userService.getUserByEmail(email);
 	    Review review = reviewService.getReviewById(id);
 	    
 	    
@@ -128,4 +192,27 @@ public class ReviewController {
 	    reviewService.deleteReview(id);
 	    return review;
 	}
+	
+	@DeleteMapping("/api/userrecipes/review/{id}")
+	public Review deleteUserReview(@RequestHeader("Authorization") String token, @PathVariable long id) {
+		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+		Claims claims;
+		try {
+			claims = jwtUtil.extractAllClaims(jwtToken);
+		}catch(Exception e) {
+			throw new RuntimeException("유효하지 않은 토큰입니다.");
+		}
+		String email = claims.getSubject();
+		if(email == null) {
+			throw new RuntimeException("로그인이 필요합ㄴ디ㅏ.");
+		}
+		User user = userService.getUserByEmail(email);
+		Review review = reviewService.getUserReviewById(id);
+		
+		if(!review.getEmail().equals(user.getEmail())){
+				throw new RuntimeException("해당 사용자가 작성한 리뷰만 삭제할 수 있습니다.");
+			}
+		reviewService.deleteReview(id);
+		return review;
+		}
 }

@@ -172,19 +172,6 @@ function RegisterModal({ onClose }) {
   };
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
 
   /** ✅ 회원가입 요청 */
   const handleRegister = async () => {

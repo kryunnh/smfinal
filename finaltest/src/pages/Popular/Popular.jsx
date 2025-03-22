@@ -25,7 +25,7 @@ export default function Popular() {
                     localStorage.removeItem('token');
                     setToken(null);  // 토큰 상태 초기화
                 });
-                axios.get(`http://localhost:8080/user/favorites`, {
+                axios.get(`http://localhost:8080/api/recipes/favorites`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(response => {
