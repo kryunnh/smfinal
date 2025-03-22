@@ -33,7 +33,7 @@ server.servlet.encoding.force=true
 #spring.web.resources.static-locations=classpath:/static/
 server.port=8080
 #upload추가
-#spring.web.resources.static-locations=file:${user.home}/uploads/
+#spring.web.resources.static-locations=file:${user.home}/uploads/s/
 
 # 실제 서버 경로로 설정 (외부 디렉토리)
 #file.upload-dir=/var/www/uploads

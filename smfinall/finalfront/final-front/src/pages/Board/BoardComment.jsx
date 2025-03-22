@@ -16,6 +16,7 @@ const BoardComment = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+
   let userEmail = null;
   if (token) {
     try {
@@ -275,7 +276,7 @@ const toggleEditReply = (commentId, replyId, content) => {
           comments.map((comment) => (
             <div key={comment.commentId} className="comment-item">
               <div>
-                <span>{comment.author}</span>
+                <p>{comment.author}</p>
                 {isEditingComment === comment.commentId ? (
                   <form style={{ width: "100%", display: "flex", alignItems: "center" }}
                     onSubmit={(e) => {
@@ -324,7 +325,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                 <div className="replies">
                   {comment.replies.map((reply) => (
                     <div key={reply.commentId} className="reply-item" style={{ paddingLeft: "20px" }}>
-                      <span>{reply.author}</span>
+                      <sp>{reply.author}</sp>
                       {isEditingReply === reply.commentId ? (
                         <form style={{ width: "100%", display: "flex", alignItems: "center" }}
                           onSubmit={(e) => {

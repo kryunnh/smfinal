@@ -15,6 +15,7 @@ const BoardList = () => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // token이 있으면 로그인 상태로 설정
   }, []);
+
   // 게시글 목록 가져오기
   const fetchBoardList = async () => {
     try {
@@ -94,7 +95,7 @@ const BoardList = () => {
             <tr key={board.boardId}>
               <td>{board.boardId}</td>
               <td> 
-                <Link to={`/boardlist/${board.boardId}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <Link to={`/boardlist/${board.boardId}`} style={{ textDecoration: "none", color: "inherit" }} >
                   {board.title}
                 </Link>
               </td>
@@ -109,7 +110,7 @@ const BoardList = () => {
       {/* 글쓰기 버튼이 로그인 상태일 때만 보이도록 */}
       {isLoggedIn && (
         <div className="write-button-container">
-          <Link to="/boardwrite">
+          <Link to={"/boardwrite"}>  
             <button className="write-btn">글쓰기</button>
           </Link>
         </div>

@@ -3,11 +3,13 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import axios from 'axios';
+import 'react-resizable/css/styles.css'; // react-resizable 스타일 추가
 import { useNavigate } from 'react-router-dom';
 import './BoardWrite.css';
 
 const BoardWrite = () => {
   const [title, setTitle] = useState(''); // 제목 상태
+  const [imageData, setImageData] = useState(null); // 업로드된 이미지의 데이터
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -38,9 +40,17 @@ const BoardWrite = () => {
   
       if (response.data.filename) {
         const fileName = response.data.filename;
+        const imageUrl = `http://localhost:8080/uploads/boardimage/${fileName}`;
         
-        // 📌 UUID 적용된 파일명으로 이미지 URL 삽입
-        editor.chain().focus().insertContent(`<img src="http://localhost:8080/uploads/boardimage/${fileName}" alt="Uploaded image"/>`).run();
+        // 에디터에 이미지 삽입
+        editor.chain().focus().insertContent(`<img src="${imageUrl}" alt="Uploaded image" />`).run();
+        
+        // 이미지 크기 및 위치 상태 업데이트
+        setImageData({
+          src: imageUrl,
+          width: 200, // 기본 크기 설정
+          height: 200,
+        });
       } else {
         alert("이미지 업로드 실패");
       }
@@ -124,6 +134,7 @@ const BoardWrite = () => {
       {/* 에디터 내용 */}
       <EditorContent editor={editor} className="boardwrite-content" />
 
+      {/* 이미지 크기 조정 및 수정 */}
       <div className="button-container">
         {/* 게시글 저장 버튼 */}
         <button onClick={handleGoToBoardList} className="board-goback">

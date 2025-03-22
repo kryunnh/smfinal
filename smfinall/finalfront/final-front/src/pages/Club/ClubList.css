@@ -127,3 +127,11 @@
   margin-top: 80px;
     text-align: right;
   }
+
+  .club-image-list{
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  border-radius: 10px;
+  margin-bottom:40px;
+  }

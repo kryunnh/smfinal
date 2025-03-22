@@ -166,7 +166,7 @@ public class krhClubController {
 	        
 	        if (clubImage != null && !clubImage.isEmpty()) {
 	            // 프로젝트 루트 경로를 기준으로 파일 경로 설정
-	            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+	            String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
 	            File dir = new File(uploadDir);
 	            if (!dir.exists()) {
 	                dir.mkdirs();  // 디렉토리 없으면 생성

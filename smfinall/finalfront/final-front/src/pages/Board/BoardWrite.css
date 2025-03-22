@@ -145,6 +145,7 @@
   }
   .save-btn:hover {
     background-color: #ff9861;
+    cursor: pointer;
   }
   
   .board-goback {
@@ -153,6 +154,7 @@
   
   .board-goback:hover {
     background-color: #d2d2d2;
+    cursor: pointer;
   }
   
   /* 버튼과 입력란 간격 조정 */
@@ -161,19 +163,3 @@
     width: auto;
     margin-right: 10px;
   }
-  
-  @media (max-width: 768px) {
-    .save-btn {
-      width: 100%;
-    }
-  
-    .board-goback {
-      width: 100%;
-      margin-top: 10px;
-    }
-  
-    .editor-container {
-      padding: 15px;
-    }
-  }
-  

@@ -10,7 +10,6 @@ const BoardUpdate = () => {
   const { boardId } = useParams();
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(true);
-  const [incremented, setIncremented] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   let userEmail = null;
@@ -57,19 +56,7 @@ const BoardUpdate = () => {
       })
       .finally(() => setLoading(false));
 
-    if (!incremented) {
-      console.log("조회수 증가 API 호출!");
-      axios
-        .put(`http://localhost:8080/api/board/${boardId}/incrementViews`, null, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .catch((error) => {
-          console.error('조회수 증가 실패:', error);
-        });
-      setIncremented(true);
-    }
-
-  }, [boardId, editor, incremented, token]);
+  }, [boardId, editor, token]);
 
   const handleUpdate = async () => {
     const content = editor.getHTML();
@@ -119,10 +106,19 @@ const BoardUpdate = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
       <div className="toolbar">
+      <button onClick={() => editor.chain().focus().toggleBold().run()}><b>B</b></button>
+        <button onClick={() => editor.chain().focus().toggleItalic().run()}><i>I</i></button>
+        <button onClick={() => editor.chain().focus().toggleStrike().run()}><s>S</s></button>
+        <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>H1</button>
+        <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>H2</button>
+        <button onClick={() => editor.chain().focus().toggleBulletList().run()}>• List</button>
+        <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>1. List</button>
       </div>
       <EditorContent editor={editor} className="boardwrite-content" />
-      <button onClick={() => navigate(`/boardlist/${boardId}`)} className="board-goback">돌아가기</button>
-      <button className="save-btn" onClick={handleUpdate}>게시글 수정</button>
+      <div className="button-container">
+        <button onClick={() => navigate(`/boardlist/${boardId}`)} className="board-goback">돌아가기</button>
+        <button className="save-btn" onClick={handleUpdate}>게시글 수정</button>
+      </div>
     </div>
   );
 };

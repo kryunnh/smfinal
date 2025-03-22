@@ -51,7 +51,7 @@
 }
 
 .button-group button{
-    background-color: #FFA575;
+    background-color: #eeeeee;
     margin-left: 10px;
     border-radius: 20px;
     border: none;
@@ -61,5 +61,9 @@
 
 .button-group button:hover{
     cursor: pointer;
-    background-color: #ff9d68;
+    background-color: #d2d2d2;
+}
+
+.page img{
+    width:60%;
 }

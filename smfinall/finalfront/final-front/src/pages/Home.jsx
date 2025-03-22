@@ -82,11 +82,6 @@ export default function Home(){
             setError("날씨 정보를 가져오는 데 실패했습니다.", error);
           }
         };
-
-
-        
-  
-    
         fetchWeather();
       }, []);
 
@@ -115,13 +110,9 @@ export default function Home(){
         })
         .catch(error =>{
             console.log("에러", error);
-            
         })
     }
-
-
-     
-
+    
     return(  
         <div className="home">
            <Link to={'/'}>

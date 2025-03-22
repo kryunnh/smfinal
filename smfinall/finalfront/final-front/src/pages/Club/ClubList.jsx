@@ -152,7 +152,7 @@ const ClubList = () => {
               style={{ width: "100%", height:"200px" }}
               src={`http://localhost:8080/uploads/clubimage/${club.clubImage}`}
               alt={`${club.clubName} 이미지`}
-              className="club-image"
+              className="club-image-list"
             />
               <h2>{club.clubName}</h2>
               <p>{club.location}</p>

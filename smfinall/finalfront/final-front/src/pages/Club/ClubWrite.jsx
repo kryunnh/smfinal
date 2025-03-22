@@ -120,6 +120,15 @@ const ClubWrite = () => {
   return (
     <div className="editor-container">
       <h1 className="big-title">모임 생성하기</h1>
+      <div className="gyeonggo">
+        <h3>⚠️ 클럽 생성 시 주의사항 ⚠️</h3>
+        <p>1. 클럽 이름은 중복되지 않도록 설정해주세요. 동일한 이름의 클럽이 이미 존재할 경우 등록이 불가능합니다.</p>
+        <p>2. 클럽 설명은 명확하고 구체적으로 작성해주세요. 클럽의 목적, 활동 내용을 자세히 적어주세요.</p>
+        <p>3. 클럽 대표 이미지는 jpg, png, jpeg 형식만 등록 가능합니다. 용량이 너무 크면 업로드가 실패할 수 있습니다.</p>
+        <p>4. 모임 모집 기한을 정확히 설정해주세요. 모집 기한이 지나면 자동으로 신청이 불가능해집니다.</p>
+        <p>5. 부적절한 내용, 광고, 저작권이 있는 이미지는 등록할 수 없습니다. 관리자의 판단에 따라 삭제될 수 있습니다.</p>
+        <p>6. 한 번 생성된 클럽은 삭제가 제한될 수 있습니다. 클럽을 만들기 전에 신중하게 결정해주세요.</p>
+    </div>
       {/* 기타 입력 필드들 */}
       <div className="mozip">모임 명</div>
       <input
@@ -160,7 +169,7 @@ const ClubWrite = () => {
         value={clubUrl}
         onChange={handleClubUrlChange}
       />
-
+      
       <div className="mozip">모임 설명</div>
       <EditorContent editor={editor} className="clubwrite-content" />
 
