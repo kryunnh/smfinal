@@ -29,7 +29,6 @@ public class UserRecipe {
     private String stepImg6;
     private int view;
     private Long userId;
-    private String name;
     private int foodTime;
     private int categoryId;
     private String status; // 승인 여부 (on/off)

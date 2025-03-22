@@ -3395,3 +3395,34 @@ Caused by: org.apache.maven.model.building.ModelBuildingException: 1 problem was
 2025-03-22 21:19:37,345 [Worker-95: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-03-22 21:19:37,354 [Worker-95: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 24 resources from src\main\resources to target\classes
 2025-03-22 21:19:37,365 [Worker-95: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 03:44:13,678 [Worker-5: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-03-23 03:47:52,779 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 03:47:52,812 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 21 resources from src\main\resources to target\classes
+2025-03-23 03:47:52,837 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 03:48:37,746 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 03:48:37,755 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 24 resources from src\main\resources to target\classes
+2025-03-23 03:48:37,771 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 03:54:11,867 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 03:54:11,885 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 03:54:11,913 [Worker-18: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:01:10,640 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:01:10,651 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:01:10,669 [Worker-25: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:01:59,063 [Worker-23: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:01:59,076 [Worker-23: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:01:59,103 [Worker-23: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:05:32,203 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:05:32,213 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:05:32,229 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:16:56,437 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:16:56,452 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:16:56,468 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:18:21,806 [Worker-39: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:18:21,822 [Worker-39: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:18:21,841 [Worker-39: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:24:14,979 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:24:14,990 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:24:15,009 [Worker-36: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources
+2025-03-23 04:25:12,362 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-03-23 04:25:12,372 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 27 resources from src\main\resources to target\classes
+2025-03-23 04:25:12,387 [Worker-38: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\user\Desktop\FinalProject-react\final-backend\finalproject\src\test\resources

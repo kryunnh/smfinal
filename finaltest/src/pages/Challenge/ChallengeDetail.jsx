@@ -8,8 +8,6 @@ import { useParams } from "react-router-dom";
 export default function ChallengeDetail(){
     const {id} = useParams();
     const [selectRecipes, setSelectRecipes] = useState(null);
-    const [recipes, setRecipes] = useState([]);
-    const [filteredRecipes, setFilteredRecipes] = useState([]); 
     const [review, setReview] = useState([]);
     const [content, setContent] = useState(""); 
     const [rating, setRating] = useState(0); 
@@ -21,60 +19,23 @@ export default function ChallengeDetail(){
 
     
 
-    useEffect(()=>{
-        const token = localStorage.getItem('token');
-        setToken(token);
-        
-
-        if(token){
-            axios.get(`http://localhost:8080/api/userrecipes`)
-            .then(response=>{
-                setRecipes(response.data);
-            })
-            .catch(error =>{
-                console.log("오류",error);
-                localStorage.removeItem('token');
-                setToken(null);
-            });
-        }
-    },[])
-    
    
-
-    useEffect(() => {
-        const fetchRecipes = () => {
-            axios.get('http://localhost:8080/api/userrecipes') 
-                .then(response => {
-                    setRecipes(response.data); 
-                })
-                .catch(error => {
-                    console.error("데이터를 불러오는 중 오류 발생:", error);
-                });
-        };
-        fetchRecipes();
-    }, []);
 
 
     useEffect(() => {
         const fetchRecipesDetail = () => {
             axios.get(`http://localhost:8080/api/userrecipes/${id}`)
-                .then(response => {
-                    setSelectRecipes(response.data);
+            .then(response => {
+                setSelectRecipes(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("데이터를 불러오는 중 오류 발생:", error);
+            });
+    };
 
-                    if (response.data) {
-                        const relatedRecipes = recipes
-                            .filter(recipe => recipe.categoryName === response.data.categoryName && recipe.recipesId !== response.data.recipesId)
-                            .sort(() => Math.random() - 0.5);
-                        setFilteredRecipes(relatedRecipes);
-                    }
-                })
-                .catch(error => {
-                    console.error("데이터를 불러오는 중 오류 발생:", error);
-                });
-        };
-
-        fetchRecipesDetail();
-    }, [id, recipes]);
+    fetchRecipesDetail();
+}, [id]);
 
     
      const handlePurchase = (ingredientName) =>{
@@ -91,6 +52,7 @@ export default function ChallengeDetail(){
             axios.get(`http://localhost:8080/api/userrecipes/review/${id}`)
             .then(response =>{
                 setReview(response.data);
+                
             })
             .catch(error=>{
                 console.error("데이터를 불러오는 중 오류 발생:", error);
@@ -209,6 +171,7 @@ export default function ChallengeDetail(){
                <p className="recipe-view">조회수 : {selectRecipes.view}</p>
            <div className="recipe-header">
                <img src={`http://localhost:8080/uploads/${selectRecipes.foodImg}`} alt={selectRecipes.foodName} />
+               <h2>{selectRecipes.name}</h2>
                <h1>{selectRecipes.foodName}<span>({selectRecipes.foodTime}분)</span></h1>
                <h3>{selectRecipes.categoryName}</h3>
                <br/>

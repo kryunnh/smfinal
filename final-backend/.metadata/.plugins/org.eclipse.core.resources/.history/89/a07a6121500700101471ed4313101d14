@@ -20,7 +20,7 @@ public interface ljmUserRecipeMapper {
 
 	
 
-	@Select("SELECT * FROM User_Recipes")
+	@Select("SELECT ur.*, u.* FROM User_Recipes JOIN Users u ON ur.user_id = u.id")
     List<UserRecipe> getAllUserRecipes();
 
     // 특정 레시피에 대한 재료 가져오기
@@ -32,12 +32,9 @@ public interface ljmUserRecipeMapper {
     @Select("SELECT i.* FROM Ingredients i JOIN Recipe_Ingredients ri ON i.ingredient_id = ri.ingredient_id WHERE ri.user_recipes_id = #{userRecipesId}")
     List<Ingredients> findByIngredientsByUserRecipeId(@Param("userRecipesId") Long userRecipesid);
     
-    @Select("SELECT ur.*, c.category_name AS categoryName, u.name AS Name " +
-            "FROM User_Recipes ur " +
-            "JOIN Categories c ON ur.category_id = c.category_id " +
-            "JOIN Users u ON ur.user_id = u.id " +  // Users 테이블과 조인
-            "WHERE ur.user_recipes_id = #{id}")
+    @Select("SELECT ur.*, c.category_name AS categoryName FROM User_Recipes ur JOIN Categories c ON ur.category_id = c.category_id WHERE ur.user_recipes_id = #{id}")
     UserRecipe userFindById(@Param("id") Long id);
+    
 //    @Select("SELECT ur.*, c.category_name AS categoryName FROM User_Recipes ur JOIN Categories c ON ur.category_id = c.category_id WHERE ur.user_recipes_id = #{id}")
 //    UserRecipe findUserById(@Param("id") Long id);
     

@@ -31,8 +31,7 @@ public interface ljmUserRecipeMapper {
     
     @Select("SELECT i.* FROM Ingredients i JOIN Recipe_Ingredients ri ON i.ingredient_id = ri.ingredient_id WHERE ri.user_recipes_id = #{userRecipesId}")
     List<Ingredients> findByIngredientsByUserRecipeId(@Param("userRecipesId") Long userRecipesid);
-    
-    @Select("SELECT ur.*, c.category_name AS categoryName, u.name AS Name " +
+    @Select("SELECT ur.*, c.category_name AS categoryName, u.name AS userName " +
             "FROM User_Recipes ur " +
             "JOIN Categories c ON ur.category_id = c.category_id " +
             "JOIN Users u ON ur.user_id = u.id " +  // Users 테이블과 조인
