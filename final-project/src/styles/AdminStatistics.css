@@ -1,0 +1,53 @@
+.admin-statistics-container {
+  padding: 30px;
+  background-color: #f9f9f9;
+  min-width: 1000px; /* 사이드바 찌그러짐 방지 */
+}
+
+.statistics-header {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.statistics-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e74c3c;
+  text-align: center;
+}
+
+
+.statistics-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e74c3c;
+  text-align: center;
+}
+
+.active-users {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.statistics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2열 */
+  grid-gap: 20px; /* 차트 간격 */
+}
+
+.chart-box {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.chart-box h3 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}

@@ -1,0 +1,75 @@
+/* 📌 모든 폼을 동일한 크기와 스타일로 설정 */
+.form-container {
+    width: 900px; /* ✅ 모든 폼 크기 통일 */
+    margin: 50px auto;
+    background: #111; /* ✅ 문의 목록과 동일한 배경 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+}
+
+.form-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-input, .form-textarea {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    background: #222;
+    color: white;
+}
+
+.form-textarea {
+    height: 150px;
+    resize: none;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.submit-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 380px;
+}
+
+.submit-button:hover {
+    background: #0056b3;
+}
+
+.cancel-button {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    
+}
+
+.cancel-button:hover {
+    background: #333;
+}

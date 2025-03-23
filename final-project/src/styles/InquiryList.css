@@ -1,0 +1,65 @@
+.inquiry-list-container {
+    width: 900px;
+    margin: 50px auto;
+    background: #111;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+  }
+  
+  .inquiry-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .inquiry-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .inquiry-table th, .inquiry-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .inquiry-table th {
+    background: #222;
+    font-size: 18px;
+  }
+  
+  .reply-status {
+    color: lightgreen;
+    font-weight: bold;
+  }
+  
+  .delete-button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background: darkred;
+  }
+  
+  .inquiry-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .inquiry-button:hover {
+    background: #0056b3;
+  }
+  

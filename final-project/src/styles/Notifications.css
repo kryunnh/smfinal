@@ -1,0 +1,62 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+/* 📌 알림 페이지 스타일 */
+.notifications-container {
+    width: 900px; /* ✅ 문의 목록과 동일한 크기 */
+    margin: 50px auto;
+    background: #111; /* ✅ 동일한 다크 테마 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+}
+
+.notifications-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.notifications-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notifications-table th,
+.notifications-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+.notifications-table th {
+    background: #222;
+    font-weight: bold;
+}
+
+.read-button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.read-button:hover {
+    background: #388e3c;
+}
+
+.delete-button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background: darkred;
+}

@@ -1,0 +1,50 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+/* 📌 문의 상세 페이지 스타일 */
+.inquiry-detail-container {
+    width: 900px; /* ✅ 모든 폼 크기 통일 */
+    margin: 50px auto;
+    background: #111; /* ✅ 문의 목록과 동일한 배경 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+}
+
+.inquiry-detail-content {
+    text-align: left;
+    padding: 20px;
+}
+
+.inquiry-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.inquiry-date {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.inquiry-reply {
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.back-button {
+    background: #007bff;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+}
+
+.back-button:hover {
+    background: #0056b3;
+}

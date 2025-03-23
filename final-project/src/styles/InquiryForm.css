@@ -1,0 +1,69 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+.inquiry-form-container {
+    width: 900px;
+    margin: 50px auto;
+    background: #222; /* ✅ Inquiry 전용 스타일 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+}
+
+.inquiry-header {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.inquiry-input, .inquiry-textarea {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    background: #333;
+    color: white;
+}
+
+.inquiry-textarea {
+    height: 180px;
+    resize: none;
+}
+
+.inquiry-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.inquiry-submit-button {
+    background: #28a745; /* ✅ Inquiry용 버튼 스타일 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.inquiry-submit-button:hover {
+    background: #218838;
+}
+
+.inquiry-cancel-button {
+    background: #dc3545; /* ✅ Inquiry용 취소 버튼 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 200px;
+}
+
+.inquiry-cancel-button:hover {
+    background: #c82333;
+}
