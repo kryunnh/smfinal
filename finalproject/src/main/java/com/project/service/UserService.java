@@ -1,6 +1,8 @@
 package com.project.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -21,12 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.project.config.JwtUtil;
 import com.project.mapper.InquiryMapper;
 import com.project.mapper.UserMapper;
-import com.project.model.Board;
 import com.project.model.Favorite;
 import com.project.model.Inquiry;
 import com.project.model.Notification;
-import com.project.model.Post;
 import com.project.model.User;
+import com.project.model.krhBoardVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +44,7 @@ public class UserService {
     // 🔹 이메일 인증 코드 저장
     private final Map<String, String> verificationCodes = new HashMap<>(); // 🔹 이메일-코드 저장
     private final EmailService emailService;
-    
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/"; // ✅ 업로드 디렉토리 고정
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -93,30 +94,41 @@ public class UserService {
         Random random = new Random();
         return String.format("%06d", random.nextInt(1000000)); // 6자리 숫자로 변환
     }
-    // ✅ 회원가입을 별도로 처리하고, 이메일 인증을 하지 않은 유저는 가입 불가
-    public void registerUser(User user) {
-        System.out.println("🔹 [서비스] 회원가입 요청됨 - isVerified 값: " + user.getIsVerified());
-        System.out.println("🔹 [서비스] 회원가입 요청된 비밀번호 (암호화 전): " + user.getPassword());
-
-        // ✅ 이메일 인증 여부 확인
+    public void registerUser(User user, MultipartFile profileImage) {
         if (user.getIsVerified() == null || !user.getIsVerified()) {
-            System.out.println("🚨 이메일 인증 안됨! 회원가입 불가");
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일 인증을 완료한 사용자만 회원가입할 수 있습니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일 인증을 완료한 사용자만 가입할 수 있습니다.");
         }
 
-        // ✅ 강제로 Boolean 값을 Integer(0,1)로 변환 후 저장
-        user.setIsVerified(user.getIsVerified() != null && user.getIsVerified());
-        System.out.println("🔹 [서비스] 변환된 isVerified 값: " + user.getIsVerified());
+        user.setIsVerified(true);
 
-        // ✅ 비밀번호 암호화 적용
+        // ✅ 비밀번호 암호화
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
-        System.out.println("🔹 [서비스] 암호화된 비밀번호: " + user.getPassword());
 
-        // ✅ 회원가입 진행
+        // ✅ 프로필 이미지 저장 처리
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                String uploadDir = System.getProperty("user.dir") + "/uploads/";
+                File folder = new File(uploadDir);
+                if (!folder.exists()) folder.mkdirs();
+
+                String originalFileName = profileImage.getOriginalFilename();
+                String newFileName = UUID.randomUUID() + "_" + originalFileName;
+
+                File dest = new File(uploadDir + newFileName);
+                profileImage.transferTo(dest);
+
+                user.setProfileImage(newFileName);
+                System.out.println("📸 이미지 저장 완료: " + newFileName);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 이미지 저장 실패");
+            }
+        }
+
         userMapper.registerUser(user);
-        System.out.println("✅ [서비스] 회원가입 완료! 암호화된 비밀번호가 저장됨.");
+        System.out.println("✅ 회원가입 완료!");
     }
+
 
 
     // ✅ 이메일 중복 체크 서비스
@@ -210,41 +222,61 @@ public class UserService {
     }
 
     public Map<String, Object> login(String email, String rawPassword) {
-        System.out.println("🚀 login() 메서드 실행됨! email = " + email);
+        System.out.println("🚀 login() 메서드 실행됨! 입력된 이메일: " + email);
 
-        // 🔹 유저 정보 가져오기
+        // 🔹 1. 유저 정보 가져오기
         User user = userMapper.getUserByEmail(email);
-        if (user == null || !passwordEncoder.matches(rawPassword, user.getPassword())) {
+        System.out.println("🔍 [DB 조회 결과] user = " + (user != null ? "존재함" : "존재하지 않음"));
+
+        if (user == null) {
+            System.out.println("❌ 이메일이 존재하지 않음");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호입니다.");
         }
 
-        System.out.println("✅ 로그인 성공: userId = " + user.getId());
+        System.out.println("🔍 [DB 저장된 해시 비번] " + user.getPassword());
+        System.out.println("🔍 [입력된 원본 비번] " + rawPassword);
 
-        // 🔹 로그인 기록 저장 실행 여부 확인
-        if (user.getId() != null) {
-            System.out.println("🔹 saveLoginHistory() 호출 예정: userId = " + user.getId());
-            saveLoginHistory(user.getId()); // 🔥 로그인 기록 저장 실행
-        } else {
-            System.out.println("⚠️ user.getId()가 NULL이라 로그인 기록 저장 불가능!");
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            System.out.println("❌ 비밀번호 불일치");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호입니다.");
         }
 
-        // ✅ 로그인 성공 시 `last_login` 업데이트
-        userMapper.updateLastLogin(user.getId());
-     // ✅ 1시간마다 `login_count` 증가
-        userMapper.incrementLoginCount(email);
-        // ✅ JWT 토큰 생성 (role 포함)
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        System.out.println("✅ 로그인 성공! 유저 ID: " + user.getId() + ", 역할: " + user.getRole());
 
-        // ✅ 로그인 응답 데이터 구성
-        // ✅ 유저 전체 정보를 포함한 응답 생성
+        // 🔹 2. 로그인 기록 저장 (관리자 제외)
+        if (user.getId() != null && !"ADMIN".equals(user.getRole())) {
+            System.out.println("🔹 saveLoginHistory() 호출 예정 - userId: " + user.getId());
+            saveLoginHistory(user.getId());
+            System.out.println("✅ 로그인 기록 저장 완료!");
+        } else {
+            System.out.println("⚠️ 관리자 또는 ID NULL → 로그인 기록 저장 제외");
+        }
+
+        // 🔹 3. 마지막 로그인 시간 업데이트 (모두 적용)
+        userMapper.updateLastLogin(user.getId());
+        System.out.println("✅ last_login 컬럼 업데이트 완료");
+
+        // 🔹 4. login_count 증가 (관리자 제외)
+        if (!"ADMIN".equals(user.getRole())) {
+            userMapper.incrementLoginCount(email);
+            System.out.println("✅ 일반 유저 login_count 증가 완료 (1시간 간격 제한)");
+        } else {
+            System.out.println("⚠️ 관리자 로그인 → login_count 증가 제외");
+        }
+
+        // 🔹 5. JWT 생성
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        System.out.println("✅ JWT 토큰 생성 완료: " + token);
+
+        // 🔹 6. 응답 구성
         Map<String, Object> response = new HashMap<>();
-        response.put("user", user);  // ✅ 유저 전체 정보 포함
+        response.put("user", user);
         response.put("token", token);
 
         return response;
     }
 
-    
+
     
     public void saveLoginHistory(Long userId) {
         System.out.println("📝 saveLoginHistory() 실행됨! userId = " + userId);
@@ -253,66 +285,95 @@ public class UserService {
             return;
         }
 
-        String sql = "INSERT INTO login_history (user_id) VALUES (?)";
-        jdbcTemplate.update(sql, userId);
-        System.out.println("✅ 로그인 기록 저장 완료! userId = " + userId);
+        try {
+            String sql = "INSERT INTO login_history (user_id) VALUES (?)";
+            jdbcTemplate.update(sql, userId);
+            System.out.println("✅ 로그인 기록 저장 완료! userId = " + userId);
+        } catch (Exception e) {
+            System.out.println("❌ 로그인 기록 저장 중 예외 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
+
 
 
     public User getUserByEmail(String email) {
         System.out.println("🔍 getUserByEmail() 실행됨: " + email);
         User user = userMapper.getUserByEmail(email);
 
-        if (user != null) {
-            System.out.println("✅ 조회된 유저: " + user);
-            return user;
-        } else {
+        if (user == null) {
             System.out.println("⚠ 유저를 찾을 수 없음!");
             throw new IllegalArgumentException("해당 이메일의 유저를 찾을 수 없습니다.");
         }
-    }
-    public boolean isUserExists(String email) {
-        return userMapper.getUserByEmail(email) != null;
+
+        System.out.println("✅ 조회된 유저: " + user);
+
+        // ✅ 프로필 이미지 변환 로직 (중복 변환 방지)
+        String profileImage = user.getProfileImage();
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImage = profileImage.trim();
+
+            // ⚠ URL에 `http://localhost:8080/uploads/`가 포함된 경우, 변환하지 않음
+            if (!profileImage.startsWith("http://") && !profileImage.startsWith("https://")) {
+                profileImage = "http://localhost:8080/uploads/" + profileImage;
+                System.out.println("🖼 변환된 프로필 이미지 URL: " + profileImage);
+            } else {
+                System.out.println("🖼 기존 URL 유지: " + profileImage);
+            }
+
+            user.setProfileImage(profileImage);
+        } else {
+            System.out.println("⚠ 프로필 이미지 없음!");
+        }
+
+        return user;
     }
 
-   
-    
-    // 🔹 (본인) 유저 정보 수정
+
+
+
+
+
+    // 🔹 2️⃣ 유저 정보 수정 + 이미지 업로드
     @Transactional
-    public void updateUser(String email, String password, String name, String phoneNumber, MultipartFile file) {
+    public User updateUser(String email, String password, String name, String phoneNumber, MultipartFile file) {
         User user = userMapper.findByEmail(email);
         if (user == null) {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
 
         if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화 저장
+            user.setPassword(passwordEncoder.encode(password));
         }
         user.setName(name);
         user.setPhoneNumber(phoneNumber);
 
-        // ✅ 새로운 프로필 이미지를 업로드한 경우에만 변경
+        // ✅ 프로필 이미지 업로드 처리
         if (file != null && !file.isEmpty()) {
-            String uploadDir = "C:/upload/";  // ✅ 실제 저장 경로 확인
             String newFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(uploadDir + newFileName);
+            Path filePath = Paths.get(System.getProperty("user.dir") + "/uploads/", newFileName);
+
             try {
+                Files.createDirectories(Paths.get(System.getProperty("user.dir") + "/uploads/")); // ✅ 디렉토리 없으면 생성
                 file.transferTo(filePath.toFile());
-                user.setProfileImage(newFileName); // ✅ 파일명만 저장 (DB에 'uploads/' 없이 저장)
+                user.setProfileImage(newFileName);
+                System.out.println("✅ 저장된 파일 경로: " + filePath.toAbsolutePath());
             } catch (IOException e) {
-                throw new RuntimeException("파일 업로드 실패", e);
+                throw new RuntimeException("❌ 파일 업로드 실패: " + e.getMessage(), e);
             }
         }
 
         userMapper.updateUser(user);
+        return user; // ✅ 업데이트된 유저 객체 반환
     }
 
 
-    public void insertPost(Post post) {
-        userMapper.insertPost(post);
-    }
 
-    public List<Board> getUserBoardTitles(String email) {
+
+    
+
+    public List<krhBoardVO> getUserBoardTitles(String email) {
         System.out.println("🟢 [게시물 조회 요청] email: " + email);
         return userMapper.findBoardsByUserEmail(email);
     }
@@ -341,6 +402,9 @@ public class UserService {
     // 유저의 즐겨찾기 목록 조회
     public List<Favorite> getFavoritesByUser(Long userId) {
         return userMapper.getFavoritesByUserId(userId);
+    }
+    public List<Map<String, Object>> getFavoriteRecipeList(Long userId) {
+        return userMapper.getFavoriteRecipesByUser(userId);
     }
 
     // 즐겨찾기 삭제

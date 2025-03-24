@@ -8,10 +8,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -28,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String requestPath = request.getRequestURI();
 
-        // ✅ 인증이 필요 없는 API 경로는 필터를 건너뛰기
+        // ✅ 인증 필요 없는 경로는 필터 건너뜀
         if (requestPath.startsWith("/user/register") || requestPath.startsWith("/user/login") ||
             requestPath.startsWith("/user/verify-email") || requestPath.startsWith("/user/confirm-email") ||
             requestPath.startsWith("/user/check-email") || requestPath.startsWith("/user/find-id") ||
@@ -46,20 +49,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.substring(7);
         String email = jwtUtil.extractEmail(token);
-        String role = jwtUtil.extractRole(token);
+        String role = jwtUtil.extractRole(token); // ✅ JWT에서 role 추출
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             if (jwtUtil.validateToken(token, email)) {
+                // ✅ 권한 설정: JWT에서 추출한 role을 직접 authority로 사용
+                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
+                    userDetails, null, authorities
                 );
+
+                // ✅ 디버깅 로그
+                System.out.println("🔐 인증된 사용자: " + email);
+                System.out.println("🛡️ 부여된 권한: " + authorities);
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                System.out.println("❌ 토큰 검증 실패");
             }
         }
 
         chain.doFilter(request, response);
     }
-
 }

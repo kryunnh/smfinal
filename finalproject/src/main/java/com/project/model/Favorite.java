@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Favorite {
-    private Long id;
-    private Long userId;
+    private int favoriteId;
+    private int userId;
     private Long recipeId;
 }
 

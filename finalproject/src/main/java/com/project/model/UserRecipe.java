@@ -28,5 +28,10 @@ public class UserRecipe {
     private int foodTime;
     private int categoryId;
     private String status; // 승인 여부 (on/off)
+
+    // ✅ 추가된 필드
+    private String writerName;
+    private String writerEmail;
+    private String ingredients;
 }
 

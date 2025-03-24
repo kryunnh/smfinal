@@ -27,11 +27,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.model.Ingredient;
 import com.project.model.Inquiry;
-import com.project.model.Notification;
 import com.project.model.Recipe;
 import com.project.model.User;
 import com.project.model.UserDeletionRequest;
 import com.project.model.UserRecipe;
+import com.project.model.krhBoardVO;
+import com.project.model.krhReportVo;
 import com.project.service.AdminService;
 import com.project.service.FileStorageService;
 
@@ -78,28 +79,44 @@ public class AdminController {
     public ResponseEntity<List<Inquiry>> getAllInquiries() {
         return ResponseEntity.ok(adminService.getAllInquiries());
     }
-
+    // ✅ 1:1 문의 상세보기 엔드포인트
+    @GetMapping("/inquiries/{id}")
+    public ResponseEntity<Inquiry> getInquiryDetail(@PathVariable Long id) {
+        Inquiry inquiry = adminService.getInquiryDetail(id);
+        if (inquiry == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(inquiry);
+    }
     // ✅ 2. 1:1 문의 답변 등록 (RequestParam → RequestBody로 변경)
     @PatchMapping("/inquiries/reply/{id}")
-    public ResponseEntity<String> replyToInquiry(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<String> updateInquiryReply(@PathVariable Long id, @RequestBody Map<String, String> payload) {
         String reply = payload.get("reply");
         if (reply == null || reply.isEmpty()) {
             return ResponseEntity.badRequest().body("답변 내용을 입력해야 합니다.");
         }
-        adminService.replyToInquiry(id, reply);
-        return ResponseEntity.ok("답변이 등록되었습니다.");
+        adminService.updateInquiryReply(id, reply);
+        return ResponseEntity.ok("답변이 수정되었습니다.");
     }
 
-    // ✅ 3. 1:1 문의 삭제
+ // ✅ 1:1 문의 삭제 (문의 자체 삭제)
     @DeleteMapping("/inquiries/{id}")
-    public ResponseEntity<String> deleteInquiry(@PathVariable int id) {
-        adminService.deleteInquiryReply(id);
+    public ResponseEntity<String> deleteInquiry(@PathVariable Long id) {
+        adminService.deleteInquiry(id);
         return ResponseEntity.ok("문의가 삭제되었습니다.");
     }
 
-    @PostMapping("/send-notification")
+    // ✅ 1:1 문의 답변 삭제 (문의는 남겨두고 답변만 삭제)
+    @DeleteMapping("/inquiries/reply/{id}")
+    public ResponseEntity<String> deleteInquiryReply(@PathVariable Long id) {
+        adminService.deleteInquiryReply(id);
+        return ResponseEntity.ok("답변이 삭제되었습니다.");
+    }
+
+    @PostMapping("/notifications")
     public ResponseEntity<String> sendNotification(@RequestBody Map<String, String> payload) {
-        String receiverEmail = payload.get("receiverEmail");
+       
+    	String receiverEmail = payload.get("receiverEmail");
         String message = payload.get("message");
 
         if (receiverEmail == null || receiverEmail.isEmpty()) {
@@ -184,6 +201,7 @@ public class AdminController {
             @RequestParam("categoryId") int categoryId,
             @RequestParam(value = "weatherId", required = false) Integer weatherId,
             @RequestParam(value = "foodImg", required = false) MultipartFile foodImg,
+            @RequestParam(value = "deleteFoodImg", required = false) boolean deleteFoodImg, // ✅ 이미지 삭제 여부 추가
             @RequestParam(value = "step1", required = false) String step1,
             @RequestParam(value = "step2", required = false) String step2,
             @RequestParam(value = "step3", required = false) String step3,
@@ -191,22 +209,51 @@ public class AdminController {
             @RequestParam(value = "step5", required = false) String step5,
             @RequestParam(value = "step6", required = false) String step6,
             @RequestParam(value = "stepImg1", required = false) MultipartFile stepImg1,
+            @RequestParam(value = "deleteStepImg1", required = false) boolean deleteStepImg1, // ✅ 이미지 삭제 여부 추가
             @RequestParam(value = "stepImg2", required = false) MultipartFile stepImg2,
+            @RequestParam(value = "deleteStepImg2", required = false) boolean deleteStepImg2, 
             @RequestParam(value = "stepImg3", required = false) MultipartFile stepImg3,
+            @RequestParam(value = "deleteStepImg3", required = false) boolean deleteStepImg3, 
             @RequestParam(value = "stepImg4", required = false) MultipartFile stepImg4,
+            @RequestParam(value = "deleteStepImg4", required = false) boolean deleteStepImg4, 
             @RequestParam(value = "stepImg5", required = false) MultipartFile stepImg5,
+            @RequestParam(value = "deleteStepImg5", required = false) boolean deleteStepImg5, 
             @RequestParam(value = "stepImg6", required = false) MultipartFile stepImg6,
+            @RequestParam(value = "deleteStepImg6", required = false) boolean deleteStepImg6, 
             @RequestParam(value = "ingredients", required = false) List<String> ingredients) {
 
-        Recipe recipe = new Recipe();
-        recipe.setRecipesId(recipeId);
-        recipe.setFoodName(foodName);
-        recipe.setFoodTime(foodTime);
-        recipe.setCategoryId(categoryId);
-        recipe.setWeatherId(weatherId);
+        // 기존 레시피 조회 (DB에 존재하는지 확인)
+        Recipe existingRecipe = adminService.getRecipeById(recipeId);
+        if (existingRecipe == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("레시피를 찾을 수 없습니다.");
+        }
 
-        adminService.updateRecipe(recipe, foodImg, step1, step2, step3, step4, step5, step6,
-                stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, ingredients);
+        // ✅ 삭제 요청이 있으면 기존 이미지 삭제
+        if (deleteFoodImg) {
+            adminService.deleteFile(existingRecipe.getFoodImg());
+            existingRecipe.setFoodImg(null);
+        }
+        if (deleteStepImg1) adminService.deleteFile(existingRecipe.getStepImg1());
+        if (deleteStepImg2) adminService.deleteFile(existingRecipe.getStepImg2());
+        if (deleteStepImg3) adminService.deleteFile(existingRecipe.getStepImg3());
+        if (deleteStepImg4) adminService.deleteFile(existingRecipe.getStepImg4());
+        if (deleteStepImg5) adminService.deleteFile(existingRecipe.getStepImg5());
+        if (deleteStepImg6) adminService.deleteFile(existingRecipe.getStepImg6());
+
+        // ✅ 레시피 기본 정보 업데이트
+        existingRecipe.setFoodName(foodName);
+        existingRecipe.setFoodTime(foodTime);
+        existingRecipe.setCategoryId(categoryId);
+        existingRecipe.setWeatherId(weatherId);
+
+        // ✅ 서비스에서 실제 업데이트 진행
+        adminService.updateRecipe(
+        	    existingRecipe, foodImg,
+        	    step1, step2, step3, step4, step5, step6,
+        	    stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6,
+        	    deleteFoodImg, deleteStepImg1, deleteStepImg2, deleteStepImg3, deleteStepImg4, deleteStepImg5, deleteStepImg6,
+        	    ingredients
+        	);
 
         return ResponseEntity.ok("레시피 수정 완료!");
     }
@@ -218,14 +265,7 @@ public class AdminController {
         return ResponseEntity.ok("레시피 삭제 완료!");
     }
 
-    /** ✅ 5. 파일 제공 */
-    @GetMapping("/{fileName:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
-        Resource file = fileStorageService.loadFileAsResource(fileName);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
+  
     @DeleteMapping("/recipes/{recipeId}/step-img/{stepNumber}")
     public ResponseEntity<?> deleteStepImage(@PathVariable Long recipeId, @PathVariable int stepNumber) {
         try {
@@ -235,83 +275,88 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ 이미지 삭제 실패: " + e.getMessage());
         }
     }
+    // ✅ 전체 유저 레시피 조회
+    @GetMapping("/user-recipes")
+    public ResponseEntity<List<UserRecipe>> getAllUserRecipes() {
+        System.out.println("📥 전체 유저 레시피 조회 요청 수신됨");
+        return ResponseEntity.ok(adminService.getAllUserRecipes());
+    }
+ // 승인된 유저 레시피 조회
+    @GetMapping("/user-recipes/approved")
+    public List<UserRecipe> getApprovedUserRecipes() {
+        return adminService.getUserRecipesByStatus("on");
+    }
+    // ✅ 특정 유저 레시피 조회
+    @GetMapping("/user-recipes/{id}")
+    public ResponseEntity<UserRecipe> getUserRecipeById(@PathVariable Long id) {
+        System.out.println("📥 특정 유저 레시피 조회 요청 - ID: " + id);
+        return ResponseEntity.ok(adminService.getUserRecipeById(id));
+    }
 
-    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+    // ✅ 승인 대기 중인 유저 레시피 조회
+    @GetMapping("/user-recipes/pending")
+    public ResponseEntity<List<UserRecipe>> getPendingUserRecipes() {
+        System.out.println("📥 승인 대기 유저 레시피 조회 요청");
+        return ResponseEntity.ok(adminService.getPendingUserRecipes());
+    }
 
- // ✅ 전체 유저 레시피 조회
- @GetMapping("/user-recipes")
- public ResponseEntity<List<UserRecipe>> getAllUserRecipes() {
-     return ResponseEntity.ok(adminService.getAllUserRecipes());
+    // ✅ 유저 레시피 승인
+    @PatchMapping("/user-recipes/{id}/approve")
+    public ResponseEntity<String> approveUserRecipe(@PathVariable Integer id) {
+        System.out.println("🛠️ 유저 레시피 승인 요청 수신 - ID: " + id);
+        try {
+            adminService.approveUserRecipe(id);
+            return ResponseEntity.ok("유저 레시피가 승인되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("레시피 승인 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    // ✅ 유저 레시피 삭제
+    @DeleteMapping("/user-recipes/{id}")
+    public ResponseEntity<String> deleteUserRecipe(@PathVariable Integer id) {
+        System.out.println("🗑️ 유저 레시피 삭제 요청 - ID: " + id);
+        adminService.deleteUserRecipe(id);
+        return ResponseEntity.ok("유저 레시피가 삭제되었습니다.");
+    }
+
+
+
+ // 📌 신고 전체 목록
+ @GetMapping("/reports")
+ public List<krhReportVo> getAllReports() {
+     return adminService.getReports();
  }
 
-
- // ✅ 특정 유저 레시피 조회 (id 기반)
- @GetMapping("/user-recipes/{id}")
- public ResponseEntity<UserRecipe> getUserRecipeById(@PathVariable Long id) {
-     return ResponseEntity.ok(adminService.getUserRecipeById(id));
+ // 📌 신고 상세 조회
+ @GetMapping("/reports/{reportId}")
+ public krhReportVo getReportDetail(@PathVariable int reportId) {
+     return adminService.getReportById(reportId);
  }
 
- // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'인 데이터만 조회)
- @GetMapping("/user-recipes/pending")
- public ResponseEntity<List<UserRecipe>> getPendingUserRecipes() {
-     return ResponseEntity.ok(adminService.getPendingUserRecipes());
+ // 📌 신고 삭제
+ @DeleteMapping("/reports/{reportId}")
+ public String deleteReport(@PathVariable int reportId) {
+     adminService.deleteReport(reportId);
+     return "신고가 삭제되었습니다.";
  }
-
-//✅ 유저 레시피 승인 (STATUS = 'ON'으로 변경)
-@PatchMapping("/user-recipes/{id}/approve") // ✅ 중복된 "/admin" 제거
-public ResponseEntity<String> approveUserRecipe(@PathVariable Integer  id, Authentication authentication) {
-  System.out.println("🚀 PATCH 요청 수신됨 - 승인할 레시피 ID: " + id);
-  
-  try {
-      adminService.approveUserRecipe(id);
-      System.out.println("✅ 레시피 승인 완료 - ID: " + id);
-      return ResponseEntity.ok("유저 레시피가 승인되었습니다.");
-  } catch (Exception e) {
-      System.out.println("❌ PATCH 요청 실패 - 오류 발생: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("레시피 승인 중 오류 발생");
-  }
+//전체 게시물 목록 조회
+@GetMapping("/boards")
+public List<krhBoardVO> getAllBoards() {
+  return adminService.getAllBoards();
 }
-
-
- // ✅ 테스트용 GET 엔드포인트 (PATCH 차단 문제 확인)
- @GetMapping("/user-recipes/{id}/approve-test") // ✅ 중복된 "/admin" 제거
- public ResponseEntity<String> testApproveUserRecipe(@PathVariable Long id) {
-     System.out.println("✅ GET 요청 수신됨 - 승인할 레시피 ID: " + id);
-     return ResponseEntity.ok("GET 요청 정상 작동");
+ //특정 게시물 조회
+ @GetMapping("/boards/{boardId}")
+ public krhBoardVO getBoardDetail(@PathVariable int boardId) {
+     return adminService.getBoardById(boardId);
+ }
+ //특정 게시물 삭제 
+ @DeleteMapping("/boards/{boardId}")
+ public String deleteBoard(@PathVariable int boardId) {
+     adminService.deleteBoard(boardId);
+     return "게시글이 삭제되었습니다.";
  }
 
-
- // ✅ 유저 레시피 삭제 (거절 포함)
- @DeleteMapping("/user-recipes/{id}")
- public ResponseEntity<String> deleteUserRecipe(@PathVariable Integer  id) {
-     adminService.deleteUserRecipe(id);
-     return ResponseEntity.ok("유저 레시피가 삭제되었습니다.");
- }
-
-
-
-
-   
-
-    // 🔹 관리자 알림 목록 조회
-    @GetMapping("/notifications")
-    public ResponseEntity<List<Notification>> getAdminNotifications(@RequestParam String email) {
-        return ResponseEntity.ok(adminService.getAdminNotifications(email));
-    }
-
-    // 🔹 관리자 알림 읽음 처리
-    @PatchMapping("/notifications/read/{id}")
-    public ResponseEntity<String> readAdminNotification(@PathVariable Long id) {
-        adminService.markAdminNotificationAsRead(id);
-        return ResponseEntity.ok("Admin notification read.");
-    }
-
-    // 🔹 관리자 알림 삭제
-    @DeleteMapping("/notifications/{id}")
-    public ResponseEntity<String> deleteAdminNotification(@PathVariable Long id) {
-        adminService.deleteAdminNotification(id);
-        return ResponseEntity.ok("Admin notification deleted.");
-    }
  // 📌 1. 일별 회원가입 수 통계
     @GetMapping("/daily-signups")
     public List<Map<String, Object>> getDailySignups() {
@@ -342,5 +387,25 @@ public ResponseEntity<String> approveUserRecipe(@PathVariable Integer  id, Authe
     public Map<String, Object> getCurrentActiveUsers() {
         String sql = "SELECT COUNT(*) AS active_users FROM users WHERE last_login >= NOW() - INTERVAL 10 MINUTE";
         return jdbcTemplate.queryForMap(sql);
+    }
+    @GetMapping("/recipe-category-count")
+    public List<Map<String, Object>> getRecipeCategoryCount() {
+        String sql = """
+            SELECT c.category_name, COUNT(r.recipes_id) AS count
+            FROM Categories c
+            LEFT JOIN recipes r ON c.category_id = r.category_id
+            GROUP BY c.category_name
+            ORDER BY count DESC;
+        """;
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    /** ✅ 5. 파일 제공 */
+    @GetMapping("/{fileName:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
+        Resource file = fileStorageService.loadFileAsResource(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
+                .body(file);
     }
 }

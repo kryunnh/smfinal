@@ -17,12 +17,13 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/uploads") // ✅ "/uploads" → "/api/uploads"
-@CrossOrigin(origins = "http://localhost:5173") // 프론트엔드와 연결
+@RequestMapping("/api/uploads") // ✅ API 경로 유지
+@CrossOrigin(origins = "http://localhost:5173") // ✅ 프론트엔드 CORS 설정
 public class ImageController {
 
-    private static final String UPLOAD_DIR = "C:/project/uploads/";
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
+    // ✅ 서버 실행 시 업로드 폴더 자동 생성
     public ImageController() {
         File uploadFolder = new File(UPLOAD_DIR);
         if (!uploadFolder.exists()) {
@@ -30,7 +31,7 @@ public class ImageController {
         }
     }
 
-    // ✅ 이미지 업로드
+    // 🔹 1️⃣ 이미지 업로드 API
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
@@ -46,33 +47,47 @@ public class ImageController {
             Path filePath = Paths.get(UPLOAD_DIR + fileName);
             file.transferTo(filePath.toFile());
 
-            return ResponseEntity.ok(fileName); // ✅ 경로가 아니라 파일명만 반환
+            System.out.println("✅ 저장된 이미지: " + filePath.toAbsolutePath());
+
+            return ResponseEntity.ok(fileName); // ✅ 파일명 반환 (경로 X)
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패: " + e.getMessage());
         }
     }
 
-    // ✅ 업로드된 이미지 제공
+    // 🔹 2️⃣ 이미지 조회 API
     @GetMapping("/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get(UPLOAD_DIR + filename);
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
-            if (!resource.exists() || !resource.isReadable()) {
+            if (!resource.exists()) {
                 return ResponseEntity.notFound().build();
             }
 
+            // ✅ MIME 타입 설정
             String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
+            MediaType mediaType = (contentType != null) ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_OCTET_STREAM;
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(resource); // ✅ Content-Disposition 헤더 제거
+                    .contentType(mediaType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // 🔹 3️⃣ 이미지 삭제 API
+    @DeleteMapping("/{filename}")
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
+            Files.deleteIfExists(filePath);
+            return ResponseEntity.ok().body("파일 삭제 완료");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(500).body("파일 삭제 실패");
         }
     }
 }

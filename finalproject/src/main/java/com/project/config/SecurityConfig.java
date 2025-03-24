@@ -43,10 +43,12 @@ public class SecurityConfig {
                     "/user/verify-email", "/user/confirm-email", "/user/check-email", "/user/check-phone").permitAll()
 
             // 🔹 관리자 페이지 보호 (hasRole 사용)
-            .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ ROLE_ADMIN이 있어야 접근 가능
+            .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 
             // 🔹 사용자 인증 필요 API
             .requestMatchers("/user/update", "/user/inquiries", "/user/notifications/**", "/user/**").authenticated()
+         // 🔹 타로 카드 API는 USER, ADMIN 모두 허용
+            .requestMatchers("/tarot/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
             // ✅ 🔥 `/uploads/**` 경로 모든 사용자 허용 (프로필 이미지, 레시피 이미지 접근 가능)
             .requestMatchers("/uploads/**").permitAll()
