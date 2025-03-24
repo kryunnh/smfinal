@@ -1,0 +1,38 @@
+.user-info-card {
+    min-width: 1000px; /* ⬅️ 기존보다 넓게 */
+    margin: 60px auto; /* ⬅️ 위아래 여백 + 가운데 정렬 */
+    padding: 32px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    font-size: 18px; /* ⬅️ 폰트 살짝 키움 */
+  }
+  
+  .user-info-card h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    color: #4CAF50;
+  }
+  
+  .user-info-detail p {
+    margin: 14px 0;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  
+  .profile-image-box {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #4CAF50;
+  }
+  
