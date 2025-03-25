@@ -1,6 +1,10 @@
 package com.project.model;
 
-import lombok.*;
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -10,5 +14,5 @@ public class Notification {
     private String receiverEmail;
     private String message;
     private Boolean isRead;
-    private String createdAt;
+    private LocalDateTime createdAt; 
 }

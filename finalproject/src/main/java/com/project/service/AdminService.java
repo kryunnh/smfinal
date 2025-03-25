@@ -118,7 +118,7 @@ public class AdminService {
         // ✅ 해당 레시피의 재료도 함께 조회
         List<Ingredient> ingredients = adminMapper.getIngredientsByRecipeId(recipeId);
         recipe.setIngredients(ingredients);
-
+        System.out.println("✅ 가져온 재료: " + recipe.getIngredients());
         return recipe;
     }
 
@@ -362,10 +362,11 @@ public class AdminService {
 
     // ✅ 특정 유저 레시피 조회
     public UserRecipe getUserRecipeById(Long id) {
-        System.out.println("📥 [Service] 특정 유저 레시피 조회 요청 - user_id: " + id);
-        return adminMapper.getUserRecipeById(id);
+        UserRecipe recipe = adminMapper.getUserRecipeById(id);
+        System.out.println("✅ 쿼리 결과: " + recipe);
+        System.out.println("✅ 재료 필드 ingredientsss: " + recipe.getIngredientsss());
+        return recipe;
     }
-
     // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'만 가져옴)
     public List<UserRecipe> getPendingUserRecipes() {
         System.out.println("📥 [Service] 승인 대기 레시피 목록 조회 요청");

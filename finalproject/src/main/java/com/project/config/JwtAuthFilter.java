@@ -52,7 +52,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String role = jwtUtil.extractRole(token); // ✅ JWT에서 role 추출
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        	CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+
 
             if (jwtUtil.validateToken(token, email)) {
                 // ✅ 권한 설정: JWT에서 추출한 role을 직접 authority로 사용

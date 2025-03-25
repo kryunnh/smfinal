@@ -32,6 +32,14 @@ public class UserRecipe {
     // ✅ 추가된 필드
     private String writerName;
     private String writerEmail;
-    private String ingredients;
+    private String ingredientsss;
+    
+    public String getIngredientsss() {
+        return ingredientsss;
+    }
+
+    public void setIngredientsss(String ingredientsss) {
+        this.ingredientsss = ingredientsss;
+    }
 }
 

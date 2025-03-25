@@ -2,20 +2,22 @@
 
 /* 📌 알림 페이지 스타일 */
 .notifications-container {
-    width: 900px; /* ✅ 문의 목록과 동일한 크기 */
-    margin: 50px auto;
-    background: #111; /* ✅ 동일한 다크 테마 */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    min-width: 1200px;
+    margin: 60px auto;
+    background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
     text-align: center;
-    color: white;
 }
 
 .notifications-header {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
+    color: #FFA575; /* ✅ 강조된 주황색 제목 */
 }
 
 .notifications-table {
@@ -25,13 +27,13 @@
 
 .notifications-table th,
 .notifications-table td {
-    border: 1px solid #444;
+    border: 1px solid  #FFD2B9;
     padding: 10px;
     text-align: center;
 }
 
 .notifications-table th {
-    background: #222;
+    background: #FFA575; /* ✅ 검정 대신 주황 */
     font-weight: bold;
 }
 
@@ -49,7 +51,7 @@
 }
 
 .delete-button {
-    background: red;
+    background: #FF7A7A; 
     color: white;
     border: none;
     padding: 8px 12px;
@@ -58,5 +60,5 @@
 }
 
 .delete-button:hover {
-    background: darkred;
+    background: #e65353;
 }

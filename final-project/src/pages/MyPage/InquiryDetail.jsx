@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // 🔹 useNavigate 추가
 import axios from "axios";
 import "../../styles/InquiryDetail.css";
+import "../../styles/GlobalStyles.css"
 import "../../styles/FormStyles.css"; // ✅ 공통 CSS 적용
 const InquiryDetail = () => {
   const { id } = useParams(); // ✅ URL에서 문의 ID 가져오기

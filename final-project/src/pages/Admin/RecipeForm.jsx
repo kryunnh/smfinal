@@ -122,62 +122,62 @@ const handleIngredientChange = (index, value) => {
 };
 
   /** ✅ 기존 레시피 데이터를 불러오기 (수정 모드) */
-  useEffect(() => {
-    if (isEditing && id) {
-      const token = localStorage.getItem("token");
-  
-      axios
-        .get(`http://localhost:8080/admin/recipes/${id}`, {
-          headers: { Authorization: token ? `Bearer ${token}` : "" },
-        })
-        .then((response) => {
-          console.log("🔍 API 응답 데이터:", response.data);
-          const { foodName, foodTime, categoryId, foodImg, ingredients, weatherId, ...stepsData } = response.data;
-  
-          // ✅ 단계별 설명 배열 변환
-          const steps = Array(6).fill({ description: "", image: null, existingImage: "" }).map((_, index) => ({
+/** ✅ 기존 레시피 데이터를 불러오기 (수정 모드) */
+useEffect(() => {
+  if (isEditing && id) {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(`http://localhost:8080/admin/recipes/${id}`, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      })
+      .then((response) => {
+        console.log("🔍 API 응답 데이터:", response.data);
+
+        const {
+          foodName,
+          foodTime,
+          categoryId,
+          foodImg,
+          ingredients,
+          weatherId,
+          ...stepsData
+        } = response.data;
+
+        // ✅ 단계별 설명 배열 변환
+        const steps = Array(6)
+          .fill({ description: "", image: null, existingImage: "" })
+          .map((_, index) => ({
             description: stepsData[`step${index + 1}`] || "",
             existingImage: stepsData[`stepImg${index + 1}`]
               ? `http://localhost:8080/uploads/${encodeURIComponent(stepsData[`stepImg${index + 1}`])}`
               : "",
             image: null,
           }));
+
+        setRecipe((prev) => ({
+          ...prev,
+          foodName,
+          foodTime,
+          categoryId,
+          foodImg: null,
+          existingFoodImg: foodImg
+            ? `http://localhost:8080/uploads/${encodeURIComponent(foodImg)}`
+            : "",
+          ingredients: Array.isArray(ingredients) ? ingredients : [],
+          weatherId,
+          steps,
+        }));
+      })
+      .catch((error) => {
+        console.error("❌ 레시피 불러오기 실패:", error);
+      });
+  }
+}, [isEditing, id]); // ✅ useEffect 끝
+
   
-          // ✅ 재료 목록 변환 (JSON 배열 또는 일반 문자열 변환)
-          let ingredientList = [];
-          try {
-            if (typeof ingredients === "string") {
-              let parsedIngredients = JSON.parse(ingredients);
-  
-              if (Array.isArray(parsedIngredients)) {
-                ingredientList = parsedIngredients.map((ingredient) => {
-                  if (typeof ingredient === "object" && ingredient.name) {
-                    return ingredient.name;
-                  }
-                  return ingredient.replace(/[\[\]"]/g, ""); // ✅ `[]`, `"`, `\` 제거
-                });
-              }
-            } else if (Array.isArray(ingredients)) {
-              ingredientList = ingredients.map((ingredient) => ingredient.name || ingredient);
-            }
-          } catch (error) {
-            console.error("❌ 재료 목록 파싱 실패:", error);
-          }
-  
-          setRecipe({
-            foodName,
-            foodTime,
-            categoryId: categoryId || "", // ✅ null 방지
-            foodImg: null,
-            existingFoodImg: foodImg ? `http://localhost:8080/uploads/${encodeURIComponent(foodImg)}` : "",
-            ingredients: ingredientList, // ✅ 불필요한 문자 제거한 리스트 적용
-            steps,
-            weatherId: weatherId || "", // ✅ null 방지
-          });
-        })
-        .catch((error) => console.error("❌ 레시피 불러오기 실패:", error));
-    }
-  }, [isEditing, id]);
+          
+
   
   
   
@@ -259,30 +259,33 @@ const handleSubmit = async () => {
   formData.append("categoryId", recipe.categoryId);
   formData.append("weatherId", recipe.weatherId);
 
-  /** ✅ 재료 데이터 정리 */
-  let ingredientsData;
-  try {
-    // ✅ 배열이 아닐 경우 강제로 변환 (예외 처리)
-    if (!Array.isArray(recipe.ingredients)) {
-      recipe.ingredients = JSON.parse(recipe.ingredients);
-    }
-
-    // ✅ 재료 이름만 추출하여 변환
-    ingredientsData = recipe.ingredients.map((ing) => {
-      if (typeof ing === "string") {
-        return ing.trim().replace(/[\\"]/g, "");
-      } else if (typeof ing === "object" && ing.name) {
-        return ing.name.trim();
-      }
-      return "";
-    }).filter(ing => ing !== ""); // ✅ 빈 값 제거
-
-  } catch (error) {
-    console.error("❌ 재료 목록 파싱 실패:", error);
-    ingredientsData = [];
+/** ✅ 재료 데이터 정리 */
+let ingredientsData;
+try {
+  // ✅ 이미 배열이면 그대로 사용하고, 문자열이면 JSON으로 변환
+  if (!Array.isArray(recipe.ingredients)) {
+    recipe.ingredients = JSON.parse(recipe.ingredients);
   }
-  formData.append("ingredients", JSON.stringify(ingredientsData));
 
+  // ✅ 모든 요소를 문자열로 변환 + 불필요한 문자 제거
+  ingredientsData = recipe.ingredients.flat().map((ing) => {
+    if (typeof ing === "string") {
+      return ing.trim().replace(/[\[\]"]/g, ""); // ✅ `[]`, `"` 제거
+    } else if (typeof ing === "object" && ing.name) {
+      return ing.name.trim();
+    }
+    return "";
+  }).filter(ing => ing !== ""); // ✅ 빈 값 제거
+
+} catch (error) {
+  console.error("❌ 재료 목록 파싱 실패:", error);
+  ingredientsData = [];
+}
+
+// ✅ 최종적으로 배열인지 확인 (디버깅용)
+console.log("✅ 변환된 재료 목록:", ingredientsData);
+
+formData.append("ingredients", JSON.stringify(ingredientsData));
   // ✅ 대표 이미지 처리
   if (recipe.foodImg instanceof File) {
     formData.append("foodImg", recipe.foodImg);
@@ -372,43 +375,75 @@ for (let i = 0; i < 6; i++) {
         ))}
       </select>
   
-      {/* ✅ 재료 입력 */}
-      <h3>재료 목록</h3>
-{recipe.ingredients.map((ingredient, index) => (
-  <div key={index} className="ingredient-container">
-    <input 
-      type="text" 
-      value={ingredient.replace(/[\[\]"\\]/g, "")} // ✅ 입력 필드에서도 불필요한 문자 제거
-      onChange={(e) => handleIngredientChange(index, e.target.value)} 
-    />
-    <button type="button" onClick={() => removeIngredient(index)}>❌ 삭제</button>
-  </div>
-))}
+     {/* ✅ 재료 입력 */}
+     <h3>재료 목록</h3>
+{recipe.ingredients.map((ingredient, index) => {
+  let value = "";
+
+  try {
+    if (typeof ingredient === "string") {
+      value = ingredient.replace(/[\[\]"]/g, "").trim();
+    } else if (typeof ingredient === "object" && ingredient.name) {
+      // ❌ JSON.parse()는 제거하고, 문자열만 정리
+      value = ingredient.name.replace(/[\[\]"]/g, "").trim();
+    } else {
+      value = String(ingredient).trim();
+    }
+  } catch (e) {
+    console.error("❌ 재료 렌더링 파싱 오류:", ingredient);
+    value = "";
+  }
+
+  return (
+    <div key={index} className="ingredient-container">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => handleIngredientChange(index, e.target.value)}
+      />
+      <button type="button" onClick={() => removeIngredient(index)}>❌ 삭제</button>
+    </div>
+  );
+})}
 <button type="button" onClick={addIngredient}>➕ 재료 추가</button>
-      {/* ✅ 단계별 설명 및 이미지 업로드 */}
+
     {/* ✅ 단계별 설명 및 이미지 업로드 */}
 <h3>단계별 설명</h3>
-{recipe.steps.map((step, index) => (
-  <div key={index} className="step-container">
-    <label>단계 {index + 1}</label>
-    <input type="text" value={step.description} onChange={(e) => handleStepChange(index, e.target.value)} />
-    
-    <div className="image-upload-container">
-      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} />
-      
-      {/* ✅ 이미지 미리보기 & 삭제 버튼 추가 */}
-      {step.existingImage && (
-        <div className="image-preview">
-          <img src={step.existingImage} alt={`단계 ${index + 1} 이미지`} className="preview-img" />
-          <button type="button" onClick={() => removeImage(index)}>❌ 삭제</button>
-        </div>
-      )}
-    </div>
-    
-    <button type="button" onClick={() => removeStep(index)}>❌ 단계 삭제</button>
-  </div>
+{recipe.steps.map((step, index) => {
+  const isEmptyStep =
+    (!step.description || step.description.trim() === "" || step.description === "null") &&
+    (!step.existingImage || step.existingImage.trim() === "");
 
-))}
+  if (isEmptyStep) return null; // ❌ 아무것도 없으면 렌더링 안 함
+
+  return (
+    <div key={index} className="step-container">
+      <label>단계 {index + 1}</label>
+      <input
+        type="text"
+        value={step.description === "null" ? "" : step.description}
+        onChange={(e) => handleStepChange(index, e.target.value)}
+      />
+
+      <div className="image-upload-container">
+        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} />
+
+        {step.existingImage && (
+          <div className="image-preview">
+            <img
+              src={step.existingImage}
+              alt={`단계 ${index + 1} 이미지`}
+              className="preview-img"
+            />
+            <button type="button" onClick={() => removeImage(index)}>❌ 삭제</button>
+          </div>
+        )}
+      </div>
+
+      <button type="button" onClick={() => removeStep(index)}>❌ 단계 삭제</button>
+    </div>
+  );
+})}
 
 {/* ✅ 최대 6단계까지만 추가 가능 */}
 {recipe.steps.length < 6 && (

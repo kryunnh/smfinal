@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/UserEdit.css";
 import "../../styles/FormStyles.css"; // ✅ 공통 CSS 적용
+import { useNavigate } from "react-router-dom";
 
 export default function UserEdit() {
+    const navigate = useNavigate();
     const [user, setUser] = useState({
         email: "",
         password: "",
@@ -145,57 +147,89 @@ useEffect(() => {
     };
 
     return (
-        <div className="user-edit-container">
-            <h2>회원 정보 수정</h2>
+        <div className="user-edit-container" style={{ position: "relative" }}>
+          <h2>회원 정보 수정</h2>
+      
+          <div className="image-upload-wrapper">
+  <label className="profile-label">프로필 이미지:</label>
 
-            <div className="form-group">
-                <label>이메일:</label>
-                <input type="email" name="email" value={user.email} readOnly />
-            </div>
+  <div className="image-preview-wrapper">
+    {/* 파일 선택이 이미지 위로! */}
+    <input
+      type="file"
+      className="file-input"
+      accept="image/*"
+      onChange={handleImageUpload}
+    />
 
-            <div className="form-group">
-                <label>비밀번호:</label>
-                <input type="password" name="password" value={user.password} onChange={handleChange} />
-            </div>
+    {/* 이미지 미리보기 */}
+    {preview && (
+      <img
+        src={preview}
+        alt="미리보기"
+        className="image-preview"
+        onError={(e) => {
+          e.target.src = "/images/default-profile.jpg";
+        }}
+      />
+    )}
 
-            <div className="form-group">
-                <label>이름:</label>
-                <input type="text" name="name" value={user.name} onChange={handleChange} />
-            </div>
+    {/* 삭제 버튼은 이미지 아래 */}
+    {user.profileImage && !deleteImage && (
+      <button type="button" className="delete-image-btn" onClick={handleDeleteImage}>
+        ❌ 삭제
+      </button>
+    )}
+  </div>
+</div>
 
-            <div className="form-group">
-                <label>전화번호:</label>
-                <input 
-                    type="text" 
-                    name="phoneNumber" 
-                    value={user.phoneNumber} 
-                    onChange={handlePhoneChange} 
-                    maxLength={13} // 최대 길이 13 ("010-XXXX-XXXX" 포함)
-                />
-            </div>
 
-           {/* 🔹 이미지 업로드 섹션 */}
-           <div className="image-upload-container">
-                <label>프로필 이미지:</label>
-                <input type="file" className="file-input" accept="image/*" onChange={handleImageUpload} />
 
-                {/* ✅ 미리보기 이미지 */}
-                {preview && (
-                    <div className="image-preview-container">
-                        <img 
-                            src={preview} 
-                            alt="미리보기" 
-                            className="image-preview"
-                            onError={(e) => { e.target.src = "/images/default-profile.jpg"; }} // 기본 이미지로 변경
-                        />
-                        {user.profileImage && !deleteImage && (
-                            <button type="button" onClick={handleDeleteImage}>❌ 삭제</button>
-                        )}
-                    </div>
-                )}
-            </div>
-
-            <button className="submit-btn" onClick={handleSubmit}>수정 완료</button>
+      
+          {/* 🔹 기본 정보 입력 필드들 */}
+          <div className="form-group">
+            <label>이메일:</label>
+            <input type="email" name="email" value={user.email} readOnly />
+          </div>
+      
+          <div className="form-group">
+            <label>비밀번호:</label>
+            <input
+              type="password"
+              name="password"
+              value={user.password}
+              onChange={handleChange}
+            />
+          </div>
+      
+          <div className="form-group">
+            <label>이름:</label>
+            <input
+              type="text"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+            />
+          </div>
+      
+          <div className="form-group">
+            <label>전화번호:</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              value={user.phoneNumber}
+              onChange={handlePhoneChange}
+              maxLength={13}
+            />
+          </div>
+      
+          {/* 🔹 버튼 그룹 */}
+         {/* 🔹 버튼 가로 정렬 */}
+    <div className="form-buttons">
+      <button className="submit-button" onClick={handleSubmit}>수정 완료</button>
+      <button className="cancel-button" onClick={() => navigate("/mypage/user-info")}>🔙 이전으로 돌아가기</button>
+    </div>
         </div>
-    );
+      );
+      
 }

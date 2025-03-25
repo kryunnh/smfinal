@@ -73,6 +73,7 @@ const AdminCompetitions = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log("🔍 상세 레시피 응답:", res.data); // ✅ 이거 꼭 추가!!!
       setSelectedRecipe(res.data);
       setShowModal(true);
     } catch (error) {
@@ -159,7 +160,13 @@ const AdminCompetitions = () => {
             <p><strong>레시피명:</strong> {selectedRecipe.foodName}</p>
             <p><strong>카테고리:</strong> {categoryMap[selectedRecipe.categoryId]}</p>
             <p><strong>조리시간:</strong> {selectedRecipe.foodTime}분</p>
-            <p><strong>재료:</strong> {selectedRecipe.ingredients || "등록된 재료 없음"}</p>
+            <p><strong>재료:</strong> 
+  {typeof selectedRecipe.ingredientsss === "string" && selectedRecipe.ingredientsss.trim()
+    ? selectedRecipe.ingredientsss.split(',').map((ing, i, arr) => (
+        <span key={i}>{ing.trim()}{i < arr.length - 1 ? ', ' : ''}</span>
+      ))
+    : "등록된 재료 없음"}
+</p>
             <p><strong>조회수:</strong> {selectedRecipe.view}</p>
             <hr />
             {[...Array(6)].map((_, i) => {

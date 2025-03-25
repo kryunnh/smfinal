@@ -205,16 +205,23 @@ public interface AdminMapper {
 
         // ✅ 특정 유저 레시피 조회 (user_id 기준, 작성자 정보 포함)
         @Select("""
-            SELECT ur.*, u.name AS writerName, u.email AS writerEmail,
-       GROUP_CONCAT(ing.name SEPARATOR ', ') AS ingredients
-FROM user_recipes ur
-JOIN users u ON ur.user_id = u.id
-LEFT JOIN recipe_ingredients ri ON ri.user_recipes_id = ur.user_recipes_id
-LEFT JOIN ingredients ing ON ri.ingredient_id = ing.ingredient_id
-WHERE ur.user_recipes_id = #{id}
-GROUP BY ur.user_recipes_id;
-        """)
-        UserRecipe getUserRecipeById(@Param("id") Long id);
+        	    SELECT ur.*, u.name AS writerName, u.email AS writerEmail,
+        	           GROUP_CONCAT(ing.name SEPARATOR ', ') AS ingredientsss
+        	    FROM user_recipes ur
+        	    JOIN users u ON ur.user_id = u.id
+        	    LEFT JOIN recipe_ingredients ri ON ri.user_recipes_id = ur.user_recipes_id
+        	    LEFT JOIN ingredients ing ON ri.ingredient_id = ing.ingredient_id
+        	    WHERE ur.user_recipes_id = #{id}
+        	    GROUP BY ur.user_recipes_id
+        	""")
+        	@Results({
+        	    @Result(property = "ingredientsss", column = "ingredientsss"),
+        	    @Result(property = "writerName", column = "writerName"),
+        	    @Result(property = "writerEmail", column = "writerEmail"),
+        	    // 필요한 필드 매핑 더 추가 가능
+        	})
+        	UserRecipe getUserRecipeById(@Param("id") Long id);
+
 
         // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'만 조회)
         @Select("""

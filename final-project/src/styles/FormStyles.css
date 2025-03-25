@@ -1,75 +1,79 @@
 /* 📌 모든 폼을 동일한 크기와 스타일로 설정 */
 .form-container {
-    width: 900px; /* ✅ 모든 폼 크기 통일 */
-    margin: 50px auto;
-    background: #111; /* ✅ 문의 목록과 동일한 배경 */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    min-width: 1200px;
+    margin: 60px auto;
+    background: #fffaf2;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
     text-align: center;
-    color: white;
-}
-
-.form-header {
+  }
+  
+  .form-header {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-}
-
-.form-content {
+  }
+  
+  .form-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.form-input, .form-textarea {
+  }
+  
+  .form-input,
+  .form-textarea {
     width: 90%;
     padding: 10px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     margin-bottom: 15px;
-    background: #222;
-    color: white;
-}
-
-.form-textarea {
+    background: #fff;
+    color: #333;
+  }
+  
+  .form-textarea {
     height: 150px;
     resize: none;
-}
-
-.form-buttons {
+  }
+  
+  .form-buttons {
     display: flex;
-    justify-content: space-between;
-    width: 90%;
-}
-
-.submit-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+    justify-content: center;
+    gap: 20px;
+    width: 100%; /* or auto */
+  }
+  
+  .submit-button,
+  .cancel-button {
+    flex: none; /* 🔥 핵심! 크기 고정 */
+    width: 200px;
+    padding: 12px 20px;
     border-radius: 20px;
     font-size: 16px;
-    cursor: pointer;
-    width: 380px;
-}
-
-.submit-button:hover {
-    background: #0056b3;
-}
-
-.cancel-button {
-    background: #555;
-    color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 16px;
     cursor: pointer;
-    
-}
-
-.cancel-button:hover {
-    background: #333;
-}
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button {
+    background: #FFA575;
+    color: white;
+  }
+  
+  .submit-button:hover {
+    background-color: #ff9d68;
+  }
+  
+  .cancel-button {
+    background: #eeeeee;
+    color: #333;
+  }
+  
+  .cancel-button:hover {
+    background-color: #d2d2d2;
+  }
+  

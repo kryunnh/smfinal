@@ -20,4 +20,22 @@ public interface NotificationMapper {
     // 🔹 알림 삭제
     @Delete("DELETE FROM notifications WHERE id = #{notificationId}")
     void deleteNotification(@Param("notificationId") Long notificationId);
+    
+    @Select("""
+            SELECT * FROM notifications
+            WHERE receiver_email = #{email}
+            AND is_read = false
+            AND message LIKE '[관리자]%'
+        """)
+        List<Notification> selectUnreadAdminNotifications(@Param("email") String email);
+   
+    @Select("""
+    	    SELECT * FROM notifications
+    	    WHERE user_id = #{userId}
+    	      AND is_read = false
+    	      AND message LIKE '[관리자]%'
+    	""")
+    	List<Notification> findUnreadAdminNotifications(@Param("userId") Long userId);
+
 }
+

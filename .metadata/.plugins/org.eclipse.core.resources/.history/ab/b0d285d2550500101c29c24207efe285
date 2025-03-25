@@ -1,0 +1,15 @@
+package com.project.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // ✅ 정적 리소스를 프로젝트 내부(static/uploads)로 변경
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("classpath:/static/uploads/");
+    }
+}

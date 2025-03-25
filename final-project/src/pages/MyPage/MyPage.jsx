@@ -10,7 +10,7 @@ import UserWithdrawal from "./UserWithdrawal";
 import InquiryList from "./InquiryList"; // ✅ 문의 목록 추가
 import InquiryForm from "./InquiryForm"; // ✅ 문의 작성 폼 추가
 import InquiryDetail from "./InquiryDetail"; // ✅ 문의 상세 페이지 추가
-
+import "../../styles/GlobalStyles.css"
 export default function MyPage({ user }) {
   return (
     <MyLayout user={user}>

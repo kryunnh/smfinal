@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/AdminNotifications.css"; // 스타일 재사용
 import ReportDetailModal from "./ReportDetailModal"; // 신고 상세 모달
-
+import SendNotificationModal from "./SendNotificationModal"; 
 const AdminreportList = () => {
   const [reports, setReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
-
+  const [showSendModal, setShowSendModal] = useState(false);
   // ✅ 신고 목록 불러오기
   const fetchReports = async () => {
     try {
@@ -63,7 +63,10 @@ const AdminreportList = () => {
           ))
         )}
       </div>
-
+      {showSendModal && (
+  <SendNotificationModal onClose={() => setShowSendModal(false)} />
+)}
+      <button onClick={() => setShowSendModal(true)}>📢 알림 직접 보내기</button>
       {/* 📌 상세 신고 모달 */}
       {selectedReport && (
         <ReportDetailModal

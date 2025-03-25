@@ -44,7 +44,8 @@ public class SecurityConfig {
 
             // 🔹 관리자 페이지 보호 (hasRole 사용)
             .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-
+            .requestMatchers("/api/notifications/**").authenticated()
+	
             // 🔹 사용자 인증 필요 API
             .requestMatchers("/user/update", "/user/inquiries", "/user/notifications/**", "/user/**").authenticated()
          // 🔹 타로 카드 API는 USER, ADMIN 모두 허용

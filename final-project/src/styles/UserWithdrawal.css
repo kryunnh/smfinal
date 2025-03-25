@@ -2,14 +2,15 @@
 
 /* 📌 회원 탈퇴 폼 스타일 */
 .withdrawal-form-container {
-    width: 900px; /* ✅ 문의 목록과 동일한 크기 */
-    margin: 50px auto;
-    background: #111; /* ✅ 다크 테마 적용 */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    min-width: 1200px;
+    margin: 60px auto;
+    background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
     text-align: center;
-    color: white;
 }
 
 .withdrawal-header {
@@ -26,42 +27,15 @@
     padding: 10px;
     font-size: 16px;
     resize: none;
-    background: #222;
-    color: white;
+    background: #fff;
+    color: #333;
 }
 
 .withdrawal-buttons {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
+  justify-content: center;  /* ✅ 버튼을 가운데로 정렬 */
+  gap: 20px;                /* ✅ 버튼 사이 간격 */
+  margin-top: 20px;
 }
 
-.submit-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
 
-.submit-button:hover {
-    background: #0056b3;
-}
-
-.cancel-button {
-    background: #888;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 100px;
-}
-
-.cancel-button:hover {
-    background: #666;
-}

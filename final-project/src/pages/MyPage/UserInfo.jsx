@@ -27,15 +27,7 @@ export default function UserInfo() {
   return (
     <div className="user-info-card">
       <h2>👤 회원 정보</h2>
-      <div className="user-info-detail">
-        <p><strong>이름:</strong> {user.name}</p>
-        <p><strong>이메일:</strong> {user.email}</p>
-        <p><strong>전화번호:</strong> {user.phoneNumber}</p>
-        <p><strong>역할(Role):</strong> {user.role}</p>
-        <p><strong>가입일:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}</p>
-        <p><strong>이메일 인증 여부:</strong> {user.isVerified ? "인증 완료 ✅" : "미인증 ❌"}</p>
-
-        {user.profileImage && (
+      {user.profileImage && (
           <div className="profile-image-box">
             <img
             src={
@@ -50,6 +42,15 @@ export default function UserInfo() {
           />
           </div>
         )}
+      <div className="user-info-detail">
+        <p><strong>이름:</strong> {user.name}</p>
+        <p><strong>이메일:</strong> {user.email}</p>
+        <p><strong>전화번호:</strong> {user.phoneNumber}</p>
+        <p><strong>역할(Role):</strong> {user.role}</p>
+        <p><strong>가입일:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}</p>
+        <p><strong>이메일 인증 여부:</strong> {user.isVerified ? "인증 완료 ✅" : "미인증 ❌"}</p>
+
+     
       </div>
     </div>
   );

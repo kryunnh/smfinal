@@ -1,65 +1,76 @@
 .inquiry-list-container {
-    width: 900px;
-    margin: 50px auto;
-    background: #111;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    color: white;
-  }
+  min-width: 1200px;
+  margin: 60px auto;
+  background: #fffaf2;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+  text-align: center;
+}
+
+.inquiry-header {
+  font-size: 26px;
+  font-weight: bold;
+  background-color: #ff914d; /* 밝은 오렌지 */
+  margin-bottom: 30px;
+  padding: 12px 0;
+  text-align: center; /* ✅ 중앙 정렬 */
+  color: white;        /* ✅ 텍스트 가독성 위해 흰색 추천 */
+  border-radius: 10px; /* ✅ 살짝 둥글게 */
+}
   
-  .inquiry-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .inquiry-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .inquiry-table th, .inquiry-table td {
-    border: 1px solid #444;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .inquiry-table th {
-    background: #222;
-    font-size: 18px;
-  }
-  
-  .reply-status {
-    color: lightgreen;
-    font-weight: bold;
-  }
-  
-  .delete-button {
-    background: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .delete-button:hover {
-    background: darkred;
-  }
-  
-  .inquiry-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .inquiry-button:hover {
-    background: #0056b3;
-  }
-  
+.inquiry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.inquiry-table th,
+.inquiry-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.inquiry-table th {
+  background-color: #ffe4cc; /* 밝은 오렌지 베이스 */
+  color: #444;
+}
+
+.reply-status {
+  font-weight: bold;
+  color: #ffa75e; /* 부드러운 강조 오렌지 */
+}
+
+.delete-button {
+  background: #ff5c5c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background: #cc0000;
+}
+
+.inquiry-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #FFA575;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 180px;
+  color: white;
+}
+
+.inquiry-button:hover {
+  background: #0056b3;
+}

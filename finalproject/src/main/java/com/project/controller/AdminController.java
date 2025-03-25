@@ -115,17 +115,22 @@ public class AdminController {
 
     @PostMapping("/notifications")
     public ResponseEntity<String> sendNotification(@RequestBody Map<String, String> payload) {
-       
-    	String receiverEmail = payload.get("receiverEmail");
+        String receiverEmail = payload.get("receiverEmail");
         String message = payload.get("message");
 
         if (receiverEmail == null || receiverEmail.isEmpty()) {
             return ResponseEntity.badRequest().body("receiverEmail 값이 필요합니다.");
         }
 
+        // ✅ [관리자] 태그가 없다면 자동으로 붙여주기
+        if (message != null && !message.startsWith("[관리자]")) {
+            message = "[관리자] " + message;
+        }
+
         adminService.sendUserNotification(receiverEmail, message);
         return ResponseEntity.ok("알림이 성공적으로 전송되었습니다.");
     }
+    
 
     /** ✅ 일반 레시피 (Recipes) 관리 **/
     /** ✅ 1. 모든 레시피 가져오기 */

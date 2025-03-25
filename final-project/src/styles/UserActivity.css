@@ -2,14 +2,15 @@
 
 /* 📌 내 활동(게시글 + 관심 목록) 컨테이너 */
 .user-activity-container {
-    width: 900px; /* ✅ 문의 목록과 동일한 크기 */
-    margin: 50px auto;
-    background: #111; /* ✅ 다크 테마 적용 */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    color: white;
+    min-width: 1200px;
+  margin: 60px auto;
+  background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+  text-align: center;
 }
 
 .activity-title {
@@ -26,6 +27,7 @@
 .activity-table {
     width: 100%;
     border-collapse: collapse;
+    
 }
 
 .activity-table th, .activity-table td {
@@ -35,8 +37,9 @@
 }
 
 .activity-table th {
-    background: #222;
-    font-size: 18px;
+    background: #FFA575;         /* ✅ 주황 계열로 변경 */
+  color: white;                /* 글씨는 흰색으로 가독성 유지 */
+  font-size: 18px;
 }
 
 .favorites-grid {
@@ -52,7 +55,7 @@
 /* 📌 관심 항목 카드 스타일 */
 .favorite-item {
     width: 180px;            /* ✅ 고정 너비 */
-    background-color: #222;
+    background-color: #FFF3E4; 
     padding: 16px;
     border-radius: 10px;
     text-align: center;
@@ -70,13 +73,14 @@
 /* 📌 버튼 스타일 */
 .favorite-detail-btn, .favorite-remove-btn {
     margin-top: 5px;
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+  background: #FFA575;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 .favorite-remove-btn {

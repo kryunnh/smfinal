@@ -1,0 +1,348 @@
+package com.project.service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.project.mapper.AdminMapper;
+import com.project.model.Ingredient;
+import com.project.model.Inquiry;
+import com.project.model.Notification;
+import com.project.model.Recipe;
+import com.project.model.RecipeIngredient;
+import com.project.model.User;
+import com.project.model.UserDeletionRequest;
+import com.project.model.UserRecipe;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class AdminService {
+
+    private final AdminMapper adminMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final String UPLOAD_DIR = "C:/upload/recipes/";
+    private final FileStorageService fileStorageService; // ✅ 파일 저장을 위한 서비스 (필요 시 구현)
+    // ✅ 로그인할 때마다 login_history 테이블에 기록 추가
+    public void saveLoginHistory(Long userId) {
+        String sql = "INSERT INTO login_history (user_id) VALUES (?)";
+        jdbcTemplate.update(sql, userId);
+    }
+
+    // ✅ 최근 30일 동안 가장 많이 로그인한 유저 조회
+    public List<Map<String, Object>> getMostActiveUsers() {
+        String sql = "SELECT u.email, COUNT(lh.id) AS login_count " +
+                     "FROM users u " +
+                     "JOIN login_history lh ON u.id = lh.user_id " +
+                     "WHERE lh.login_time >= NOW() - INTERVAL 30 DAY " +
+                     "GROUP BY u.id " +
+                     "ORDER BY login_count DESC " +
+                     "LIMIT 5";
+        return jdbcTemplate.queryForList(sql);
+    }
+    // 🔹 전체 회원 조회
+    public List<User> getAllUsers() {
+        return adminMapper.getAllUsers();
+    }
+
+    // 🔹 회원 삭제
+    public void deleteUser(String email) {
+        adminMapper.deleteUser(email);
+    }
+
+    // 🔹 회원탈퇴 요청 목록 조회
+    public List<UserDeletionRequest> getAllDeletionRequests() {
+        List<UserDeletionRequest> requests = adminMapper.getAllDeletionRequests();
+
+        // ✅ 날짜 포맷을 문자열로 변환하여 응답
+        return requests.stream().map(request -> {
+            request.setCreatedAt(request.getCreatedAt()); // 그대로 유지
+            return request;
+        }).collect(Collectors.toList());
+    }
+
+    // 🔹 회원탈퇴 요청 승인
+    public void approveDeletionRequest(String email) {
+        adminMapper.approveDeletionRequest(email);
+        adminMapper.deleteUserDeletionRequest(email);
+    }
+
+    // 🔹 1:1 문의 전체 목록 조회
+    public List<Inquiry> getAllInquiries() {
+        return adminMapper.getAllInquiries();
+    }
+
+    // 🔹 1:1 문의 답변 등록
+    public void replyToInquiry(Long inquiryId, String reply) {
+        adminMapper.replyToInquiry(inquiryId, reply);
+    }
+
+    // 🔹 1:1 문의 답변 삭제
+    @Transactional
+    public void deleteInquiryReply(int id) {
+        adminMapper.deleteInquiryReply(id);
+    }
+
+    // 🔹 특정 유저에게 알림 전송
+    public void sendUserNotification(String receiverEmail, String message) {
+        adminMapper.sendUserNotification(receiverEmail, message);
+    }
+
+    /** ✅ 일반 레시피 (Recipes) 관리 **/
+    /** ✅ 1. 모든 레시피 가져오기 */
+    /** ✅ 1. 모든 레시피 가져오기 */
+    public List<Recipe> getAllRecipes() {
+        return adminMapper.getAllRecipes();
+    }
+
+    /** ✅ 2. 특정 레시피 조회 */
+    public Recipe getRecipeById(Long recipeId) {
+        Recipe recipe = adminMapper.getRecipeById(recipeId);
+        if (recipe == null) {
+            throw new RuntimeException("❌ 해당 레시피가 존재하지 않습니다.");
+        }
+
+        // ✅ 해당 레시피의 재료도 함께 조회
+        List<Ingredient> ingredients = adminMapper.getIngredientsByRecipeId(recipeId);
+        recipe.setIngredients(ingredients);
+
+        return recipe;
+    }
+
+    /** ✅ 3. 특정 레시피의 재료 목록 조회 */
+    public List<Ingredient> getIngredientsByRecipeId(Long recipeId) {
+        return adminMapper.getIngredientsByRecipeId(recipeId);
+    }
+
+    /** ✅ 4. 레시피 추가 */
+    @Transactional
+    public void addRecipe(Recipe recipe, MultipartFile foodImg, 
+                          String step1, String step2, String step3, String step4, String step5, String step6,
+                          MultipartFile stepImg1, MultipartFile stepImg2, MultipartFile stepImg3, 
+                          MultipartFile stepImg4, MultipartFile stepImg5, MultipartFile stepImg6,
+                          int categoryId, int foodTime, Integer weatherId, List<String> ingredients) {
+        try {
+            // ✅ 1. 대표 이미지 저장
+            recipe.setFoodImg(saveImageIfExists(foodImg));
+
+            // ✅ 2. 기본 정보 저장
+            recipe.setCategoryId(categoryId);
+            recipe.setFoodTime(foodTime);
+            recipe.setWeatherId(weatherId);
+
+            // ✅ 3. 단계별 설명 및 이미지 저장
+            setRecipeSteps(recipe, step1, step2, step3, step4, step5, step6);
+            setRecipeStepImages(recipe, stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, null);
+
+            // ✅ 4. 레시피 저장
+            adminMapper.insertRecipe(recipe);
+            System.out.println("🟢 새로운 레시피 추가 완료! 레시피 ID: " + recipe.getRecipesId());
+
+            // ✅ 5. 재료 추가 (이 부분이 제대로 실행되지 않는 문제 해결)
+            // ✅ 재료 추가
+            if (ingredients != null && !ingredients.isEmpty()) {
+            	for (String ingredientName : ingredients) {
+            	    Integer ingredientId = adminMapper.getIngredientIdByName(ingredientName);
+
+            	    if (ingredientId == null) {
+            	        Ingredient newIngredient = new Ingredient();
+            	        newIngredient.setName(ingredientName);
+
+            	        adminMapper.insertNewIngredient(newIngredient); // ✅ 객체 전달
+            	        ingredientId = newIngredient.getIngredientId(); // ✅ 생성된 키 받아오기
+            	    }
+
+            	    adminMapper.insertRecipeIngredient(recipe.getRecipesId(), ingredientId);
+            	}
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("❌ 레시피 추가 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    /** ✅ 5. 기존 재료 삭제 후 새로운 재료 추가 */
+    /** ✅ 재료를 추가하는 메서드 */
+    private void insertIngredients(Long recipeId, List<String> ingredients) {
+        if (ingredients == null || ingredients.isEmpty()) {
+            System.out.println("⚠️ 추가할 재료 없음.");
+            return;
+        }
+
+        for (String ingredientName : ingredients) {
+            // ✅ 1. 해당 재료가 이미 존재하는지 확인
+            Integer ingredientId = adminMapper.getIngredientIdByName(ingredientName);
+
+            // ✅ 2. 존재하지 않으면 새로운 재료 추가
+            if (ingredientId == null) {
+                Ingredient newIngredient = new Ingredient(); // 객체 생성
+                newIngredient.setName(ingredientName);
+
+                adminMapper.insertNewIngredient(newIngredient); // ✅ 객체 전달
+                ingredientId = newIngredient.getIngredientId(); // ✅ 새로 생성된 ID 가져오기
+            }
+
+            // ✅ 3. Recipe_Ingredients 테이블에 추가
+            adminMapper.insertRecipeIngredient(recipeId, ingredientId);
+        }
+        System.out.println("🟢 재료 추가 완료! 레시피 ID: " + recipeId);
+    }
+
+
+    /** ✅ 6. 레시피 수정 */
+    @Transactional
+    public void updateRecipe(Recipe recipe, MultipartFile foodImg, 
+                             String step1, String step2, String step3, String step4, String step5, String step6,
+                             MultipartFile stepImg1, MultipartFile stepImg2, MultipartFile stepImg3, 
+                             MultipartFile stepImg4, MultipartFile stepImg5, MultipartFile stepImg6,
+                             List<String> ingredients) {
+        try {
+            // ✅ 1. 기존 레시피 정보 조회
+            Recipe existingRecipe = adminMapper.getRecipeById(recipe.getRecipesId()); 
+            if (existingRecipe == null) {
+                throw new RuntimeException("❌ 레시피 업데이트 실패! 해당 ID가 존재하지 않습니다.");
+            }
+
+            // ✅ 2. 대표 이미지 업데이트
+            recipe.setFoodImg(updateImageIfExists(foodImg, existingRecipe.getFoodImg()));
+
+            // ✅ 3. 단계별 설명 및 이미지 업데이트
+            setRecipeSteps(recipe, step1, step2, step3, step4, step5, step6);
+            setRecipeStepImages(recipe, stepImg1, stepImg2, stepImg3, stepImg4, stepImg5, stepImg6, existingRecipe);
+
+            // ✅ 4. 레시피 정보 업데이트
+            int updatedRecipeRows = adminMapper.updateRecipe(recipe);
+            if (updatedRecipeRows == 0) {
+                throw new RuntimeException("❌ 레시피 업데이트 실패!");
+            }
+
+            // ✅ 5. 기존 재료 삭제 후 새로운 재료 추가 (이 부분 수정)
+            updateRecipeIngredients(recipe.getRecipesId(), ingredients);
+
+            System.out.println("🟢 레시피와 재료 업데이트 완료!");
+        } catch (Exception e) {
+            throw new RuntimeException("❌ 레시피 업데이트 중 오류 발생: " + e.getMessage());
+        }
+    }
+    public void deleteStepImage(Long recipeId, int stepNumber) {
+        try {
+            String column = "stepImg" + stepNumber;
+            adminMapper.deleteStepImage(recipeId, column);
+            System.out.println("✅ 단계 " + stepNumber + " 이미지 삭제 완료 (DB)");
+        } catch (Exception e) {
+            throw new RuntimeException("❌ 이미지 삭제 실패: " + e.getMessage());
+        }
+    }
+    /** ✅ 기존 재료 삭제 후 새로운 재료 추가 */
+    private void updateRecipeIngredients(Long recipeId, List<String> ingredients) {
+        adminMapper.deleteIngredientsByRecipeId(recipeId); // 기존 재료 삭제
+        insertIngredients(recipeId, ingredients); // 새로운 재료 추가
+    }
+    /** ✅ 레시피 단계별 설명 업데이트 */
+    private void setRecipeSteps(Recipe recipe, String step1, String step2, String step3, String step4, String step5, String step6) {
+        recipe.setStep1(step1);
+        recipe.setStep2(step2);
+        recipe.setStep3(step3);
+        recipe.setStep4(step4);
+        recipe.setStep5(step5);
+        recipe.setStep6(step6);
+    }
+
+    /** ✅ 레시피 단계별 이미지 업데이트 */
+    private void setRecipeStepImages(Recipe recipe, MultipartFile stepImg1, MultipartFile stepImg2, MultipartFile stepImg3,
+                                     MultipartFile stepImg4, MultipartFile stepImg5, MultipartFile stepImg6, Recipe existingRecipe) {
+        recipe.setStepImg1(updateImageIfExists(stepImg1, existingRecipe != null ? existingRecipe.getStepImg1() : null));
+        recipe.setStepImg2(updateImageIfExists(stepImg2, existingRecipe != null ? existingRecipe.getStepImg2() : null));
+        recipe.setStepImg3(updateImageIfExists(stepImg3, existingRecipe != null ? existingRecipe.getStepImg3() : null));
+        recipe.setStepImg4(updateImageIfExists(stepImg4, existingRecipe != null ? existingRecipe.getStepImg4() : null));
+        recipe.setStepImg5(updateImageIfExists(stepImg5, existingRecipe != null ? existingRecipe.getStepImg5() : null));
+        recipe.setStepImg6(updateImageIfExists(stepImg6, existingRecipe != null ? existingRecipe.getStepImg6() : null));
+    }
+
+    /** ✅ 이미지 저장 (수정 없으면 기존 이미지 유지) */
+    private String updateImageIfExists(MultipartFile file, String existingFileName) {
+        if (file != null && !file.isEmpty()) {
+            return fileStorageService.storeFile(file);
+        }
+        return existingFileName;
+    }
+
+    /** ✅ 이미지 저장 (없으면 null 반환) */
+    private String saveImageIfExists(MultipartFile file) {
+        if (file != null && !file.isEmpty()) {
+            return fileStorageService.storeFile(file);
+        }
+        return null;
+    }
+
+
+    /** ✅ 레시피 목록 가져오기 (검색 및 필터 포함) */
+    public List<Recipe> getRecipes(String keyword, Integer categoryId, Integer weatherId) {
+        return adminMapper.findRecipes(keyword, categoryId, weatherId);
+    }
+
+    /** ✅ 5. 레시피 삭제 */
+    public void deleteRecipe(Long id) {
+        adminMapper.deleteRecipe(id);
+    }
+    /** ✅ 유저 레시피 (User_Recipes) 관리 **/
+
+    // ✅ 전체 유저 레시피 조회
+    public List<UserRecipe> getAllUserRecipes() {
+        return adminMapper.getAllUserRecipes();
+    }
+
+ // ✅ 특정 유저 레시피 조회
+    public UserRecipe getUserRecipeById(Long id) {
+        return adminMapper.getUserRecipeById(id);
+    }
+
+    // ✅ 승인 대기 중인 유저 레시피 조회 (STATUS = 'OFF'만 가져옴)
+    public List<UserRecipe> getPendingUserRecipes() {
+        return adminMapper.getPendingUserRecipes();
+    }
+
+    // ✅ 유저 레시피 승인 (STATUS = 'ON'으로 변경)
+   
+    public void approveUserRecipe(Integer  id) {
+        System.out.println("🔍 [Service] 승인 요청된 레시피 ID: " + id);
+        
+        int updatedRows = adminMapper.approveUserRecipe(id);
+        
+        if (updatedRows == 0) {
+            System.out.println("❌ [Service] 승인 실패 - 존재하지 않는 ID일 가능성");
+            throw new RuntimeException("레시피 승인 실패: 존재하지 않는 ID일 가능성이 있음.");
+        }
+
+        System.out.println("✅ [Service] 승인 완료! 업데이트된 행 수: " + updatedRows);
+    }
+
+    // ✅ 유저 레시피 삭제
+    public void deleteUserRecipe(Integer  id) {
+        adminMapper.deleteUserRecipe(id);
+    }
+    // 🔹 관리자 알림 목록 조회
+    public List<Notification> getAdminNotifications(String email) {
+        List<Notification> notifications = adminMapper.getAdminNotifications(email);
+        if (notifications.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No notifications found for admin.");
+        }
+        return notifications;
+    }
+    // 🔹 관리자 알림 읽음 처리
+    public void markAdminNotificationAsRead(Long notificationId) {
+        adminMapper.markAdminNotificationAsRead(notificationId);
+    }
+
+    // 🔹 관리자 알림 삭제
+    public void deleteAdminNotification(Long notificationId) {
+        adminMapper.deleteAdminNotification(notificationId);
+    }
+}
