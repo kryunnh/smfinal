@@ -1,0 +1,88 @@
+package com.project.config;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+@Component
+public class ClovaSpeechClient {
+
+	@Value("${clova.api.secret}")
+    private String apiSecret;
+
+	@Value("${clova.api.url}")
+    private String apiRrl;
+	private static final Header[] HEADERS = {
+			new BasicHeader("Accept", "application/json"),
+			new BasicHeader("X-CLOVASPEECH-API-KEY",apiSecret),
+	};
+	
+	private final Gson gson = new Gson();
+	
+	public String upload(File file) {
+		try(CloseableHttpClient httpClient = HttpClients.createDefault()){
+			HttpPost httpPost = new HttpPost(INVOKE_URL + "/recognize/upload");
+			httpPost.setHeaders(HEADERS);
+			
+			 HttpEntity httpEntity = MultipartEntityBuilder.create()
+		                .addTextBody("params", "{\"language\":\"ko-KR\",\"completion\":\"sync\"}", ContentType.APPLICATION_JSON)
+		                .addBinaryBody("media", file, ContentType.DEFAULT_BINARY, file.getName())
+		                .build();
+			 
+			 httpPost.setEntity(httpEntity);
+			 
+			 try(CloseableHttpResponse response = httpClient.execute(httpPost)){
+				 String jsonResponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+				 return extractText(jsonResponse);
+			 }
+		}catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private String extractText(String jsonResponse) {
+		try {
+			JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+			return jsonObject.has("text") ? jsonObject.get("text").getAsString(): "변환된 텍스트가 없습니다.";
+		}catch(Exception e) {
+			return "JSON 파싱 오류:" + e.getMessage();
+		}
+	}
+	
+	public void saveTextToFile(String text, String outputPath) {
+        try (FileWriter writer = new FileWriter(outputPath, StandardCharsets.UTF_8)) {
+            writer.write(text);
+            System.out.println("변환된 텍스트가 저장되었습니다: " + outputPath);
+        } catch (IOException e) {
+            System.err.println("파일 저장 오류: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        ClovaSpeechClient client = new ClovaSpeechClient();
+        File inputFile = new File("C:\\audio\\voice.m4a");  // 변환할 음성 파일
+        String outputTextFile = "C:\\audio\\output1.txt";     // 변환된 텍스트 저장 파일
+
+        String resultText = client.upload(inputFile);  // 음성을 텍스트로 변환
+        client.saveTextToFile(resultText, outputTextFile);  // 변환된 텍스트 저장
+    }
+	
+}

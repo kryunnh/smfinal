@@ -177,7 +177,7 @@ export default function ChallengeDetail(){
                <br/>
                <div className="ingredient-table">
                    <h2>재료</h2><br/>
-                   {selectRecipes.ingredients && selectRecipes.ingredients.length > 0 ? (
+                   {selectRecipes.ingredientss && selectRecipes.ingredientss.length > 0 ? (
                    <table>
                            <thead>
                                <tr>
@@ -188,16 +188,16 @@ export default function ChallengeDetail(){
                                </tr>
                            </thead>
                        <tbody>
-                           {selectRecipes.ingredients.map((ingredient, index) => (
+                           {selectRecipes.ingredientss.map((ingredient, index) => (
                                index % 2 === 0 ? (
                                    <tr key={index}>
                                        <td>{ingredient.name}</td>
                                        <td>
                                            <a onClick={()=>handlePurchase(ingredient.name)}>구매하기</a>
                                        </td>
-                           {selectRecipes.ingredients[index + 1] && (
+                           {selectRecipes.ingredientss[index + 1] && (
                                    <>
-                                       <td>{selectRecipes.ingredients[index + 1].name}</td>
+                                       <td>{selectRecipes.ingredientss[index + 1].name}</td>
                                        <td>
                                            <a onClick={()=>handlePurchase(ingredient[index+1].name)}>구매하기</a>
                                        </td>

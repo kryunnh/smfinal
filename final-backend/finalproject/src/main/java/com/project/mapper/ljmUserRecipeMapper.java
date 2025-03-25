@@ -20,7 +20,7 @@ public interface ljmUserRecipeMapper {
 
 	
 
-	@Select("SELECT * FROM User_Recipes")
+	@Select("SELECT * FROM User_Recipes WHERE status = 'on'")
     List<UserRecipe> getAllUserRecipes();
 
     // 특정 레시피에 대한 재료 가져오기

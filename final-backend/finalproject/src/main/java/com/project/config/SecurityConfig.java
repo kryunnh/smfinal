@@ -40,7 +40,7 @@ public class SecurityConfig {
                         "/user/send-verification-code", "/user/reset-password", 
                         "/user/verify-email", "/user/confirm-email", "/user/check-email", "/user/check-phone", 
                         
-                        "/api/recipes", "/api/recipes/popular",
+                        "/api/recipes", "/api/recipes/popular","/api/recognize-speech",
                         "/api/recipes/search", "/api/recipes/**", "/api/recipes/review/{id}","/api/userrecipes/review/{id}",
                         "/api/recipes/{id}/increase-view","/api/weather/recipe","/api/weather","/recognize",
                         "/api/userrecipes","/api/userrecipes/{id}","/api/userrecipes/search","/api/userrecipes/{id}/increase-view",

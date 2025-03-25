@@ -1,0 +1,68 @@
+package com.project.controller;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.project.config.ClovaSpeechClient;
+
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+public class NaverSpeechController {
+
+    private final String secret = "608d1fb18cf248f7a0b3dfecb481065a";
+    
+    @PostMapping("/recognize")
+    public ResponseEntity<Map<String, String>> recognizeSpeech(@RequestParam("file") MultipartFile file) {
+        try {
+            // MultipartFile을 File로 변환
+            File convertedFile = convertMultipartFileToFile(file);
+            if (convertedFile == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "파일 변환 실패"));
+            }
+            
+            if (!isValidAudioFile(convertedFile)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "지원하지 않는 파일 형식"));
+            }
+            
+            ClovaSpeechClient client = new ClovaSpeechClient();
+            String recognizedText = client.upload(convertedFile);
+            
+            // 음성 인식 실패 시 처리
+            if (recognizedText.equals("변환된 텍스트가 없습니다.")) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                     .body(Collections.singletonMap("error", "음성 인식 실패"));
+            }
+            
+            return ResponseEntity.ok(Collections.singletonMap("text", recognizedText));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Collections.singletonMap("error", "음성 인식 처리 중 오류 발생"));
+        }
+    }
+    
+    private boolean isValidAudioFile(File file) {
+        // 파일 형식 체크 (예: WAV, MP3 등)
+        String fileName = file.getName().toLowerCase();
+        return fileName.endsWith(".wav") || fileName.endsWith(".mp3");
+    }
+
+    private File convertMultipartFileToFile(MultipartFile file) {
+        try {
+            File convertedFile = new File(file.getOriginalFilename());
+            file.transferTo(convertedFile);
+            return convertedFile;
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return null; // 파일 변환 실패 시 null 반환
+        }
+    }
+}

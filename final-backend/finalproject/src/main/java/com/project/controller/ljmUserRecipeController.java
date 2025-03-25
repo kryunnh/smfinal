@@ -44,7 +44,7 @@ public class ljmUserRecipeController {
         List<UserRecipe> userRecipes = ljmuserRecipeService.getAllUserRecipes();
         for(UserRecipe userRecipe : userRecipes){
         	List<Ingredients> ingredients = ljmuserRecipeService.getIngredientsByUserRecipeId(userRecipe.getUserRecipesId());
-        	userRecipe.setIngredients(ingredients);
+        	userRecipe.setIngredientss(ingredients);
         }
         return userRecipes;
     }
@@ -53,7 +53,7 @@ public class ljmUserRecipeController {
     public UserRecipe getUserRecipe(@PathVariable long id) {
     	UserRecipe userRecipes = ljmuserRecipeService.userRecipeById(id);
     	List<Ingredients> ingredients = ljmuserRecipeService.getIngredientsByUserRecipeId(id);
-    	userRecipes.setIngredients(ingredients);
+    	userRecipes.setIngredientss(ingredients);
     	return userRecipes;
     }
     

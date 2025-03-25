@@ -1,0 +1,17 @@
+package com.project.service;
+
+import org.springframework.stereotype.Service;
+
+import lombok.Value;
+
+@Service
+public class NaverCloudSpeechService {
+	
+	@Value("${clova.api.url}")
+	private String clovaApiUrl;
+	
+	@Value("${clova.api.secret")
+	private String apiSecret;
+	
+	
+}

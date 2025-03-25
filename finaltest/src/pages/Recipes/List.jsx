@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './List.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,10 @@ export default function List() {
     const [favorites, setFavorites] = useState({});
     const [isSearching, setIsSearching] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('token')); 
-    const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
+
     
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'ko-KR';
@@ -127,48 +130,127 @@ export default function List() {
             });
     };
 
-    const startVoiceSearch = ()=>{
-        if (!category) {
-            alert("카테고리를 선택해 주세요.");
-            return;
-        }
+    const startRecording = async () => {
+        try{
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
 
-        if (isVoiceSearchActive) {
-            recognition.stop();
-            setIsVoiceSearchActive(false);
-        } else {
-            recognition.start();
-            setIsVoiceSearchActive(true);
-        }
+        mediaRecorder.ondataavailable = (event)=>{
+            if(event.data.size > 0){
+                audioChunksRef.current.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async ()=>{
+            const audioBlob = new Blob(audioChunksRef.current, {type: "audio/wav"});
+            const formData = new FormData();
+            formData.append("file", audioBlob, "recorded_audio.wav");
+
+            try {
+                // 네이버 클로바 음성 인식 API에 파일 전송
+                const response = await axios.post("http://localhost:8080/api/recognize-speech", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                });
+
+                const recognizedText = response.data.text;
+                console.log("음성 인식 결과:", recognizedText);
+                setQuery(recognizedText); // 음성 인식 결과로 검색어 업데이트
+            } catch (error) {
+                console.log("음성 인식 오류:", error);
+                alert("음성 인식 실패했습니다.");
+            }
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+    }catch(error){
+        console.log("마이크 오류 : ", error);
+        alert("마이크 문제");
+    }
+}
+    const stopRecording = ()=>{
+       if(mediaRecorderRef.current){
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+       }
     };
 
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const cleanedText = transcript.replace(/\.$/, '');
-        setQuery(cleanedText);
-        handleVoiceSearch(cleanedText);
+    
 
-        recognition.stop();
-        setIsVoiceSearchActive(false);
-    };
+    // const startVoiceSearch = ()=>{
+    //     if (!category) {
+    //         alert("카테고리를 선택해 주세요.");
+    //         return;
+    //     }
 
-    const handleVoiceSearch = (recognizedText) =>{
-        const searchUrl = `http://localhost:8080/api/recipes/search?query=${recognizedText}&category=${category}`;
-        axios.get(searchUrl)
-            .then(response =>{
-                setRecipes(response.data);
-            })
-            .catch(error =>{
-                console.log("검색 오류 :", error);
-                setRecipes([]);
-            });
-    };
+    //     if (isVoiceSearchActive) {
+    //         recognition.stop();
+    //         setIsVoiceSearchActive(false);
+    //     } else {
+    //         recognition.start();
+    //         setIsVoiceSearchActive(true);
+    //     }
+    // };
+
+    // recognition.onresult = (event) => {
+    //     const transcript = event.results[0][0].transcript;
+    //     const cleanedText = transcript.replace(/\.$/, '');
+    //     setQuery(cleanedText);
+    //     handleVoiceSearchWithClova(cleanedText);
+
+    //     recognition.stop();
+    //     setIsVoiceSearchActive(false);
+    // };
+
+    // const handleVoiceSearch = (recognizedText) =>{
+    //     const searchUrl = `http://localhost:8080/api/recipes/search?query=${recognizedText}&category=${category}`;
+    //     axios.get(searchUrl)
+    //         .then(response =>{
+    //             setRecipes(response.data);
+    //         })
+    //         .catch(error =>{
+    //             console.log("검색 오류 :", error);
+    //             setRecipes([]);
+    //         });
+    // };
+
+    // const handleVoiceSearchWithClova = (audioFile) => {
+    //     const formData = new FormData();
+    //     formData.append('file', audioFile);  // audioFile은 업로드된 오디오 파일입니다.
+    
+    //     // 네이버 클로바 음성 인식 API로 요청
+    //     axios.post('http://localhost:8080/recognize', formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     })
+    //     .then(response => {
+    //         const recognizedText = response.data.text;
+    //         console.log(response.data.text);
+    //         setQuery(recognizedText);  // 음성 인식 결과로 검색어 업데이트
+    //         handleVoiceSearch(recognizedText);  // 음성 인식된 텍스트로 검색 처리
+    //     })
+    //     .catch(error => {
+    //         console.log("음성 파일 업로드 실패:", error);
+    //         alert("음성 인식에 실패했습니다.");
+    //     });
+    // };
+
+   
+
 
     return (
         <div className="recipe-main">
             <h1>레시피 목록</h1>
             <div className='recipe-search'>
-                <button onClick={startVoiceSearch}> {isVoiceSearchActive ? "🔴 인식 중" : "🎤 시작"}</button>
+                {/* <button onClick={startVoiceSearch}> {isVoiceSearchActive ? "🔴 인식 중" : "🎤 시작"}</button> */}
+                <button onClick={isRecording ? stopRecording : startRecording}>
+                    {isRecording ? "🔴 인식 중" : "🎤 시작"}
+                </button>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">분류 선택</option>
                     <option value="음식명">음식명</option>

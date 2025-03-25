@@ -1,0 +1,19 @@
+package com.project.config;
+
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.MultipartConfigElement;
+
+@Configuration
+public class MultipartConfig {
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        // 임시 파일 저장 위치 설정
+        factory.setLocation("/tmp");
+        return factory.createMultipartConfig();
+    }
+}

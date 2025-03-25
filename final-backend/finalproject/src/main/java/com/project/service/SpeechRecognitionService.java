@@ -1,0 +1,52 @@
+package com.project.service;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class SpeechRecognitionService {
+
+	 @Value("${naver.api.client-id}")
+	    private String clientId;
+
+	    @Value("${naver.api.client-secret}")
+	    private String clientSecret;
+
+	    @Value("${naver.api.url}")
+	    private String naverApiUrl;
+
+	    public String recognizeSpeech(MultipartFile file) throws IOException {
+	        // 네이버 API에 요청할 HttpHeaders 설정
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(org.springframework.http.MediaType.MULTIPART_FORM_DATA);
+	        headers.set("X-Naver-Client-Id", clientId);
+	        headers.set("X-Naver-Client-Secret", clientSecret);
+
+	        // 파일을 Multipart로 설정
+	        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+	        body.add("file", file.getResource());
+
+	        // RestTemplate을 사용하여 네이버 음성 인식 API 호출
+	        RestTemplate restTemplate = new RestTemplate();
+	        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
+
+	        ResponseEntity<String> response = restTemplate.exchange(naverApiUrl, HttpMethod.POST, request, String.class);
+
+	        // 응답에서 텍스트 추출
+	        String responseBody = response.getBody();
+	        if (responseBody != null && responseBody.contains("\"text\"")) {
+	            return responseBody.split("\"text\":\"")[1].split("\"")[0];
+	        }
+	        return null; // 텍스트가 없는 경우
+	    }
+    }

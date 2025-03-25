@@ -33,5 +33,5 @@ public class UserRecipe {
     private int foodTime;
     private int categoryId;
     private String status; // 승인 여부 (on/off)
-    private List<Ingredients> ingredients; 
+    private List<Ingredients> ingredientss; 
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import './Popular.css';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import '../Recipes/List.css';
 
 export default function Popular() {
     const [recipes, setRecipes] = useState([]);

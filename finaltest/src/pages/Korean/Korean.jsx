@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import './Korean.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import '../Recipes/List.css';
 
 
 
