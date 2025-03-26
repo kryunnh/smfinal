@@ -89,7 +89,7 @@ public class krhImageController {
     
     @GetMapping("/api/userrecipes/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) throws IOException {
-    	String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
+    	String IMAGE_DIRECTORY = "src/main/resources/static/uploads/";
     	File file = new File(IMAGE_DIRECTORY + filename);
         
         // 파일이 존재하는지 확인

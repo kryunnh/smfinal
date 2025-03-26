@@ -45,7 +45,6 @@ public class RecipesController {
 	        List<Ingredients> ingredients = recipesService.getIngredientsByRecipeId(recipe.getRecipesId()); // 각 레시피의 재료를 가져옴
 	        recipe.setIngredients(ingredients);
 	    }
-	    
 	    return recipes; 
 	}
 	

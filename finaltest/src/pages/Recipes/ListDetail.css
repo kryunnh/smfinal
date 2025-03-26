@@ -1,5 +1,7 @@
 .recipe-detail-main p{
-    margin-top: 5%;
+    max-width: 1400px;
+    width: 100%;
+    text-align: center;
 }
 
 .recipe-detail-main{
@@ -9,9 +11,12 @@
     font-size: 20px;
 }
 .recipe-view{
+    margin-top: 100px;
+    display: flex;
+    justify-content: flex-end;
     text-align: right;
     font-size: small;
-    margin-right: 10%;
+   
 }
 .recipe-header{
     text-align: center;
@@ -87,6 +92,7 @@ table{
     overflow-x: auto; /* 가로 스크롤 */
     white-space: nowrap;
     padding: 10px 0;
+    margin-bottom: 100px;
 }
 
 
@@ -104,6 +110,8 @@ table{
     margin-bottom: 20px;
 }
 
+
+
 .review-head{
     margin-bottom: 30px;
 }
@@ -111,6 +119,7 @@ table{
 .review-content{
     display: flex;
     align-items: center;
+    flex-grow: 1;
 }
 
 .review-content textarea{
@@ -126,6 +135,15 @@ table{
     padding: 10px 20px;
     text-align: center;
     align-items: center;
+    background-color: #FFA575;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 1px;
+}
+
+.review-content button:hover{
+    background-color: #ff9d68;
 }
 
 .review-rating{
@@ -135,4 +153,30 @@ table{
 
 .review-edit{
     right: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0;
+    margin: 0;
+}
+
+.review-edit button{
+     background-color: #eeeeee;
+      border: none;
+      border-radius: 20px;
+      padding: 5px 10px;
+}
+
+.review-list{
+    list-style: none;
+    padding: 0;
+}
+
+.review-list li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-hr{
+    border: 0.5px solid #eeeeee;
 }

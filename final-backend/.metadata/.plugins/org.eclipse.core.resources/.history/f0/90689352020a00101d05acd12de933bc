@@ -88,9 +88,9 @@ public class krhImageController {
     }
     
     @GetMapping("/api/userrecipes/{filename}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) throws IOException {
-    	String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
-    	File file = new File(IMAGE_DIRECTORY + filename);
+    public ResponseEntity<byte[]> getImage(@PathVariable String filename) throws IOException {
+    	
+    	File file = new File(uploadDir + filename);
         
         // 파일이 존재하는지 확인
         if (!file.exists()) {

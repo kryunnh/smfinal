@@ -45,7 +45,8 @@ public class RecipesController {
 	        List<Ingredients> ingredients = recipesService.getIngredientsByRecipeId(recipe.getRecipesId()); // 각 레시피의 재료를 가져옴
 	        recipe.setIngredients(ingredients);
 	    }
-	    
+	    String currentDirectory = System.getProperty("user.dir");
+	    System.out.println(currentDirectory);
 	    return recipes; 
 	}
 	

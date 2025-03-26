@@ -88,24 +88,24 @@ public class krhImageController {
     }
     
     @GetMapping("/api/userrecipes/{filename}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) throws IOException {
-    	String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
-    	File file = new File(IMAGE_DIRECTORY + filename);
-        
-        // 파일이 존재하는지 확인
-        if (!file.exists()) {
-            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(null);
-        }
+    public ResponseEntity<Resource> getImage(@PathVariable String fileName){
+    	
+    	try {
+            Path filePath = Paths.get(uploadDir + fileName);
+            Resource resource = new UrlResource(filePath.toUri());
 
-        // 이미지 파일을 byte[]로 읽어오기
-        try (InputStream in = new FileInputStream(file)) {
-            byte[] media = in.readAllBytes();
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
 
-            // 응답 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(getContentType(file.getName())));
-
-            return new ResponseEntity<>(media, headers, HttpStatus.SC_OK);
+            // MIME 타입 자동 설정
+            String contentType = getContentType(fileName);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
     

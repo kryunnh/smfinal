@@ -239,7 +239,7 @@ export default function Challenge(){
                     >
                         <Link to={`/challenge/${recipe.userRecipesId}`} 
                         onClick={()=> { handleClick(recipe.userRecipesId)}}>
-                        <img  src={`http://localhost:8080/uploads/${recipe.foodImg}`} alt={recipe.foodName}/>
+                        <img  src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
                         </Link>  
                         <h3>{recipe.foodName}</h3>
                         <div className="recipe-grid-btn">

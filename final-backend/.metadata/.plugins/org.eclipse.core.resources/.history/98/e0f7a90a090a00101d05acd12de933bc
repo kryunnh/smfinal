@@ -104,7 +104,7 @@ public class krhUserRecipeController {
 	    userRecipe.setUserId(userId);
 	    System.out.println("categoryId: " + categoryId);
 	    // 이미지 파일 처리 (각 스텝 이미지)
-	    String uploadDir = System.getProperty("user.dir") + "/uploads/";
+	    String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
 	    File dir = new File(uploadDir);
 	    if (!dir.exists()) {
 	        dir.mkdirs();  // 디렉토리가 없으면 생성

@@ -224,7 +224,7 @@ export default function ListDetail(){
         <div className="recipe-detail-main">
              {selectRecipes ? (
             <>
-                    <p className="recipe-view">조회수 : {selectRecipes.view}</p>
+                    <a className="recipe-view">조회수 : {selectRecipes.view}</a>
                 <div className="recipe-header">
                     <img src={selectRecipes.foodImg} alt={selectRecipes.foodName} />
                     <h1>{selectRecipes.foodName}<span>({selectRecipes.foodTime}분)</span></h1>
@@ -312,6 +312,7 @@ export default function ListDetail(){
                     ) : (
                         <p>리뷰가 없습니다.</p>
                     )}
+                    <hr className="review-hr"/>
                 </div>
 
                 {/* 리뷰 작성 폼 */}
@@ -342,6 +343,7 @@ export default function ListDetail(){
                 ) : (
                     !token &&<p>로그인 후 리뷰를 작성할 수 있습니다.</p>
                 )}
+                
 
                 {/* 리뷰 수정 폼 */}
                 {editReviewId && (
