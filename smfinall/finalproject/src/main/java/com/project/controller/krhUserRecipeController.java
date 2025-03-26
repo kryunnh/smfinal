@@ -59,13 +59,13 @@ public class krhUserRecipeController {
             @RequestParam(value = "stepImg4", required = false) MultipartFile stepImg4,
             @RequestParam(value = "stepImg5", required = false) MultipartFile stepImg5,
             @RequestParam(value = "stepImg6", required = false) MultipartFile stepImg6,
-            @RequestParam("ingredients")List<String> ingredients,
+            @RequestParam("ingredientss")List<String> ingredientss,
 	        @RequestHeader("Authorization") String token) {
 		    
 	    // JWT 토큰에서 이메일 추출
 	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    String email;
-	    
+	    System.out.println(ingredientss);
 	    try {
 	        // JWT에서 이메일 추출
 	        email = jwtUtil.extractEmail(jwtToken);
@@ -104,7 +104,7 @@ public class krhUserRecipeController {
 	    userRecipe.setUserId(userId);
 	    System.out.println("categoryId: " + categoryId);
 	    // 이미지 파일 처리 (각 스텝 이미지)
-	    String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+	    String uploadDir = System.getProperty("user.dir") + "/uploads/";
 	    File dir = new File(uploadDir);
 	    if (!dir.exists()) {
 	        dir.mkdirs();  // 디렉토리가 없으면 생성
@@ -134,9 +134,9 @@ public class krhUserRecipeController {
 	    
 	    // 레시피와 재료 추가
 	    try {
-	    	System.out.println(ingredients);
+	    	System.out.println(ingredientss);
 	    	System.out.println("userRecipeService: " + userRecipeService); // null이면 문제 있음
-	        userRecipeService.addUserRecipe(userRecipe, ingredients);
+	        userRecipeService.addUserRecipe(userRecipe, ingredientss);
 	        return ResponseEntity.ok("레시피가 성공적으로 등록되었습니다.");
 	    } catch (Exception e) {
 	    	e.printStackTrace();

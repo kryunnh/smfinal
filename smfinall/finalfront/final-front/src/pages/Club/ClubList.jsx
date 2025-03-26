@@ -106,6 +106,11 @@ const ClubList = () => {
   if (error) {
     return <div>{error}</div>;
   }
+  
+  //top으로 이동
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="club-page">
@@ -122,7 +127,7 @@ const ClubList = () => {
         <button onClick={handleSearchClick} className="search-btn">검색</button>
       </div>
       
-      <h2 style={{ color: "#FF8746" }}>🔥 신규 태그 🔥</h2>
+      <h2 style={{ color: "#FF8746" }} className="clubtagti">🔥 신규 태그 🔥</h2>
       <div className="tag-list">
         {tags.length > 0 ? (
           tags.map((tag) => (
@@ -138,7 +143,7 @@ const ClubList = () => {
             </button>
           ))
         ) : (
-          <p>태그 목록을 불러오는 데 실패했습니다.</p>
+          <p>태그 목록이 존재하지 않습니다. 새로운 모임을 생성해주십시오.</p>
         )}
       </div>
 
@@ -148,16 +153,18 @@ const ClubList = () => {
         ) : (
           filteredClubs.map((club, index) => (
             <li key={`${club.clubId}-${index}`}>
-              <img
+             <Link to={`/club/${club.clubId}`} className="detail-link">
+             <img
               style={{ width: "100%", height:"200px" }}
               src={`http://localhost:8080/uploads/clubimage/${club.clubImage}`}
               alt={`${club.clubName} 이미지`}
               className="club-image-list"
-            />
-              <h2>{club.clubName}</h2>
-              <p>{club.location}</p>
-              <p>마감일: {club.date}</p>
-              <Link to={`/club/${club.clubId}`} className="detail-link">상세보기</Link>
+              />
+              </Link>
+              <p style={{color: "#5e5e5e"}}>{club.location}</p>
+              <h2 style={{margin:18}}>{club.clubName}</h2>
+              <p style={{textAlign:"left"}}>마감일: {club.date}</p>
+              {/* <Link to={`/club/${club.clubId}`} className="detail-link">상세보기</Link> */}
             </li>
           ))
         )}
@@ -177,6 +184,7 @@ const ClubList = () => {
           </Link>
         )}
       </div>
+      <button onClick={scrollToTop} className="totop">🔝</button>
     </div>
   );
 };

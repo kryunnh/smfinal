@@ -1,13 +1,16 @@
 /*전체 페이지 규격*/
 .page{
-    width: 1400px;
+    width:100%;
+    max-width: 1400px;
     text-align: center;
     justify-self: center;
     margin: 0 auto;
 }
+
 table{
     text-align: center;
     border-collapse: collapse;
+    width: 100%; /* 전체 너비를 100%로 설정 */
 }
 
 /*제목*/
@@ -64,21 +67,22 @@ table{
 
 .search-container .search{
     border-radius: 20px;
-    padding: 10px 100px 10px 10px;
+    padding: 10px 10px 10px 10px;
     text-align: left;
     border:1px solid black;
 }
 
-.search-btn{
-    margin-left: 20px;
-    background-color: #FFA575;
-    padding: 10px 20px;
-    border-radius: 20px;
+.search-btnn{
+    padding: 10px 20px !important;
     border: none;
+    background-color: #FFA575;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
 }
 
-.search-btn:hover{
+.search-btnn:hover{
     cursor: pointer;
+    background-color: #ff9d68;
 }
 
 .write-btn{
@@ -87,6 +91,7 @@ table{
     text-align: right;
     border-radius: 20px;
     border: none;
+    transition: background-color 0.3s ease;
 }
 
 .write-button-container{
@@ -96,9 +101,45 @@ table{
 
 .write-btn:hover{
     cursor: pointer;
+    background-color: #ff9861;
 }
 
 .replies{
     background-color: #F7F7F7;
     padding:20px;
+}
+
+@media (max-width: 768px) {
+    /* 작은 화면에서는 테이블을 스크롤 가능하게 */
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 테이블 헤더 크기 조정 */
+    .tdz td {
+        padding: 10px;
+    }
+    
+    .big-title {
+        font-size: 24px; /* 제목 크기 조정 */
+        margin-top: 50px;
+        margin-bottom: 40px;
+    }
+
+    .search-container {
+        text-align: center; /* 작은 화면에서는 검색창을 중앙 정렬 */
+    }
+    
+    .board-paging button {
+        padding: 8px 15px; /* 버튼 크기 조정 */
+        font-size: 14px;
+    }
+    
+    .write-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
 }

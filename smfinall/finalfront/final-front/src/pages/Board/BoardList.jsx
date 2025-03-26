@@ -46,6 +46,14 @@ const BoardList = () => {
     setFindStr(event.target.value);
   };
 
+  const handleClick=(boardId)=>{
+    try {
+      // 서버에 조회수 증가 요청
+      axios.get(`http://localhost:8080/api/board/${boardId}/incrementviews`);
+    } catch (error) {
+      console.error("조회수 증가 실패:", error);
+    }
+  }
   const handleSearchClick = () => {
     setPage(1);
     fetchBoardList();
@@ -85,7 +93,7 @@ const BoardList = () => {
           placeholder="검색어를 입력하세요"
           className="search"
         />
-        <button onClick={handleSearchClick} className="search-btn">검색</button>
+        <button onClick={handleSearchClick} className="search-btnn">검색</button>
       </div>
       
       <table>
@@ -95,7 +103,7 @@ const BoardList = () => {
             <tr key={board.boardId}>
               <td>{board.boardId}</td>
               <td> 
-                <Link to={`/boardlist/${board.boardId}`} style={{ textDecoration: "none", color: "inherit" }} >
+                <Link to={`/boardlist/${board.boardId}`} style={{ textDecoration: "none", color: "inherit" }} onClick={()=>handleClick(board.boardId)}>
                   {board.title}
                 </Link>
               </td>

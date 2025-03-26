@@ -275,10 +275,16 @@ public class krhBoardController {
 	
 	//대댓글 추가
 	@PostMapping("/{boardId}/addreply")
-	public ResponseEntity<String> addReply(@PathVariable int boardId, @RequestBody krhCommentVO krhcommentVo, @RequestHeader("Authorization") String token) {
+	public ResponseEntity<String> addReply(
+	        @PathVariable int boardId, 
+	        @RequestBody krhCommentVO krhcommentVo, 
+	        @RequestHeader("Authorization") String token) {
+	    
 	    // JWT 토큰에서 사용자 이메일 추출
 	    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    Claims claims;
+	    
+	    System.out.println(krhcommentVo);
 	    try {
 	        claims = jwtUtil.extractAllClaims(jwtToken); 
 	    } catch (Exception e) {
@@ -301,32 +307,40 @@ public class krhBoardController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
 	    }
 
-//	    // 부모 댓글의 작성자 이메일 조회 (부모 댓글의 ID를 사용하여 작성자 이메일 가져오기)
-//	    krhCommentVO parentComment = krhcommentService.getCommentById(krhcommentVo.getReplyId());
-//	    if (parentComment == null) {
-//	        return ResponseEntity.badRequest().body("부모 댓글을 찾을 수 없습니다.");
-//	    }
-//
-//	    String boardOwnerEmail = parentComment.getAuthorEmail(); // 부모 댓글의 작성자 이메일
+	    // 부모 댓글의 작성자 이메일 조회 (replyId를 이용하여 부모 댓글 정보 가져오기)
+	    System.out.println("전달된 replyId: " + krhcommentVo.getReplyId());
+	    krhCommentVO parentComment = krhcommentService.getCommentById(krhcommentVo.getReplyId());
+	    if (parentComment == null) {
+	        System.out.println("부모 댓글을 찾을 수 없습니다.");
+	    } else {
+	        System.out.println("부모 댓글: " + parentComment);
+	    }
 
+	    String parentCommentAuthorEmail = parentComment.getAuthorEmail(); // 부모 댓글의 작성자 이메일
+
+	    System.out.println(parentCommentAuthorEmail);
 	    // 대댓글 정보를 VO에 담기
 	    krhcommentVo.setBoardId(boardId);
 	    krhcommentVo.setAuthor(user.getName());
 	    krhcommentVo.setAuthorId(user.getId());
 	    krhcommentVo.setAuthorEmail(email);
-
-//	    // 알림 생성 (부모 댓글 작성자에게 알림)
-//	    Notification notification = new Notification();
-//	    notification.setReceiverEmail(boardOwnerEmail);  // 부모 댓글 작성자 이메일
-//	    String message = user.getName() + "님이 회원님의 댓글에 답글을 작성하였습니다."; // 댓글 주인 이름
-//	    notification.setMessage(message);  // 알림 메시지 내용
+	    
+	    
+	    // 알림 생성 (부모 댓글 작성자에게 알림)
+	    if (!email.equals(parentCommentAuthorEmail)) { // 본인에게 알림 보내지 않도록 체크
+	        Notification notification = new Notification();
+	        notification.setReceiverEmail(parentCommentAuthorEmail); // 부모 댓글 작성자 이메일
+	        String message = user.getName() + "님이 회원님의 댓글에 답글을 작성하였습니다."; // 알림 메시지
+	        notification.setMessage(message);
+	        krhnotificationService.insertNotification(notification); // 알림 저장
+	    }
 
 	    // 대댓글 추가 서비스 호출
 	    try {
 	        krhcommentService.addReply(krhcommentVo);
-	        //krhnotificationService.insertNotification(notification); // 알림 전송
 	        return ResponseEntity.ok("대댓글이 성공적으로 추가되었습니다.");
 	    } catch (Exception e) {
+	    	e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("대댓글 추가 중 오류가 발생했습니다.");
 	    }
 	}

@@ -11,6 +11,7 @@ import com.project.model.Favorite;
 import com.project.model.Ingredients;
 import com.project.model.Recipes;
 import com.project.model.User;
+import com.project.model.UserRecipe;
 
 @Service
 public class RecipesService {
@@ -22,7 +23,7 @@ public class RecipesService {
 	
 	public List<Recipes> getAllRecipes(){
 		List<Recipes> recipes = recipesMapper.getAllRecipes();
-		
+		System.out.println("기본");
 		return recipes;
 	}
 	
@@ -46,6 +47,11 @@ public class RecipesService {
 		}
 		return recipe;
 	}
+	
+	 public Recipes findByRecipeId(long recipeId) {
+	        return recipesMapper.findByRecipeId(recipeId);
+	    }
+
 	
 	public List<Ingredients> getIngredientsByRecipeId(long recipesId) {
 		 List<Ingredients> ingredients = recipesMapper.findIngredientsByRecipeId(recipesId);
@@ -90,6 +96,14 @@ public class RecipesService {
 	    return recipesMapper.getFavoritesByUserId(userId);
 	}
 	
+	public List<Recipes> getWeatherRecipes(String precipitation){
+    	List<Recipes> recipes = recipesMapper.getWeatherRecipes(precipitation);
+    	return recipes;
+    }
+	
+
+	
 	
 }
+
 

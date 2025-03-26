@@ -54,6 +54,7 @@
   
   .toolbar button:hover {
     background-color: #ff9861;
+    cursor: pointer;
   }
   
   /* 툴바 버튼 - 스타일 */

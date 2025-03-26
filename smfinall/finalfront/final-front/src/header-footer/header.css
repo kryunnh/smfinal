@@ -1,106 +1,178 @@
-*{
-    margin: 10px;
-}
-.header{
-    background-color:white;
-    align-items: center;
-    display: flex;
-    margin: 0;
-    justify-content: space-between;
-    padding: 10px 20px;
-    position: relative;
-    height: 180px;
-}
-.header-logo h1{
-    flex-grow: 1; 
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-    margin: 0;
-}
-.header-logo img{
-    width: 80px;
-    height: 80px;
-
-}
-.header-logo{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%); /* 가로 중앙 정렬 */
-    display: flex;
-    align-items: center;
+/* header.css */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.login{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-grow: 1;
-    position: absolute;
-    top: 0;
-    right: 0;
+.header-logo h1 {
+  color: #FF8746;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'YOnepickTTF-Bold';
 }
 
-.login button{
-    border-radius: 10px;
-    background-color: rgb(224, 193, 134);
-    border: none;
-    padding: 10px 20px;
-    margin-left: 20px;
-    cursor: pointer;
+.header-logo img {
+  max-width: 100%;
+  width: 80px;
+  height: auto;
+  margin-left: 18px;
+  margin-right: 18px;
 }
 
-.category{
-    display: flex;
-    position: absolute;
-    left: 20px; 
-    bottom: 0px;
-    width: 100%;
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.category-dropdown{
-    position: relative;
+.nav-links a,
+.nav-links button {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  border: none;
+  background-color: transparent;
 }
 
-.dropdown{
-    position: absolute;
-    top: 15px; 
-    left: 0;
-    background-color: #fefefe;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    display: flex;
+.nav-links a:hover,
+.nav-links button:hover {
+  background-color: transparent;
+}
+
+.nav-links .category-dropdown,
+.nav-links .mypage-dropdown {
+  position: relative;
+}
+
+.nav-links .category-dropdown .dropdown,
+.nav-links .mypage-dropdown .dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  min-width: 150px;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.nav-links .category-dropdown:hover .dropdown,
+.nav-links .mypage-dropdown:hover .dropdown {
+  display: block;
+}
+
+.mobile-menu-icon {
+  display: none;
+}
+
+/* 로그아웃 버튼 수정 */
+.logout-btn {
+  text-align: center;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.dropdown a {
+  display: block;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.dropdown a:hover {
+  background-color: #FFA575;
+}
+
+@media (max-width: 768px) {
+  .header {
     flex-direction: column;
-    min-width: 120px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10; 
-    visibility: hidden; 
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    min-width: 150px;
-    text-align: center;
-}
+    padding: 10px;
+  }
 
-.category-dropdown:hover .dropdown{
-    visibility: visible;
-    opacity: 1;
-}
+  .header-logo h1 {
+    font-size: 20px;
+    color: white;
+  }
 
-.category .active{
-    font-weight: bold;
-    font-size: larger;
-}
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+  }
 
-.mypage{
+  .nav-links.active {
+    display: flex;
+  }
+
+  .mobile-menu-icon {
+    display: block;
     position: absolute;
-    right: 30px;
+    right: 20px;
+    top: 50px;
+    color: #FFA575;
+  }
+
+  .mobile-menu-icon:hover {
+    cursor: pointer;
+  }
+
+  .nav-links .category-dropdown .dropdown,
+  .nav-links .mypage-dropdown .dropdown {
+    position: static;
+    width: 100%;
+    margin-top: 5px;
+    display: block;
+  }
+
+  .nav-links a,
+  .nav-links button {
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  /* 로그아웃 버튼이 category 아래로 위치 */
+  .logout-btn {
+    position: static;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px 0;
+  }
 }
 
-.mypage-dropdown{
-    position: relative;
-}
+@media (max-width: 480px) {
+  .header-logo h1 {
+    font-size: 18px;
+  }
 
-.mypage-dropdown:hover .dropdown{
-    visibility: visible;
-    opacity: 1;
+  .nav-links a,
+  .nav-links button {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
 }

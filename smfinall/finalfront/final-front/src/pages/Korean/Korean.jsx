@@ -147,7 +147,7 @@ export default function Korean(){
 
     return (
         <div className="recipe-main">
-            <h1>한식</h1>
+            <h1 className="big-title">한식</h1>
             <div className='recipe-search'>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">분류 선택</option>
@@ -178,7 +178,7 @@ export default function Korean(){
                         <h3>{recipe.foodName}</h3>
                         <div className="recipe-grid-btn">
                         <a onClick={()=> handleFavorite(recipe.recipesId)}>{favorites[recipe.recipesId]?'★':'☆'}</a>
-                        <p>👀조회수 : {recipe.view}</p>
+                        <p>👀 조회수 : {recipe.view}</p>
                         </div>
                     </div>
                 ))}

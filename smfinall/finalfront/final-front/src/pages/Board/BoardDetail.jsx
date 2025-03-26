@@ -30,20 +30,20 @@ function BoardDetail() {
     }
   };
 
-  // 조회수 증가 처리
-  const incrementViews = async () => {
-    try {
-      // 서버에 조회수 증가 요청
-      await axios.get(`http://localhost:8080/api/board/${boardId}/incrementviews`);
-    } catch (error) {
-      console.error("조회수 증가 실패:", error);
-    }
-  };
+  // // 조회수 증가 처리
+  // const incrementViews = async () => {
+  //   try {
+  //     // 서버에 조회수 증가 요청
+  //     await axios.get(`http://localhost:8080/api/board/${boardId}/incrementviews`);
+  //   } catch (error) {
+  //     console.error("조회수 증가 실패:", error);
+  //   }
+  // };
 
   useEffect(() => {
     // 페이지 로드 시마다 조회수 증가
     fetchBoardDetail();
-    incrementViews();
+    // incrementViews();
   }, [boardId]);
 
   // 팝업창 열기 함수
@@ -93,6 +93,11 @@ function BoardDetail() {
   const isLoggedIn = !!token;
   const canReport = isLoggedIn && userEmail !== boardDetail.authorEmail;
 
+  //top으로 이동
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="page">
       <h1 className="big-title">요리 고민방 자세히 보기</h1>
@@ -129,6 +134,7 @@ function BoardDetail() {
 
       <BoardLike boardId={boardId} />
       <BoardComment />
+      <button onClick={scrollToTop} className="totop">🔝</button>
     </div>
   );
 }

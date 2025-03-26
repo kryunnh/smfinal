@@ -275,8 +275,8 @@ const toggleEditReply = (commentId, replyId, content) => {
         {comments.length > 0 ? (
           comments.map((comment) => (
             <div key={comment.commentId} className="comment-item">
-              <div>
-                <p>{comment.author}</p>
+              <div className="comments">
+                <p style={{fontSize:"18px" , marginBottom:"15px"}}>{comment.author}</p>
                 {isEditingComment === comment.commentId ? (
                   <form style={{ width: "100%", display: "flex", alignItems: "center" }}
                     onSubmit={(e) => {
@@ -293,7 +293,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                         })
                       }
                       rows="3"
-                      style={{ flex: "1", minHeight: "80px", resize: "vertical" }}
+                      style={{ flex: "1", minHeight: "50px", resize: "vertical", borderRadius:"20px", padding:"20px" }}
                     />
                     <button type="submit"  style={{ backgroundColor: "#FFA575", cursor: "pointer" }}>저장</button>
                     <button
@@ -306,7 +306,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                 ) : (
                   <p>{comment.content}</p>
                 )}
-                <br/>
+
                 <p className="createdAt">
                   {comment.createdAt}
                 </p>
@@ -324,8 +324,8 @@ const toggleEditReply = (commentId, replyId, content) => {
               {comment.replies && comment.replies.length > 0 && (
                 <div className="replies">
                   {comment.replies.map((reply) => (
-                    <div key={reply.commentId} className="reply-item" style={{ paddingLeft: "20px" }}>
-                      <sp>{reply.author}</sp>
+                    <div key={reply.commentId} className="reply-item">
+                      <p style={{fontSize:"18px", marginBottom:"15px"}}>{reply.author}</p>
                       {isEditingReply === reply.commentId ? (
                         <form style={{ width: "100%", display: "flex", alignItems: "center" }}
                           onSubmit={(e) => {
@@ -342,7 +342,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                               })
                             }
                             rows="3"
-                            style={{ flex: "1", minHeight: "80px", resize: "vertical" }}
+                            style={{ flex: "1", minHeight: "50px", resize: "vertical" , borderRadius:"20px", padding:"20px"}}
                           />
                           <button type="submit" style={{ backgroundColor: "#FFA575", cursor: "pointer" }}>저장</button>
                           <button type="button" onClick={() => setIsEditingReply(null)}>
@@ -352,7 +352,6 @@ const toggleEditReply = (commentId, replyId, content) => {
                       ) : (
                         <p>{reply.content}</p>
                       )}
-                      <br/>
                         <p className="createdAt">{reply.createdAt}</p>
                       <div className="boardcomment-button">
                         {reply.authorEmail === userEmail && (
@@ -368,7 +367,8 @@ const toggleEditReply = (commentId, replyId, content) => {
                   ))}
                 </div>
               )}
-&nbsp;&nbsp;
+              <br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <button
                 onClick={() => toggleReplyInput(comment.commentId)}
                 style={{
@@ -387,7 +387,7 @@ const toggleEditReply = (commentId, replyId, content) => {
                     }
                     rows="3"
                     placeholder="대댓글을 작성하세요..."
-                    style={{ flex: "1", minHeight: "80px", resize: "vertical" }}
+                    style={{ flex: "1", minHeight: "50px", resize: "vertical" , borderRadius:"20px", padding:"20px"}}
                   />
                   <button type="submit" style={{ backgroundColor: "#FFA575", height: "90px", cursor: "pointer" }}>
                     작성
@@ -409,10 +409,10 @@ const toggleEditReply = (commentId, replyId, content) => {
           onChange={(e) => setNewComment(e.target.value)}
           rows="3"
           placeholder="댓글을 작성하세요..."
-          style={{ flex: "1", minHeight: "80px", resize: "vertical" }}
+          style={{ flex: "1", minHeight: "50px", resize: "vertical", borderRadius:"20px", padding:"20px"}}
         />
         <button type="submit" style={{ backgroundColor: "#FFA575", height: "90px", cursor: "pointer" }}>
-          댓글 작성
+          작성
         </button>
       </form>
       <div className="button-container">

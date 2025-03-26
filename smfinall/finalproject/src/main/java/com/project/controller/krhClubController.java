@@ -162,6 +162,7 @@ public class krhClubController {
 	        krhclubVO.setDate(date);
 	        krhclubVO.setClubFeatures(clubFeatures);
 	        krhclubVO.setRecruiterEmail(email);  // 사용자가 작성한 클럽이므로 이메일을 저장
+	        
 	        krhclubVO.setClubUrl(clubUrl);
 	        
 	        if (clubImage != null && !clubImage.isEmpty()) {

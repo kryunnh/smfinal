@@ -121,7 +121,7 @@ const ClubDetail = () => {
             />
           )}
           <div style={{ marginBottom: "80px" }}>
-            <h1 style={{ color: "#FFA575" }}>{clubDetail.clubName}</h1>
+          <h1 style={{ color: "#FFA575" }}>{clubDetail.clubName}</h1>
           </div>
           <h3 style={{ color: "#FFA575" }}>이런 분을 찾아요!</h3>
           {/* 클럽 설명 */}

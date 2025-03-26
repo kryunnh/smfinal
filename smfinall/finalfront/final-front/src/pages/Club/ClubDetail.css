@@ -7,6 +7,7 @@
 
 /* ClubDetail.css */
 .club-detail {
+  width:100%;
     max-width: 1400px;
     margin: 0 auto;
     margin-top:100px;
@@ -17,6 +18,46 @@
     text-align: center;
     margin-bottom: 10px;
   }
+  
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 80px;
+    }
+  
+    .back-button{
+      padding: 10px 20px;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+      background-color: #EEEEEE;
+    }
+  
+    .back-button:hover{
+      cursor: pointer;
+      background-color: #d2d2d2;
+    }
+  
+    .apply-button{
+      padding: 10px 20px;
+      background-color: #FFA575;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+    }
+  
+    .apply-button:hover{
+      background-color: #ff9d68;
+      cursor: pointer;
+    }
+    
+    .club-image{
+      width:100%;
+      height: 600px;
+      display: flex;
+      justify-content: center;
+      border-radius: 10px;
+      margin-bottom:40px;
+    }
   
   .club-detail h3 {
     font-size: 1.5rem;
@@ -36,6 +77,8 @@
     border-radius: 10px;
     margin-top: 15px;
   }
+
+
   
   /* 반응형 디자인 적용 */
   @media (max-width: 768px) {
@@ -54,6 +97,10 @@
   
     #map {
       height: 300px;
+    }
+
+    .club-image{
+      height:300px;
     }
   }
   
@@ -78,44 +125,8 @@
     #map {
       height: 250px;
     }
-  }
 
-  .button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 80px;
-  }
-
-  .back-button{
-    padding: 10px 20px;
-    border-radius: 20px;
-    transition: background-color 0.3s ease;
-    background-color: #EEEEEE;
-  }
-
-  .back-button:hover{
-    cursor: pointer;
-    background-color: #d2d2d2;
-  }
-
-  .apply-button{
-    padding: 10px 20px;
-    background-color: #FFA575;
-    border-radius: 20px;
-    transition: background-color 0.3s ease;
-  }
-
-  .apply-button:hover{
-    background-color: #ff9d68;
-    cursor: pointer;
-  }
-  
-  .club-image{
-    width:100%;
-    height: 500px;
-    display: flex;
-  justify-content: center;
-  border-radius: 10px;
-  margin-bottom:40px;
+    .club-image {
+      height: 200px; /* 모바일에서는 이미지 높이를 더 줄임 */
+    }
   }

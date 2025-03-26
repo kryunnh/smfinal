@@ -43,21 +43,27 @@ public class SecurityConfig {
                     "/user/verify-email", "/user/confirm-email", "/user/check-email", "/user/check-phone", 
                     
                     "/api/recipes", "/api/recipes/popular",
-                    "/api/recipes/search", "/api/recipes/**", "/api/review/{id}",
-                    "/api/recipes/{id}/increase-view", 
+                    "/api/recipes/search", "/api/recipes/**", "/api/recipes/review/{id}","/api/userrecipes/review/{id}",
+                    "/api/recipes/{id}/increase-view","/api/weather/recipe","/api/weather","/recognize",
+                    "/api/userrecipes","/api/userrecipes/{id}","/api/userrecipes/search","/api/userrecipes/{id}/increase-view",
                     
                     "/api/main/popular", 
                     "/api/main/recent", "/chatbot/ask", "/api/board", "/api/board/{boardId}",
                     "/api/club", "/api/club/tags", "/api/club/{clubId}/send-application",
                     "/api/club/tags/{tagId}", "/api/club/search", "/api/club/{clubId}",
                     "/api/board/{boardId}/comments", "/api/board/comment/{commentId}/replies", 
-                    "/api/weather/recipe", "/api/board/{boardId}/incrementviews").permitAll()
+                    "/api/weather/recipe", "/api/board/{boardId}/incrementviews","/api/ocr/extract-text").permitAll()
 
             // 🔹 관리자 페이지 보호 (hasRole 사용)
             .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ ROLE_ADMIN이 있어야 접근 가능
 
             // 🔹 사용자 인증 필요 API
-            .requestMatchers("/user/update", "/user/inquiries", "/user/notifications/**", "/user/**").authenticated()
+            .requestMatchers("/user/update", "/user/inquiries", "/user/notifications/**", "/user/**",	
+            		"/api/recipes/{id}/favorite","/api/recipes/review","/api/recipes/favorite",
+    				"/api/userrecipes/{id}/favorites","/api/userrecipes/favorites",
+    				"/api/userrecipes/review",
+    				
+            		"/api/urecipe/adduserrecipe").authenticated()
 
             // ✅ 🔥 `/uploads/**` 경로 모든 사용자 허용 (프로필 이미지, 레시피 이미지 접근 가능)
             .requestMatchers("/uploads/**").permitAll()

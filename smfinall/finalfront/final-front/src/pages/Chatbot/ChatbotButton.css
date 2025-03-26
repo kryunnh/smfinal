@@ -2,7 +2,7 @@
 .chatbot-button {
     position: fixed;
     bottom: 40px;  /* 화면 하단 40px */
-    right: 40px;   /* 화면 우측 40px */
+    right: 20px;   /* 화면 우측 40px */
     border: none;
     background: transparent;
     cursor: pointer;
@@ -25,3 +25,28 @@
     transform: scale(1.2);  /* 이미지를 1.2배 크기로 확대 */
   }
   
+  /* 반응형 디자인 (화면 크기가 768px 이하일 때) */
+@media (max-width: 768px) {
+  .chatbot-button {
+      bottom: 30px; /* 하단 위치 조정 */
+      right: 15px;  /* 우측 위치 조정 */
+      padding: 10px;
+  }
+
+  .chatbot-button img {
+      width: 40px;  /* 이미지 크기 줄이기 */
+  }
+}
+
+/* 반응형 디자인 (화면 크기가 480px 이하일 때) */
+@media (max-width: 480px) {
+  .chatbot-button {
+      bottom: 20px; /* 더 작은 화면에서 버튼 위치 조정 */
+      right: 10px;
+      padding: 8px;
+  }
+
+  .chatbot-button img {
+      width: 35px; /* 더 작은 크기로 조정 */
+  }
+}

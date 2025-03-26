@@ -19,8 +19,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "http://localhost:5173") 
 public class ChatbotController {
 
-    private static final String API_URL = "https://983ktt5pc1.apigw.ntruss.com/custom/v1/17127/404267835521b93069c5fcde86845534c2f0b03b4d77cb911cd61fc9b84b2082";
-    private static final String SECRET_KEY = "d3ZqTkFzVmNSYkRIRENiSkZhcktZT0VUQkRRQU5qZUg=";
+    private static final String API_URL = "https://983ktt5pc1.apigw.ntruss.com/custom/v1/17172/809c2fb94fff223e96477a875bbc1b77e5b020262e8f959d4b49455100a7f9f7";
+    private static final String SECRET_KEY = "cmdDU0tjRUNxTXVkYkpHU1lSYkxWYU1rV1FXdFdWRno=";
 
     @PostMapping("/ask")
     public String askChatbot(@RequestBody Map<String, String> requestBody) {

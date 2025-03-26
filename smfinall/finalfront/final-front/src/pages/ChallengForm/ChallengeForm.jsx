@@ -8,7 +8,7 @@ const RecipeForm = () => {
     const [cookingTime, setCookingTime] = useState('');
     const [categoryId, setCategoryId] = useState(1); // 기본값은 한식 (1)
     const [foodImg, setFoodImg] = useState(null);
-    const [ingredients, setIngredients] = useState(['']); // 재료 리스트
+    const [ingredientss, setIngredientss] = useState(['']); // 재료 리스트
     const [step1, setStep1] = useState('');
     const [step2, setStep2] = useState('');
     const [step3, setStep3] = useState('');
@@ -26,20 +26,20 @@ const RecipeForm = () => {
 
     // 재료 변경 핸들러
     const handleIngredientChange = (index, value) => {
-        const newIngredients = [...ingredients];
-        newIngredients[index] = value;
-        setIngredients(newIngredients);
+        const newIngredientss = [...ingredientss];
+        newIngredientss[index] = value;
+        setIngredientss(newIngredientss);
     };
 
     // 재료 추가 핸들러
     const addIngredient = () => {
-        setIngredients([...ingredients, '']);
+        setIngredientss([...ingredientss, '']);
     };
 
     // 재료 삭제 핸들러
     const removeIngredient = (index) => {
-        const newIngredients = ingredients.filter((_, i) => i !== index);
-        setIngredients(newIngredients);
+        const newIngredientss = ingredientss.filter((_, i) => i !== index);
+        setIngredientss(newIngredientss);
     };
 
     
@@ -50,8 +50,8 @@ const RecipeForm = () => {
         formData.append('foodTime', cookingTime);
         formData.append('categoryId', categoryId);
         formData.append('foodImg', foodImg);  // 파일 추가
-        ingredients.forEach((ingredient) => {
-            formData.append('ingredients', ingredient);  // key는 'ingredients'로 설정
+        ingredientss.forEach((ingredient) => {
+            formData.append('ingredientss', ingredient);  // key는 'ingredients'로 설정
         });
     
         formData.append('step1', step1);
@@ -79,6 +79,7 @@ const RecipeForm = () => {
             navigate('/');
         } catch (error) {
             console.error("서버 오류:", error);
+            console.log(token);
         }
     };
 
@@ -86,7 +87,7 @@ const RecipeForm = () => {
         <div className="recipe-form">
             <h1 className="big-title">맛있는 도전하기</h1>
             <div className="gyeonggo">
-                <h3>⚠️ 맛있는 도전하기 작성 시 주의사항 ⚠️</h3>
+                <h3>⚠️ 도전하기 시 주의사항 ⚠️</h3>
                     1. 모든 입력란을 정확히 작성해주세요. 필수 입력값이 누락되면 등록이 불가능합니다. <br/>
                     2. 이미지 파일은 반드시 jpg, png, jpeg 형식만 등록 가능합니다. 용량이 너무 크면 업로드가 실패할 수 있습니다.<br/>
                     3. 레시피 순서는 최대한 자세하게 작성해주세요. 정확한 설명이 없을 경우 다른 유저가 따라 하기 어려울 수 있습니다.<br/>
@@ -161,7 +162,7 @@ const RecipeForm = () => {
                 />
             <div className="mozip">재료</div>
                 <div className="input-field">
-                    {ingredients.map((ingredient, index) => (
+                    {ingredientss.map((ingredient, index) => (
                         <div key={index} style={{width:"100%"}}>
                             <input
                                 type="text"
@@ -282,6 +283,8 @@ const RecipeForm = () => {
                         placeholder="6단계"
                         required className="input-field"
                     />
+                    <div>
+
                     이미지 추가
                     <input
                         type="file"
@@ -289,6 +292,7 @@ const RecipeForm = () => {
                         onChange={(e) => setStepImg6(e.target.files[0])}
                         required
                         />
+                    </div>
                 </div>
             <div className="button-container">
                 <button type="button" onClick={handleSubmit} className="userrecipe-submit">
