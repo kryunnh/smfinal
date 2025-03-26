@@ -6,8 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="findUserById"/>
+		<item key="selection" value="Tomcat"/>
 		<list key="findhistory">
+			<item value="thymeleaf"/>
+			<item value="tomcat"/>
+			<item value="validation"/>
+			<item value="jpa"/>
+			<item value="logginh"/>
 			<item value="findUserById"/>
 		</list>
 		<list key="replacehistory">

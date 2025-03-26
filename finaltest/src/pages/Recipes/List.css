@@ -35,14 +35,16 @@
 
 .recipe-search select{
     border-radius: 20px 0 0 20px;
-    padding: 10px;
+    padding: 15px;
     margin-left: 10px;
+    margin-right: 0;
 }
 
 .recipe-search input{
     border-radius: 0 20px 20px 0;
     padding: 10px 100px 10px 10px;
     text-align: left;
+    margin-left: 0;
 }
 
 .recipe-search button{

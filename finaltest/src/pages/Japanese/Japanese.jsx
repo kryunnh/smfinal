@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import '../Recipes/List.css';
 
@@ -13,7 +13,9 @@ export default function Japanese(){
     const [isSearching, setIsSearching] = useState(false);
     const [filteredRecipes, setFilteredRecipes] = useState([]); 
     const [token, setToken] = useState(localStorage.getItem('token')); 
-    const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
     
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'ko-KR';
@@ -108,10 +110,23 @@ export default function Japanese(){
             });
     }
 
-    const handelSearch = () => {
+    useEffect(() => {
+        if (query.trim()) {
+            handleSearch(); // query가 업데이트된 후에 검색이 실행되도록
+        }
+    }, [query]); // query가 변경될 때마다 실행
+
+    const handleSearch = () => {
+        if (!category) {
+            console.log("카테고리가 비어 있음");
+            alert("카테고리를 선택해 주세요.");
+            return;
+        }
+        
+
         let searchUrl = `http://localhost:8080/api/recipes/search?query=${query}&category=${category}`;
             setIsSearching(true); // 검색 시작
-    
+
         axios.get(searchUrl)
             .then(response => {
                 console.log("검색 결과:", response.data);
@@ -122,49 +137,75 @@ export default function Japanese(){
                 setFilteredRecipes([]); // 검색 실패 시 목록 비우기
             });
     };
- 
-    const startVoiceSearch = ()=>{
-        if (!category) {
-            alert("카테고리를 선택해 주세요.");
-            return;
-        }
 
-        if (isVoiceSearchActive) {
-            recognition.stop();
-            setIsVoiceSearchActive(false);
-        } else {
-            recognition.start();
-            setIsVoiceSearchActive(true);
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+            audioChunksRef.current = [];
+    
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunksRef.current.push(event.data);
+                }
+            };
+    
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+                const formData = new FormData();
+                formData.append("file", audioBlob, "recorded_audio.wav");
+    
+                try {
+                    // 네이버 클로바 음성 인식 API에 파일 전송
+                    const response = await axios.post("http://localhost:8080/api/recognize-speech", formData, {
+                        headers: {
+                            "Content-Type": "application/octet-stream", 
+                        }
+                    });
+    
+                    const recognizedText = response.data.text;
+                    console.log("음성 인식 결과:", recognizedText);
+                    setQuery(recognizedText); // 음성 인식 결과로 검색어 업데이트
+
+            
+
+
+                } catch (error) {
+                    console.log("음성 인식 오류:", error);
+                    alert("음성 인식 실패했습니다.");
+                }
+            };
+
+            
+            mediaRecorder.start();
+            setIsRecording(true);
+            
+            setTimeout(() => {
+                handleSearch();
+                stopRecording();
+            }, 3000); // 예시로 4초 후 자동 종료
+            
+        } catch (error) {
+            console.log("마이크 오류 : ", error);
+            alert("마이크 문제");
         }
     };
-
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const cleanedText = transcript.replace(/\.$/, '');
-        setQuery(cleanedText);
-        handleVoiceSearch(cleanedText);
-
-        recognition.stop();
-        setIsVoiceSearchActive(false);
-    };
-
-    const handleVoiceSearch = (recognizedText) =>{
-        const searchUrl = `http://localhost:8080/api/recipes/search?query=${recognizedText}&category=${category}`;
-        axios.get(searchUrl)
-            .then(response =>{
-                setFilteredRecipes(response.data);
-            })
-            .catch(error =>{
-                console.log("검색 오류 :", error);
-                setFilteredRecipes([]);
-            });
+    
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
     };
 
     return (
         <div className="recipe-main">
             <h1>일식</h1>
             <div className='recipe-search'>
-            <button onClick={startVoiceSearch}> {isVoiceSearchActive ? "🔴 인식 중" : "🎤 시작"}</button>
+            <button onClick={ ()=>{if(!category){alert("카테고리를 선택해 주세요."); return;} isRecording ? stopRecording() : startRecording()}} disabled={false}>
+                    {isRecording ? "🔴 인식 중" : "🎤 시작"}
+                </button>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">분류 선택</option>
                     <option value="음식명">음식명</option>
@@ -174,11 +215,11 @@ export default function Japanese(){
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={(e)=> e.key === 'Enter' && handelSearch()}
+                    onKeyDown={(e)=> e.key === 'Enter' && handleSearch()}
                     placeholder="검색어 입력..."
                     disabled={!category}
                 />
-                <button onClick={handelSearch} disabled={!category}>검색</button>
+                <button onClick={ ()=>{if(!category){alert("카테고리를 선택해 주세요."); return;} handleSearch()}} disabled={false}>검색</button>
             </div>
             
             {isSearching && filteredRecipes.length === 0? (<p>검색 결과가 없습니다.</p>) :
