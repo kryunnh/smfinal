@@ -1,6 +1,7 @@
-import React, { useState,useEffect } from "react";
+import { useState,useEffect } from "react";
 import "../../styles/registerModal.css";
 import userApi from "../../api/userApi"; // API 불러오기
+import { useNavigate } from "react-router-dom";
 
 function RegisterModal({ onClose }) {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ function RegisterModal({ onClose }) {
   const [image, setImage] = useState(null);
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
     email: "",
@@ -170,46 +172,47 @@ function RegisterModal({ onClose }) {
     }
   };
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
 
   /** ✅ 회원가입 요청 */
   const handleRegister = async () => {
-    console.log("✅ 회원가입 요청 데이터:", { 
-        email, 
-        name, 
-        phoneNumber, 
-        password, 
-        isVerified: isCodeConfirmed // ✅ 변수명 맞추기!
+    console.log("✅ 회원가입 요청 데이터:", {
+      email,
+      name,
+      phoneNumber,
+      password,
+      isVerified: isCodeConfirmed,
     });
-
+  
     try {
-        const response = await userApi.register({
-            email,
-            name,
-            phoneNumber,
-            password,
-            isVerified: isCodeConfirmed, // ✅ 백엔드에서 받을 수 있도록 수정
-        });
-        console.log("✅ 회원가입 응답:", response.data);
-        alert("회원가입 성공!");
+      const formData = new FormData();
+  
+      // 1. JSON 데이터를 Blob으로 감싸서 user로 추가
+      const userData = {
+        email,
+        name,
+        phoneNumber,
+        password,
+        isVerified: isCodeConfirmed,
+      };
+      const userBlob = new Blob([JSON.stringify(userData)], { type: "application/json" });
+      formData.append("user", userBlob);
+  
+      // 2. 이미지가 있을 경우에만 추가
+      const fileInput = document.querySelector("input[type='file']");
+      if (fileInput && fileInput.files.length > 0) {
+        formData.append("profileImage", fileInput.files[0]);
+      }
+  
+      const response = await userApi.register(formData); // <-- formData로 변경됨
+      console.log("✅ 회원가입 응답:", response.data);
+      alert("회원가입 성공!");
+      onClose(); // 모달 닫기
     } catch (error) {
-        console.error("🚨 회원가입 실패:", error.response ? error.response.data : error);
-        alert("회원가입 실패. 다시 시도해주세요.");
+      console.error("🚨 회원가입 실패:", error.response ? error.response.data : error);
+      alert("회원가입 실패. 다시 시도해주세요.");
     }
-};
+  };
+  
 
 
   

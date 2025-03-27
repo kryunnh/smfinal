@@ -116,13 +116,13 @@ const ClubList = () => {
     <div className="club-page">
       <h1 className="big-title">다함께 요리하자</h1>
 
-      <div className="search-container">
+      <div className="search-container-club">
         <input
           type="text"
           placeholder="검색어를 입력하세요"
           value={searchTerm}
           onChange={handleSearchChange}
-          className="search"
+          className="search-club"
         />
         <button onClick={handleSearchClick} className="search-btn">검색</button>
       </div>
@@ -147,12 +147,12 @@ const ClubList = () => {
         )}
       </div>
 
-      <ul>
+      <ul className="clublistul">
         {filteredClubs.length === 0 ? (
-          <li>검색 결과가 없습니다.</li>
+          <li className="clublistli">검색 결과가 없습니다.</li>
         ) : (
           filteredClubs.map((club, index) => (
-            <li key={`${club.clubId}-${index}`}>
+            <li key={`${club.clubId}-${index}`} className="clublistli">
              <Link to={`/club/${club.clubId}`} className="detail-link">
              <img
               style={{ width: "100%", height:"200px" }}

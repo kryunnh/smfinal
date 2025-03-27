@@ -3,9 +3,16 @@
   width: 100%;
   max-width: 1400px;
   text-align: center;
-  justify-self: center;
   margin: 0 auto;
   padding: 0;
+}
+
+.tag-btn{
+  border-radius: 20px;
+  transition: background-color 0.3s ease; /* border-color 변경 시 부드럽게 애니메이션 적용 */
+}
+.tag-btn:hover{
+  background-color: #FFA575;
 }
 
 /* 태그 리스트 */
@@ -16,17 +23,18 @@
 .tag-list button {
   font-family: 'NEXON Lv1 Gothic OTF';
   font-size: 18px;
-  transition: font-size 0.3s ease; /* 반응형에 따라 글씨 크기 변화 */
+  transition: font-size 0.3s ease;
 }
 
 /* 검색 컨테이너 */
-.search-container {
+.search-container-club {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 80px;
 }
 
-.search-container .search {
+.search-club {
+  font-family: 'NEXON Lv1 Gothic OTF';
   border-radius: 20px;
   padding: 10px 100px 10px 10px;
   text-align: left;
@@ -40,134 +48,90 @@
   border-radius: 20px;
   transition: background-color 0.3s ease;
   border: none;
+  cursor: pointer;
 }
 
 .search-btn:hover {
-  cursor: pointer;
   background-color: #ff9d68;
 }
 
 /* 위로 가는 버튼 */
 .totop {
   position: fixed;
-  right: 20px; /* 오른쪽 끝에 위치 */
-  top: 50%;    /* 세로로 가운데 */
-  transform: translateY(-50%); /* 정확하게 세로 가운데 맞추기 */
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   background: #FFA575;
   color: #fff;
   padding: 10px;
   border-radius: 80px;
   border: none;
   cursor: pointer;
-  z-index: 1000; /* 버튼이 다른 요소들 위에 오도록 */
+  z-index: 1000;
   font-size: 40px;
-  transition: transform 0.3s ease-in-out, font-size 0.3s ease-in-out;
+  transition: transform 0.3s, font-size 0.3s;
 }
 
 .totop:hover {
-  transform: translateY(-50%) scale(1.1); /* 마우스를 올리면 살짝 커지게 */
+  transform: translateY(-50%) scale(1.1);
 }
 
-/* 카드 리스트 (ul) */
-ul {
+/* 카드 리스트 */
+.clublistul {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 항목 */
-  gap: 60px;
-  list-style-type: none;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  list-style: none;
   padding: 0;
 }
 
-li {
+.clublistli {
   border: 1px solid #ccc;
   padding: 15px;
   background-color: #FFD2B9;
   border-radius: 10px;
-  width: 90%; /* 크기 줄이기 */
-  max-width: 350px; /* 최대 크기 제한 */
-  margin: auto; /* 중앙 정렬 */
-}
-
-p {
-  margin: 5px 0;
+  width: 90%;
+  max-width: 350px;
+  margin: auto;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
-  .club-page {
-    width: 100%;
-  }
-
-  ul {
-    grid-template-columns: repeat(2, 1fr); /* 화면이 작으면 2개씩 표시 */
+  .clublistul {
     gap: 30px;
   }
-
-  li {
-    width: 85%;
-    max-width: 300px;
-  }
-
-  .clubtagti{
-    font-size: medium;
+  .tag-list button {
+    font-size: 16px;
   }
 }
 
 @media (max-width: 768px) {
-  .club-page {
-    width: 100%;
-  }
-
-  ul {
-    grid-template-columns: 1fr; /* 화면이 더 작으면 1개씩 표시 */
-    gap: 20px;
-  }
-
-  li {
-    max-width: 300px;
-  }
-
-  .search-container {
+  .search-container-club {
     justify-content: center;
   }
-
-  .tag-list button {
-    font-size: 16px; /* 화면이 작으면 글씨체 크기 줄이기 */
-  }
-
   .totop {
-    right: 15px; /* 화면이 좁아지면 오른쪽 여백 줄이기 */
-    font-size: 30px; /* 폰트 크기 줄이기 */
-    padding: 8px; /* 패딩 줄이기 */
+    right: 15px;
+    font-size: 30px;
+    padding: 8px;
   }
 }
 
 @media (max-width: 480px) {
   .big-title {
-    font-size: 1.5em; /* 작은 화면에서는 제목 크기 줄이기 */
+    font-size: 1.5em;
   }
-
-  .search-container .search {
-    padding: 10px 50px 10px 10px;
-  }
-
-  .load-more-btn {
-    font-size: 1em;
-  }
-
   .totop {
-    right: 10px; /* 더 작은 화면에서는 오른쪽 여백 더 줄이기 */
-    font-size: 25px; /* 버튼 크기 더 작게 */
-    padding: 6px; /* 패딩 더 줄이기 */
+    right: 10px;
+    font-size: 25px;
+    padding: 6px;
   }
-
   .tag-list button {
-    font-size: 14px; /* 더 작은 화면에서 태그 글씨체 더 작게 */
+    font-size: 14px;
   }
 }
 
 /* 버튼 스타일 */
-.add-club-btn,
-.load-more-btn {
+.add-club-btn, .load-more-btn {
   padding: 10px 20px;
   border: none;
   background-color: #FFA575;
@@ -177,13 +141,11 @@ p {
   color: black;
 }
 
-
-.add-club-btn:hover,
-.load-more-btn:hover {
+.add-club-btn:hover, .load-more-btn:hover {
   background-color: #ff9d68;
 }
 
-/* 추가 동호회 버튼 위치 */
+/* 추가 동호회 버튼 */
 .add-club {
   margin-top: 80px;
   text-align: right;
@@ -193,11 +155,10 @@ p {
 .club-image-list {
   display: flex;
   justify-content: center;
-  margin: auto;
   border-radius: 10px;
   margin-bottom: 20px;
 }
 
-.load-more-btn{
-  margin-top:80px;
+.load-more-btn {
+  margin-top: 80px;
 }

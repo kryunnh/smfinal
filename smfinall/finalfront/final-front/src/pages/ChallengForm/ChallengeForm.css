@@ -45,6 +45,24 @@
     background-color: #e63946;
 }
 
+.input-field-ur{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    font-family: 'NEXON Lv1 Gothic OTF';
+}
+
+  
+.input-field-ur:focus {
+    border-color: #ff9861;
+    outline: none;
+  }
+  
 
 .recipe-form div {
     margin-bottom: 15px;
@@ -52,6 +70,10 @@
 
 .recipe-form input[type="radio"] {
     margin-right: 5px;
+}
+
+.dangae{
+    margin-bottom: 40px;
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,8 @@
 package com.project.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 import com.project.config.JwtUtil;
-import com.project.model.Board;
-import com.project.model.Favorite;
 import com.project.model.Inquiry;
 import com.project.model.Notification;
 import com.project.model.User;
+import com.project.model.krhBoardVO;
 import com.project.service.EmailService;
 import com.project.service.UserService;
 
@@ -95,27 +98,16 @@ public class UserController {
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registerUser(
+            @RequestPart("user") User user,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+
         System.out.println("✅ 회원가입 요청 데이터: " + user);
-
-        if (user.getIsVerified() == null) {
-            System.out.println("🚨 isVerified 값이 null임!!");
-        } else {
-            System.out.println("🔹 isVerified 값: " + user.getIsVerified());
-        }
-
-        // ✅ isVerified 값이 null이거나 false라면 403 오류 반환
-        if (user.getIsVerified() == null || !user.getIsVerified()) {
-            System.out.println("🚨 이메일 인증 안됨! → 403 반환");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("이메일 인증을 완료한 사용자만 회원가입할 수 있습니다.");
-        }
-
-        // ✅ 회원가입 진행
-        userService.registerUser(user);
+        userService.registerUser(user, profileImage);
         return ResponseEntity.ok("회원가입 성공!");
     }
+
 
 
 
@@ -140,24 +132,16 @@ public class UserController {
     }
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
-        User validUser = userService.validateUser(user.getEmail(), user.getPassword());
+        System.out.println("🔐 [컨트롤러] 로그인 요청됨 - 이메일: " + user.getEmail());
 
-        if (validUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
-        }
+        // 🔥 login() 메서드로 로그인 처리 (여기서 로그인 기록 등 전부 처리됨)
+        Map<String, Object> result = userService.login(user.getEmail(), user.getPassword());
 
-        // ✅ JWT에서 이메일을 제대로 추출하는지 확인
-        String token = jwtUtil.generateToken(validUser.getEmail(), validUser.getRole()); 
-        String extractedEmail = jwtUtil.extractUsername(token);
-        
-        System.out.println("🔍 JWT에서 추출한 이메일: " + extractedEmail);
+        System.out.println("✅ [컨트롤러] 로그인 완료 후 응답 반환");
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("user", validUser);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(result);
     }
+
     // ✅ 로그인 시 암호화된 비밀번호 조회
     @GetMapping("/get-hashed-password")
     public ResponseEntity<?> getHashedPassword(@RequestParam String email) {
@@ -183,6 +167,7 @@ public class UserController {
 //    }
 
  // ✅ 유저 정보 조회
+ // ✅ 유저 정보 조회 엔드포인트
     @GetMapping("/get-user")
     public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
@@ -190,25 +175,48 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
         }
 
-        // ✅ 프로필 이미지가 존재할 경우, 전체 URL을 포함하여 응답
+        // ✅ 디버깅 로그 추가 (DB에서 가져온 프로필 이미지 확인)
+        System.out.println("📢 [DB에서 가져온 프로필 이미지]: " + user.getProfileImage());
+
+        // ✅ 프로필 이미지 변환 (중복 변환 방지)
         if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
-            user.setProfileImage("http://localhost:8080/uploads/" + user.getProfileImage());
+            String profileImage = user.getProfileImage().trim();
+
+            // 🚀 이미 전체 URL이면 변환하지 않음
+            if (!profileImage.startsWith("http://") && !profileImage.startsWith("https://")) {
+                // ✅ 파일명만 저장된 경우에만 URL 변환
+                String encodedFileName = encodeURIComponent(profileImage);
+                String fullImageUrl = "http://localhost:8080/uploads/" + encodedFileName;
+
+                System.out.println("🖼 [백엔드 응답 프로필 이미지 URL]: " + fullImageUrl);
+                user.setProfileImage(fullImageUrl);
+            } else {
+                System.out.println("🖼 기존 URL 유지: " + profileImage);
+            }
         }
 
         return ResponseEntity.ok(user);
     }
 
+    // ✅ 파일 이름 URL 인코딩 함수
+    private String encodeURIComponent(String fileName) {
+        try {
+            return URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
+                    .replaceAll("\\+", "%20"); // ✅ 공백을 "%20"으로 변환 (브라우저 호환성)
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("파일명 인코딩 실패", e);
+        }
+    }
+
     // ✅ 7. 🔹 본인 정보 수정
- // ✅ 회원 정보 수정 엔드포인트
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(
+    public ResponseEntity<?> updateUser(
             @RequestParam("email") String email,
             @RequestParam(value = "password", required = false) String password,
             @RequestParam("name") String name,
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        // ✅ 요청 데이터 디버깅 로그 추가
         System.out.println("📡 [Backend] 회원 정보 수정 요청:");
         System.out.println("Email: " + email);
         System.out.println("Password: " + password);
@@ -221,13 +229,27 @@ public class UserController {
         }
 
         try {
-            userService.updateUser(email, password, name, phoneNumber, file);
-            return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다.");
+            // ✅ 업데이트된 유저 정보 받아오기
+            User updatedUser = userService.updateUser(email, password, name, phoneNumber, file);
+
+            // ✅ 새로운 프로필 이미지 URL 생성
+            String profileImageUrl = updatedUser.getProfileImage() != null 
+                ? "http://localhost:8080/uploads/" + updatedUser.getProfileImage()
+                : null;
+
+            // ✅ 유저 정보 + 프로필 이미지 URL 반환
+            return ResponseEntity.ok(Map.of(
+                "email", updatedUser.getEmail(),
+                "name", updatedUser.getName(),
+                "phoneNumber", updatedUser.getPhoneNumber(),
+                "profileImage", profileImageUrl
+            ));
         } catch (RuntimeException e) {
             System.err.println("❌ [Error] 회원 정보 수정 중 오류 발생: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 처리 중 오류 발생: " + e.getMessage());
         }
     }
+
 
 
 
@@ -268,10 +290,11 @@ public class UserController {
 
     // 유저의 즐겨찾기 목록 조회 (마이페이지에서)
     @GetMapping("/{userId}/favorites")
-    public ResponseEntity<List<Favorite>> getFavoritesByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.getFavoritesByUser(userId));
+    public ResponseEntity<List<Map<String, Object>>> getFavoritesByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getFavoriteRecipeList(userId));
     }
 
+    
     // 유저의 즐겨찾기 삭제 (본인의 것만)
     @DeleteMapping("/{userId}/favorites/{recipeId}")
     public ResponseEntity<String> removeFavorite(@PathVariable Long userId, @PathVariable Long recipeId) {
@@ -329,7 +352,7 @@ public class UserController {
     // ✅ 16. 🔹 게시물 조회
  // ✅ 게시물 조회 (email 기반)
     @GetMapping("/my-board-titles")
-    public ResponseEntity<List<Board>> getUserBoardTitles(@RequestParam String email) {
+    public ResponseEntity<List<krhBoardVO>> getUserBoardTitles(@RequestParam String email) {
         return ResponseEntity.ok(userService.getUserBoardTitles(email));
     }
 

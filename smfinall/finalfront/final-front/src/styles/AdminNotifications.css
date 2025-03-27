@@ -1,0 +1,100 @@
+.admin-notifications-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    border-radius: 12px;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .admin-notifications-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .email-input,
+  .send-notification {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .email-input input,
+  .send-notification input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+  .email-input button,
+  .send-notification button {
+    padding: 10px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .email-input button:hover,
+  .send-notification button:hover {
+    background-color: #357ab7;
+  }
+  
+  .notifications-list {
+    margin-bottom: 30px;
+  }
+  
+  .notification-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: #fff;
+    transition: all 0.2s;
+  }
+  
+  .notification-item.unread {
+    background-color: #fffbe6;
+    border-left: 4px solid #ffc107;
+  }
+  
+  .notification-item.read {
+    background-color: #f0f0f0;
+    color: #777;
+  }
+  
+  .notification-item p {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  
+  .notification-item button {
+    margin-right: 10px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  
+  .notification-item button:first-of-type {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .notification-item button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .notification-item button:hover {
+    opacity: 0.9;
+  }

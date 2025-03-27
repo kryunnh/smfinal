@@ -12,11 +12,15 @@ export const userApi = {
   // ✅ 휴대폰 번호 중복 체크
   checkPhoneExists: (phoneNumber) => api.get(`/user/check-phone?phoneNumber=${phoneNumber}`),
 
-  // 🔹 회원가입 (이메일, 비밀번호, 이름, 전화번호, 대표 이미지)
-  async register(userData) {
-    // ✅ 클라이언트에서 해싱하지 않고 원본 비밀번호 그대로 전송
-    return api.post("/user/register", userData);
-},
+  // ✅ 회원가입 (FormData 전송: JSON(user) + 이미지)
+  register(formData) {
+    return api.post("/user/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+
 
 
   // 🔹 로그인 (JWT 토큰 반환)

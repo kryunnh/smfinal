@@ -10,10 +10,17 @@ export default function ListDetail(){
     const [recipes, setRecipes] = useState([]);
     const [filteredRecipes, setFilteredRecipes] = useState([]); 
     const [review, setReview] = useState([]);
-    const [content, setContent] = useState(""); // 리뷰 내용
-    const [rating, setRating] = useState(0); // 별점 기본값 5점
+    const [content, setContent] = useState(""); 
+    const [rating, setRating] = useState(0); 
     const [token, setToken] = useState(localStorage.getItem('token')); 
+    const [editReviewId, setEditReviewId] = useState(null); 
+    const [editContent, setEditContent] = useState(""); 
+    const [editRating, setEditRating] = useState(0);
+
     
+
+    
+
     useEffect(()=>{
         const token = localStorage.getItem('token');
         setToken(token);
@@ -33,7 +40,12 @@ export default function ListDetail(){
     },[])
     
    
+  //top으로 이동
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
+  
     useEffect(() => {
         const fetchRecipes = () => {
             axios.get('http://localhost:8080/api/recipes') 
@@ -85,38 +97,81 @@ export default function ListDetail(){
         fetchRecipesDetail();
     }, [id, recipes]);
 
-    
+    const getStars = (rating) => {
+        // 별을 gold 이모지로 처리, 빈 별은 gray로 처리
+        const fullStars = "⭐".repeat(rating);  // 꽉 찬 별
+        const emptyStars = "☆".repeat(5 - rating);  // 빈 별
+        
+        return (
+          <span>
+            {/* 꽉 찬 별에만 이모지 스타일 적용 */}
+            {fullStars.split('').map((star, index) => (
+              <span
+                key={`full-${index}`}
+                style={{
+                  cursor: "pointer",
+                  fontSize: "24px", // 별 크기 조정
+                }}
+              >
+                {star}
+              </span>
+            ))}
+            
+            {/* 빈 별은 회색으로 스타일 적용 */}
+            {emptyStars.split('').map((star, index) => (
+              <span
+                key={`empty-${index}`}
+                style={{
+                  cursor: "pointer",
+                  color: "gray", // 빈 별은 회색으로
+                  fontSize: "24px", // 별 크기 조정
+                }}
+              >
+                {star}
+              </span>
+            ))}
+          </span>
+        );
+      };
+      
      const handlePurchase = (ingredientName) =>{
          const searchUrl = `https://www.coupang.com/np/search?q=${encodeURIComponent(ingredientName)}`;
          window.open(searchUrl, '_blank');
      }
-    useEffect(()=>{
-        axios.get(`http://localhost:8080/api/review/${id}`)
-        .then(response =>{
-            setReview(response.data);
-        })
-        .catch(error=>{
-            console.error("데이터를 불러오는 중 오류 발생:", error);
-        })
-        
-    },[id])
-    
+     
+     const handleStarClick = (index) => {
+         setRating(index + 1); 
+        };
 
+
+        useEffect(()=>{
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
+            .then(response =>{
+                setReview(response.data);
+            })
+            .catch(error=>{
+                console.error("데이터를 불러오는 중 오류 발생:", error);
+            })
+            
+        },[id])
+    
     const handleReviewSubmit = () => {
+        
         if (!token) {
             alert("로그인이 필요합니다.");
             return;
         }
         const currentTime = new Date().toISOString();
-    
+        
         const newReview = {
             reviewText : content,
             rating,
             recipesId: id,
-            timestamp: currentTime, 
+            timestamp: currentTime,
+
         };
-    
-        axios.post(`http://localhost:8080/api/review`, newReview, {
+       
+        axios.post(`http://localhost:8080/api/recipes/review`, newReview, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -124,11 +179,14 @@ export default function ListDetail(){
         })
         .then(response => {
             console.log(response.data);
-            // 리뷰 작성 후 리뷰 목록 갱신
-            axios.get(`http://localhost:8080/api/review/${id}`)
+            
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
                 .then(response => {
-                    setReview(response.data); // 리뷰 목록 갱신
+                    setReview(prevReviews => [...prevReviews, response.data]);
+                    setContent(""); 
+                    setRating(0);
                     console.log(response.data);
+                    
                 })
                 .catch(error => {
                     console.error("리뷰를 불러오는 중 오류 발생:", error);
@@ -137,29 +195,88 @@ export default function ListDetail(){
         .catch(error => {
             console.error("리뷰 작성 중 오류 발생:", error);
         });
+        
     };
 
-    const handleStarClick = (index) => {
-        setRating(index + 1); 
+    const handleEditButtonClick = (reviewId, reviewText, rating) => {
+        setEditReviewId(reviewId);
+        setEditContent(reviewText);
+        setEditRating(rating);
     };
 
+    const handleEditCancel = () => {
+        setEditReviewId(null); // 취소 시 수정 모드 종료
+        setEditContent(""); // 수정 입력 초기화
+        setEditRating(0); // 별점 초기화
+    };
+    
+    const handleEditReviewSubmit = (reviewId) => {
+        const currentTime = new Date().toISOString();
+        const updatedReview = {
+            reviewText: editContent,
+            rating: editRating,
+            timestamp: currentTime,
+        };
 
+        axios.put(`http://localhost:8080/api/recipes/review/${reviewId}`, updatedReview, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        })
+        .then(() => {
+            setReview(prevReviews => prevReviews.map(r => 
+                r.reviewId === reviewId ? { ...r, reviewText: editContent, rating: editRating } : r
+            ));
+            setEditReviewId(null); // 수정 모드 종료
+            setEditContent(""); // 입력 필드 초기화
+            setEditRating(0); // 별점 초기화
+        })
+        .catch(error => {
+            console.error("리뷰 수정 중 오류 발생:", error);
+        });
+    };
+
+    const handleDeleteReview = (reviewId) => {
+        axios.delete(`http://localhost:8080/api/recipes/review/${reviewId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+        .then(response => {
+            console.log("리뷰 삭제 완료:", response.data);
+            
+            axios.get(`http://localhost:8080/api/recipes/review/${id}`)
+                .then(() => {
+                    setReview(prevReview => prevReview.filter(r => r.reviewId !== reviewId));
+                })
+                .catch(error => {
+                    console.error("리뷰 목록 갱신 중 오류 발생:", error);
+                });
+        })
+        .catch(error => {
+            console.error("리뷰 삭제 중 오류 발생:", error);
+        });
+    };
+
+  
 
 
     return(
         <div className="recipe-detail-main">
              {selectRecipes ? (
             <>
-                    <p className="recipe-view">조회수 : {selectRecipes.view}</p>
                 <div className="recipe-header">
-                    <img src={selectRecipes.foodImg} alt={selectRecipes.foodName} />
-                    <h1>{selectRecipes.foodName}</h1>
-                    <h3>{selectRecipes.categoryName}</h3>
+                    <img src={`http://localhost:8080/uploads/api/userrecipes/${selectRecipes.foodImg}`} alt={selectRecipes.foodName} className="list-img"/>
+                    <h1 className="recipe-detail-name">{selectRecipes.foodName}</h1>
+                        <span className="recipetime" style={{color: "#5e5e5e"}}>⏱️ {selectRecipes.foodTime} 분 </span>
+                        <span className="recipetime" style={{color: "#5e5e5e"}}>🔖 {selectRecipes.categoryName}</span>
+                        <span style={{color: "#5e5e5e"}}>👀 {selectRecipes.view}</span>
                     <br/>
                     <div className="ingredient-table">
-                        <h2>재료</h2><br/>
+                        <h3 style={{ color: "#FFA575" }}>재료</h3>
                         {selectRecipes.ingredients && selectRecipes.ingredients.length > 0 ? (
-                        <table>
+                        <table className="recipe-tables">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -172,7 +289,7 @@ export default function ListDetail(){
                                 {selectRecipes.ingredients.map((ingredient, index) => (
                                     index % 2 === 0 ? (
                                         <tr key={index}>
-                                            <td>{ingredient.name}</td>
+                                            <td className="recipe-detail-in-name">{ingredient.name}</td>
                                             <td>
                                                 <a onClick={()=>handlePurchase(ingredient.name)}>구매하기</a>
                                             </td>
@@ -202,8 +319,8 @@ export default function ListDetail(){
                             return (
                                 stepImg && stepText && (
                                     <div className="recipe-step" key={step}>
-                                        <p>{`${index + 1}. ${stepText}`}</p>
-                                        <img src={stepImg} alt={`Step ${step} image for ${selectRecipes.foodName}`} />
+                                        <di className="rs-p">{`${index + 1}. ${stepText}`}</di>
+                                        <img src={`http://localhost:8080/uploads/api/userrecipes/${stepImg}`} alt={`Step ${step} image for ${selectRecipes.foodName}`} />
                                     </div>
                                 )
                             );
@@ -214,36 +331,46 @@ export default function ListDetail(){
                 <div>레시피를 불러오는 중입니다...</div>
             )}
             <br/>
-            <hr/>
             <br/>
             <div className="review">
                 <div className="review-head">
-                <h2>요리 후기</h2>
-            {review.length > 0 ? (
-                        <ul>
-                        {review.map((r) => (
-                            
-                            <li key={r.reviewId}>
-                                {r.name} - {r.reviewText} - {r.rating}점
-                                <br />
-                                <small>{new Date(r.createdAt).toLocaleString()}</small> 
-                            </li>
-                        ))}
-                    </ul>
+                <h2 className="review-head-h">요리 후기</h2>
+                {review.length > 0 ? (
+                        <div className="review-container">
+                            {review.map((r) => (
+                                <div key={r.reviewId} className="reviews">
+                                    <span style={{fontSize:"18px" , marginBottom:"15px"}}>{r.name}</span>
+                                    &nbsp; &nbsp; &nbsp;
+                                    <span>{getStars(r.rating)}</span>
+                                    <p>{r.reviewText}</p>
+                                    <p className="createdAt">{new Date(r.createdAt).toLocaleString()}</p>
+                                    {r.email === localStorage.getItem("email") && (
+                                        <div className="reivewcomment-button">
+                                                <button className="comment-update" onClick={() => handleEditButtonClick(r.reviewId, r.reviewText, r.rating)}>수정</button>
+                                                <button className="comment-delete" onClick={() => handleDeleteReview(r.reviewId)}>삭제</button>
+                                        </div>
+                                    )}
+                                    <hr className="review-hr"/>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
-                        <p>리뷰가 없습니다.</p>
+                        <div className="noreview">리뷰가 없습니다.</div>
                     )}
                 </div>
-                    {/* 리뷰 작성 폼 */}
-                    {token ? (
-                    <form onSubmit={handleReviewSubmit}>
-                        <div className="review-content">
-                            <textarea value={content} onChange={(e) => setContent(e.target.value)} required />
-                            <button type="submit">후기입력</button>
+
+                {/* 리뷰 작성 폼 */}
+                {token && !editReviewId ? (
+                    <form onSubmit={handleReviewSubmit} >
+                        <div className="review-content" style={{ width: "100%", display: "flex", alignItems: "center" }}>
+                            <textarea value={content} onChange={(e) => setContent(e.target.value)} required 
+                                 rows="3"
+                                 style={{ flex: "1", minHeight: "50px", resize: "vertical", borderRadius:"20px", padding:"20px", fontFamily:"NEXON Lv1 Gothic OTF"}}/>
+                            <button type="submit" className="comments-write">작성</button>
                         </div>
                         <div className="review-rating">
                             <label>별점: </label>
-                            <div className="star-rating">
+                            <span className="star-rating">
                                 {[...Array(5)].map((_, index) => (
                                     <span
                                         key={index}
@@ -253,32 +380,67 @@ export default function ListDetail(){
                                             color: index < rating ? "gold" : "gray",
                                         }}
                                     >
-                                        &#9733; {/* 별 문자 */}
+                                        &#9733;
+                                    </span>
+                                ))}
+                            </span>
+                        </div>
+                    </form>
+                ) : (
+                    !token &&<p>로그인 후 리뷰를 작성할 수 있습니다.</p>
+                )}
+                
+
+                {/* 리뷰 수정 폼 */}
+                {editReviewId && (
+                    <form onSubmit={() => handleEditReviewSubmit(editReviewId)}>
+                        <div className="review-content" style={{ width: "100%", display: "flex", alignItems: "center" }}>  
+                            <textarea 
+                                value={editContent} 
+                                onChange={(e) => setEditContent(e.target.value)} 
+                                required 
+                                rows="3"
+                                style={{ flex: "1", minHeight: "50px", resize: "vertical" , borderRadius:"20px", padding:"20px", fontFamily:"NEXON Lv1 Gothic OTF"}}
+                            />
+                            <button type="submit"className="comments-write">저장</button>
+                            <button type="button" onClick={handleEditCancel} className="comments-back">취소</button>
+                        </div>
+                        <div className="review-rating">
+                            <label>별점 :</label>
+
+                            <div className="star-rating">
+                                {[...Array(5)].map((_, index) => (
+                                    <span
+                                        key={index}
+                                        onClick={() => setEditRating(index + 1)}
+                                        style={{
+                                            cursor: "pointer",
+                                            color: index < editRating ? "gold" : "gray",
+                                        }}
+                                    >
+                                        &#9733;
                                     </span>
                                 ))}
                             </div>
                         </div>
                     </form>
-                ) : (
-                    <p>로그인 후 리뷰를 작성할 수 있습니다.</p>
                 )}
             </div>
-            <br/>
-            <hr/>
-            <br/>
-                <h2>관련 레시피</h2>
+            <hr className="review-hr"/>
+            <h2 className="review-head-h">회원님을 위한 추천 레시피</h2>
             <div className="recommend-recipe-container">
                 <div className="recommend-recipe">
                     {filteredRecipes.map((recipe) => (
                         <div key={recipe.recipesId} className="recommend-card">
                             <Link to={`/list/${recipe.recipesId}`} onClick={()=>handleClick(recipe.recipesId)}>
-                                <img src={recipe.foodImg} alt={recipe.foodName}/>
+                            <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} className="rc-img" alt={recipe.foodName}/>
                             </Link>  
-                            <h3>{recipe.foodName}</h3>
+                            <h3 className="rd-reco">{recipe.foodName}</h3>
                         </div>
                     ))}
                 </div>
             </div>
+            <button onClick={scrollToTop} className="totop">🔝</button>
         </div>   
     )
 }

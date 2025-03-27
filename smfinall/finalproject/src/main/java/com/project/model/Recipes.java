@@ -29,8 +29,6 @@ public class Recipes {
 	 private String ingredientNames;
 	 private List<Ingredients> ingredients; 
 	 
-	 private String userName; //김륜하 씀
-	 
 	 public List<Ingredients> getIngredients() {
 	        return ingredients;
 	    }
@@ -38,4 +36,5 @@ public class Recipes {
 	    public void setIngredients(List<Ingredients> ingredients) {
 	        this.ingredients = ingredients;
 	    }
+
 }

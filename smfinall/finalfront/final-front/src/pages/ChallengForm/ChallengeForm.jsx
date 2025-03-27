@@ -8,7 +8,7 @@ const RecipeForm = () => {
     const [cookingTime, setCookingTime] = useState('');
     const [categoryId, setCategoryId] = useState(1); // 기본값은 한식 (1)
     const [foodImg, setFoodImg] = useState(null);
-    const [ingredientss, setIngredientss] = useState(['']); // 재료 리스트
+    const [ingredients, setIngredients] = useState(['']); // 재료 리스트
     const [step1, setStep1] = useState('');
     const [step2, setStep2] = useState('');
     const [step3, setStep3] = useState('');
@@ -26,20 +26,20 @@ const RecipeForm = () => {
 
     // 재료 변경 핸들러
     const handleIngredientChange = (index, value) => {
-        const newIngredientss = [...ingredientss];
-        newIngredientss[index] = value;
-        setIngredientss(newIngredientss);
+        const newIngredients = [...ingredients];
+        newIngredients[index] = value;
+        setIngredients(newIngredients);
     };
 
     // 재료 추가 핸들러
     const addIngredient = () => {
-        setIngredientss([...ingredientss, '']);
+        setIngredients([...ingredients, '']);
     };
 
     // 재료 삭제 핸들러
     const removeIngredient = (index) => {
-        const newIngredientss = ingredientss.filter((_, i) => i !== index);
-        setIngredientss(newIngredientss);
+        const newIngredients = ingredients.filter((_, i) => i !== index);
+        setIngredients(newIngredients);
     };
 
     
@@ -50,8 +50,8 @@ const RecipeForm = () => {
         formData.append('foodTime', cookingTime);
         formData.append('categoryId', categoryId);
         formData.append('foodImg', foodImg);  // 파일 추가
-        ingredientss.forEach((ingredient) => {
-            formData.append('ingredientss', ingredient);  // key는 'ingredients'로 설정
+        ingredients.forEach((ingredient) => {
+            formData.append('ingredients', ingredient);  // key는 'ingredients'로 설정
         });
     
         formData.append('step1', step1);
@@ -101,7 +101,7 @@ const RecipeForm = () => {
                     value={recipeName}
                     onChange={(e) => setRecipeName(e.target.value)}
                     required
-                     className="input-field"
+                     className="input-field-ur"
                 />
                 <div className="mozip">조리 시간 (분)</div>
                 <input
@@ -109,7 +109,7 @@ const RecipeForm = () => {
                     value={cookingTime}
                     onChange={(e) => setCookingTime(e.target.value)}
                     required
-                     className="input-field"
+                     className="input-field-ur"
                 />
                 <div className="mozip">카테고리</div>
                 <div>
@@ -158,11 +158,11 @@ const RecipeForm = () => {
                     accept="image/*"
                     onChange={(e) => setFoodImg(e.target.files[0])}
                     required
-                     className="input-field"
+                     className="input-field-ur"
                 />
             <div className="mozip">재료</div>
-                <div className="input-field">
-                    {ingredientss.map((ingredient, index) => (
+                <div className="input-field-club">
+                    {ingredients.map((ingredient, index) => (
                         <div key={index} style={{width:"100%"}}>
                             <input
                                 type="text"
@@ -170,23 +170,23 @@ const RecipeForm = () => {
                                 onChange={(e) => handleIngredientChange(index, e.target.value)}
                                 placeholder={`재료 ${index + 1}`}
                                 required
-                                className="input-field"
+                                className="input-field-ur"
                                 style={{width:"92%"}}
                             />
-                            <button type="button" onClick={() => removeIngredient(index)}>삭제</button>
+                            <button type="button" onClick={() => removeIngredient(index)} className="delete-btn-board">삭제</button>
                         </div>
                     ))}
                 <button type="button" onClick={addIngredient} className="userrecipe-ingredient-add">추가</button>
             </div>
             <div className="mozip">조리 과정</div>
-                <div>
+                <div className="dangae">
                     <div>단계 1</div>
                     <input
                         type="text"
                         value={step1}
                         onChange={(e) => setStep1(e.target.value)}
                         placeholder="1단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                         />
                     <div>        
                     이미지 추가
@@ -198,14 +198,14 @@ const RecipeForm = () => {
                         />
                     </div>
                 </div>
-                 <div>
+                 <div className="dangae">
                     <div>단계 2</div>
                     <input
                         type="text"
                         value={step2}
                         onChange={(e) => setStep2(e.target.value)}
                         placeholder="2단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                     />
                     <div>  
                     이미지 추가
@@ -217,14 +217,14 @@ const RecipeForm = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="dangae">
                     <div>단계 3</div>
                     <input
                         type="text"
                         value={step3}
                         onChange={(e) => setStep3(e.target.value)}
                         placeholder="3단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                         />
                     <div>
                         이미지 추가
@@ -236,14 +236,14 @@ const RecipeForm = () => {
                             />
                     </div>
                 </div>
-                <div>
+                <div className="dangae">
                     <div>단계 4</div>
                     <input
                         type="text"
                         value={step4}
                         onChange={(e) => setStep4(e.target.value)}
                         placeholder="4단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                     />
                     <div>
                     이미지 추가
@@ -255,14 +255,14 @@ const RecipeForm = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="dangae">
                     <div>단계 5</div>
                     <input
                         type="text"
                         value={step5}
                         onChange={(e) => setStep5(e.target.value)}
                         placeholder="5단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                     />
                     <div>
                     이미지 추가
@@ -274,14 +274,14 @@ const RecipeForm = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="dangae">
                     <div>단계 6</div>
                     <input
                         type="text"
                         value={step6}
                         onChange={(e) => setStep6(e.target.value)}
                         placeholder="6단계"
-                        required className="input-field"
+                        required className="input-field-ur"
                     />
                     <div>
 

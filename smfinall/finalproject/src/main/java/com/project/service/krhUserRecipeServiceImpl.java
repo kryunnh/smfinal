@@ -19,8 +19,8 @@ public class krhUserRecipeServiceImpl implements krhUserRecipeService {
 
     @Transactional
     @Override
-    public void addUserRecipe(UserRecipe userRecipe, List<String> ingredientss) {
-        System.out.println("재료들: " + ingredientss);
+    public void addUserRecipe(UserRecipe userRecipe, List<String> ingredients) {
+        System.out.println("재료들: " + ingredients);
 
         // 1. 레시피 추가
         userRecipeMapper.insertUserRecipe(userRecipe);
@@ -30,12 +30,12 @@ public class krhUserRecipeServiceImpl implements krhUserRecipeService {
         System.out.println("레시피 아이디: " + recipeId);
 
         // 3. 재료가 존재하지 않으면 추가 (반복문을 통해 하나씩 처리)
-        for (String ingredient : ingredientss) {
+        for (String ingredient : ingredients) {
             userRecipeMapper.insertIngredientsIfNotExist(ingredient);
         }
 
         // 4. 재료와 레시피의 관계 추가
-        for (String ingredient : ingredientss) {
+        for (String ingredient : ingredients) {
             long ingredientId = getIngredientId(ingredient);
             if (ingredientId > 0) {
                 userRecipeMapper.linkUserRecipeIngredient(recipeId, ingredientId);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import './Popular.css';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import '../Recipes/List.css';
 
 export default function Popular() {
     const [recipes, setRecipes] = useState([]);
@@ -25,7 +25,7 @@ export default function Popular() {
                     localStorage.removeItem('token');
                     setToken(null);  // 토큰 상태 초기화
                 });
-                axios.get(`http://localhost:8080/user/favorites`, {
+                axios.get(`http://localhost:8080/api/recipes/favorites`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(response => {
@@ -103,7 +103,7 @@ export default function Popular() {
                 {recipes.slice(0, visibleCount).map((recipe) => (
                     <div key={recipe.recipesId} className="recipe-card">
                         <Link to={`/list/${recipe.recipesId}`} onClick={() => handleClick(recipe.recipesId)}>
-                            <img src={recipe.foodImg} alt={recipe.foodName} />
+                        <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
                         </Link>
                         <h3>{recipe.foodName}</h3>
                         <div className="recipe-grid-btn">

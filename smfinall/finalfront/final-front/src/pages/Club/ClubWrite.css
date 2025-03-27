@@ -1,5 +1,5 @@
 /* 공통 입력란 스타일 (제목, 지역, 해시태그, 모집 마감일) */
-.input-field {
+.input-field-club {
     width: 100%;
     padding: 12px;
     margin-bottom: 40px;
@@ -8,9 +8,10 @@
     font-size: 16px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
-  .input-field:focus {
+  .input-field-club:focus {
     border-color: #ff9861;
     outline: none;
   }
@@ -25,7 +26,8 @@
     font-size: 16px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
-    
+    margin-bottom: 40px;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
   .input-date:focus {
@@ -43,6 +45,7 @@
     box-sizing: border-box;
     transition: border-color 0.3s ease;
     margin:0;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
   .react-datepicker-wrapper{
@@ -54,16 +57,19 @@
     font-size: 16px;
     border-radius: 4px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
   .react-datepicker__header {
     background-color: #FFA575;
     color: white;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
   .react-datepicker__day--selected {
     background-color: #ff9861;
     color: white;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
   .react-datepicker__day:hover {

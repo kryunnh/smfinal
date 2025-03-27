@@ -140,13 +140,13 @@ export default function Home() {
   const renderWeatherIcon = (precipitation) => {
     switch (precipitation) {
       case '맑음':
-        return <FaSun className='icon-sunny' />;
+        return '☀️';
       case '비':
-        return <FaCloudRain className='icon-rain' />;
+        return '🌧️';
       case '흐림':
-        return <FaCloud className='icon-cloud' />;
+        return '☁️';
       case '눈':
-        return <FaSnowflake className='icon-snow' />;
+        return '❄️';
       default:
         return null;
     }
@@ -165,7 +165,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <Link to={'/'}>
+      <Link to={'/tarot'}>
         <img
           src={banner}
           alt="banner"
@@ -180,7 +180,7 @@ export default function Home() {
             {recipes.map((recipe, index) => (
               <div key={index} className="weather-recipe-card">
                 <Link to={`/list/${recipe.recipesId}`} onClick={() => { handleClick(recipe.recipesId) }} style={{ textDecoration: "none", color: "inherit" }}>
-                  <img src={recipe.foodImg} alt={recipe.foodName} />
+                <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
                   <p className="homefoodename">{recipe.foodName}</p>
                 </Link>
               </div>
@@ -206,7 +206,7 @@ export default function Home() {
         {popularRecipes.map((recipe, index) => (
           <div key={index} className="weather-recipe-card">
             <Link to={`/list/${recipe.recipesId}`} onClick={() => { handleClick(recipe.recipesId) }} style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={recipe.foodImg} alt={recipe.foodName} />
+            <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
               <p className="homefoodename">{recipe.foodName}</p>
             </Link>
           </div>
@@ -218,7 +218,7 @@ export default function Home() {
         {latestRecipes.map((recipe, index) => (
           <div key={index} className="weather-recipe-card">
             <Link to={`/list/${recipe.recipesId}`} onClick={() => { handleClick(recipe.recipesId) }} style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={recipe.foodImg} alt={recipe.foodName} />
+            <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
               <p className="homefoodename">{recipe.foodName}</p>
             </Link>
           </div>
@@ -233,7 +233,7 @@ export default function Home() {
               typeRecipes.map((recipe, index) => (
                 <div key={index} className="weather-recipe-card">
                   <Link to={`/list/${recipe.recipesId}`} onClick={() => handleClick(recipe.recipesId)}>
-                    <img src={recipe.foodImg} alt={recipe.foodName} />
+                  <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
                     <p className="homefoodename">{recipe.foodName}</p>
                   </Link>
                 </div>

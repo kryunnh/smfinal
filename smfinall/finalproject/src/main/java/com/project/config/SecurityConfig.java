@@ -42,7 +42,7 @@ public class SecurityConfig {
                     "/user/send-verification-code", "/user/reset-password", 
                     "/user/verify-email", "/user/confirm-email", "/user/check-email", "/user/check-phone", 
                     
-                    "/api/recipes", "/api/recipes/popular",
+                    "/api/recipes", "/api/recipes/popular","/api/recognize-speech",
                     "/api/recipes/search", "/api/recipes/**", "/api/recipes/review/{id}","/api/userrecipes/review/{id}",
                     "/api/recipes/{id}/increase-view","/api/weather/recipe","/api/weather","/recognize",
                     "/api/userrecipes","/api/userrecipes/{id}","/api/userrecipes/search","/api/userrecipes/{id}/increase-view",
@@ -64,6 +64,13 @@ public class SecurityConfig {
     				"/api/userrecipes/review",
     				
             		"/api/urecipe/adduserrecipe").authenticated()
+            
+            // 🔹 관리자 페이지 보호 (hasRole 사용)
+            .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers("/api/notifications/**").authenticated()
+            
+         // 🔹 타로 카드 API는 USER, ADMIN 모두 허용
+            .requestMatchers("/tarot/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
             // ✅ 🔥 `/uploads/**` 경로 모든 사용자 허용 (프로필 이미지, 레시피 이미지 접근 가능)
             .requestMatchers("/uploads/**").permitAll()

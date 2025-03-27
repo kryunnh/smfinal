@@ -1,11 +1,21 @@
 package com.project.mapper;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import com.project.model.*;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import com.project.model.Favorites;
+import com.project.model.Inquiry;
+import com.project.model.Notification;
+import com.project.model.User;
+import com.project.model.krhBoardVO;
 
 @Mapper
 public interface UserMapper {
@@ -71,8 +81,9 @@ public interface UserMapper {
     User login(@Param("email") String email, @Param("password") String password);
 
     // 🔹 유저 정보 조회 (휴대폰 번호 포함)
-    @Select("SELECT * FROM users WHERE email = #{email}")
+    @Select("SELECT id, email, password, name, phone_number, profile_image, role, is_verified, created_at FROM users WHERE email = #{email}")
     User getUserByEmail(@Param("email") String email);
+
 
     // 🔹 유저 정보 수정 (이름, 프로필 이미지, 휴대폰 번호)
 
@@ -106,24 +117,31 @@ public interface UserMapper {
     void deleteUserNotification(@Param("id") Long id);
 
 
-    // 🔹 게시물 등록
-    @Insert("INSERT INTO posts (user_email, title, content) VALUES (#{userEmail}, #{title}, #{content})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertPost(Post post);
 
     // 🔹 특정 유저의 게시물 조회
-    @Select("SELECT boardid, title FROM board WHERE authorEmail = #{email}")
-    List<Board> findBoardsByUserEmail(@Param("email") String email);
+    @Select("SELECT boardid, title, createdAt FROM board WHERE authorEmail = #{email}")
+    List<krhBoardVO> findBoardsByUserEmail(@Param("email") String email);
 
     /** ✅ 유저 즐겨찾기 관련 기능 **/
+    @Select("""
+    	    SELECT 
+    	        r.recipes_id AS recipeId,
+    	        r.foodName,
+    	        r.foodImg
+    	    FROM favorite f
+    	    JOIN recipes r ON f.recipe_id = r.recipes_id
+    	    WHERE f.user_id = #{userId}
+    	""")
+    	List<Map<String, Object>> getFavoriteRecipesByUser(Long userId);
 
+    
     // 유저의 즐겨찾기 목록 조회
-    @Select("SELECT * FROM favorites WHERE user_id = #{userId}")
-    List<Favorite> getFavoritesByUserId(Long userId);
+    @Select("SELECT * FROM favorite WHERE user_id = #{userId}")
+    List<Favorites> getFavoritesByUserId(Long userId);
 
     // 즐겨찾기 삭제
  // 🔹 삭제된 행 수(int)를 반환하여 삭제 성공 여부를 확인 가능
-    @Delete("DELETE FROM favorites WHERE user_id = #{userId} AND recipe_id = #{recipeId}")
+    @Delete("DELETE FROM favorite WHERE user_id = #{userId} AND recipe_id = #{recipeId}")
     int removeFavorite(Long userId, Long recipeId);
 
     // 🔹 1:1 문의 등록
@@ -149,5 +167,8 @@ public interface UserMapper {
     	        AND (last_login_update IS NULL OR last_login_update < NOW() - INTERVAL 1 HOUR)
     	""")
     	void incrementLoginCount(@Param("email") String email);
+    // 로그인 기록 저장 
+    @Insert("INSERT INTO login_history (user_id, login_time) VALUES (#{userId}, NOW())")
+    void insertLoginHistory(@Param("userId") Long userId);
 
 }

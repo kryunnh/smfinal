@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import com.project.model.TarotCard;
@@ -26,6 +28,14 @@ public interface TarotMapper {
     void insertTarotSelection(@Param("email") String email, @Param("tarotCardId") int tarotCardId);
 
     // ✅ 선택한 타로 카드 정보 가져오기
-    @Select("SELECT id, name, description FROM tarot_cards WHERE id = #{tarotCardId}")
-    TarotCard getTarotCardById(@Param("tarotCardId") int tarotCardId);
+    @Select("SELECT id, name, description, image_url, created_at FROM tarot_cards WHERE id = #{id}")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "name", column = "name"),
+        @Result(property = "description", column = "description"),
+        @Result(property = "imageUrl", column = "image_url"), // ✅ 수동 매핑
+        @Result(property = "createdAt", column = "created_at")
+    })
+    TarotCard getTarotCardById(@Param("id") int id);
+
 }

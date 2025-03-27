@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/login.css";
 import RegisterModal from "./RegisterModal";
 import userApi from "../../api/userApi";
-import { useNavigate } from "react-router-dom";
 
 function Login({ setIsLoggedIn }) {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -10,18 +10,43 @@ function Login({ setIsLoggedIn }) {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.role === "ROLE_ADMIN") {
+      console.log("🚀 관리자 감지됨, 자동 이동");
+      navigate("/admin");
+    }
+  }, []); // 🔥 로그인 후 강제 이동 (한 번만 실행)
+
   const handleLogin = async () => {
     try {
       const response = await userApi.login({ email, password });
+  
+      console.log("✅ 로그인 응답 데이터:", response.data);
+      console.log("🔍 로그인한 사용자 역할 (원본):", response.data.user.role);
+  
+      const userRole = response.data.user.role.trim().toUpperCase(); // 🔥 소문자 대문자 변환
+      console.log("🔍 변환된 역할:", userRole);
+  
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("email", response.data.user.email);
-      setIsLoggedIn(true);  // ✅ 로그인 상태 즉시 반영
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+  
+      setIsLoggedIn(true);
       alert("로그인 성공!");
-      navigate("/"); // ✅ 메인 페이지로 이동
+  
+      if (userRole === "ROLE_ADMIN" || userRole === "ADMIN") {
+        console.log("🚀 관리자 로그인 감지됨, /admin으로 이동");
+        navigate("/admin");
+      } else {
+        console.log("👤 일반 사용자 로그인, /로 이동");
+        navigate("/");
+      }
     } catch (error) {
+      console.error("❌ 로그인 실패:", error);
       alert(`로그인 실패: ${error.response?.data?.message || error.message}`);
     }
-  }
+  };
 
   return (
     <div className="login-container">
@@ -47,8 +72,7 @@ function Login({ setIsLoggedIn }) {
         <button className="login-button" onClick={handleLogin}>로그인</button>
 
         <div className="login-links">
-           {/* ✅ 아이디/비밀번호 찾기 페이지로 이동 */}
-           <button className="find-button" onClick={() => navigate("/find-account")}>
+          <button className="find-button" onClick={() => navigate("/find-account")}>
             아이디 | 비밀번호 찾기
           </button>
           <button className="register-button" onClick={() => setIsRegisterOpen(true)}>회원가입 하기</button>

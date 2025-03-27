@@ -56,7 +56,7 @@ function ReportForm() {
 
   return (
     <div className="report-popup">
-      <h2 className="report-title">게시글 신고</h2>
+      <h1 className="report-title">게시글 신고</h1>
       <form onSubmit={handleSubmit}>
         {reportReasons.map((reason, index) => (
           <div key={index} className="report-reason-item">
@@ -88,7 +88,7 @@ function ReportForm() {
           type="submit"
           className="report-button-submit"
         >
-          신고 제출
+          제출하기
         </button>
       </form>
     </div>

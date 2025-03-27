@@ -32,9 +32,17 @@ public class UserRecipe {
     private int foodTime;
     private int categoryId;
     private String status; // 승인 여부 (on/off)
-    private List<String> ingredientss; 
-    
+    private List<String> ingredients; //김륜하
+    private List<Ingredients> ingredientss; //이정면
     private String writerName;
     private String writerEmail;
-    private String ingredients;
+    private String ingredientsss; //김동하
+    
+    public String getIngredientsss() {
+        return ingredientsss;
+    }
+
+    public void setIngredientsss(String ingredientsss) {
+        this.ingredientsss = ingredientsss;
+    }
 }

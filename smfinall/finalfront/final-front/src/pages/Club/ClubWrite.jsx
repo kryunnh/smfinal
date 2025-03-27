@@ -133,7 +133,7 @@ const ClubWrite = () => {
       <div className="mozip">모임 명</div>
       <input
         type="text"
-        className="input-field"
+        className="input-field-club"
         placeholder="모임 이름"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -141,7 +141,7 @@ const ClubWrite = () => {
       <div className="mozip">모임 지역</div>
       <input
         type="text"
-        className="input-field"
+        className="input-field-club"
         placeholder="모임 지역"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
@@ -151,20 +151,20 @@ const ClubWrite = () => {
         selected={date}
         onChange={(date) => setDate(date)}
         dateFormat="yyyy-MM-dd"
-        className="input-field input-date"
+        className="input-field-club input-date"
       />
-      <div className="mozip">모임 해시태그</div>
+      <div className="mozip" style={{marginTop:"40px"}}>모임 해시태그</div>
       <input
         type="text"
-        className="input-field"
-        placeholder="모임 해시태그 (쉼표로 구분)"
+        className="input-field-club"
+        placeholder="모임 해시태그"
         value={tag}
         onChange={handleTagChange}
       />
       <div className="mozip">모임 URL</div>
       <input
         type="text"
-        className="input-field"
+        className="input-field-club"
         placeholder="모임 URL"
         value={clubUrl}
         onChange={handleClubUrlChange}
@@ -177,7 +177,7 @@ const ClubWrite = () => {
       <div className="mozip">대표 이미지를 선택하세요</div>
       <input
         type="file"
-        className="input-field"
+        className="input-field-club"
         onChange={handleImageChange}
         accept="image/*"
       />

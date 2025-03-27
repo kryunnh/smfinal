@@ -1,5 +1,8 @@
 package com.project.controller;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
+import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -80,6 +83,27 @@ public class krhImageController {
                     .body(resource);
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    @GetMapping("/api/userrecipes/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) throws IOException {
+    	File file = new File(uploadDir + filename);
+        
+        // 파일이 존재하는지 확인
+        if (!file.exists()) {
+            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(null);
+        }
+
+        // 이미지 파일을 byte[]로 읽어오기
+        try (InputStream in = new FileInputStream(file)) {
+            byte[] media = in.readAllBytes();
+
+            // 응답 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(getContentType(file.getName())));
+
+            return new ResponseEntity<>(media, headers, HttpStatus.SC_OK);
         }
     }
     

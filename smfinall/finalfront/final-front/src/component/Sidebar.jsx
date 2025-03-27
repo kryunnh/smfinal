@@ -9,10 +9,6 @@ const Sidebar = () => {
           window.location.reload(); 
       }
   };
-
-
-
-
     return (
       <div className="sidebar_main">
         <div className="sidebar_component">

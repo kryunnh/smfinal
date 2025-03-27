@@ -4,6 +4,7 @@
     text-align: center;
     margin: auto; /* 가운데 정렬 */
     padding: 0 20px; /* 양쪽 여백 추가 */
+    margin-top: 100px;
 }
 
 .big-title {
@@ -47,34 +48,38 @@
     text-align: left;
 }
 
-/* 버튼 그룹 */
-.button-group {
-    margin-top: 30px;
-    margin-bottom: 80px;
+.buttons-board{
     text-align: right;
+    margin-bottom: 80px;
 }
-
-/* 버튼 기본 스타일 */
-.button-group button {
-    background-color: #eeeeee;
-    margin-left: 10px;
-    border-radius: 20px;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-/* 버튼 hover 효과 */
-.button-group button:hover {
-    cursor: pointer;
-    background-color: #d2d2d2;
-}
-
 /* 이미지 */
 .page img {
     width: 60%;
     max-width: 800px;
+}
+
+.edit-btn-board{
+    padding: 10px 20px;
+    border: none;
+    background-color: #eeeeee;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn-board:hover{
+    background-color: #d2d2d2;
+}
+
+.delete-btn-board{
+    padding: 10px 20px;
+    border: none;
+    background-color: #eeeeee;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn-board:hover{
+    background-color: #d2d2d2;
 }
 
 /* 💡 반응형 스타일 (태블릿 크기) */

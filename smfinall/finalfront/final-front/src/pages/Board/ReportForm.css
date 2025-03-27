@@ -1,3 +1,4 @@
+
 .report-popup{
     margin:0;
     padding:0;
@@ -9,17 +10,26 @@
 .report-title{
     text-align: center;
     color:#FFA575;
-    padding:20px;
+    padding:30px;
 }
 
 .report-button-submit{
     background-color: #FFA575;
-    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    width:100%;
+    text-align: center;
+}
+
+.report-button-submit:hover{
+  background-color: #ff9d68;
 }
 
 .report-reason-item {
     border: 1px solid #ccc;  /* 테두리 */
-    padding: 10px;           /* 내부 여백 */
+    padding: 20px;           /* 내부 여백 */
     margin: 5px 0;           /* 위아래 간격 */
     border-radius: 5px;      /* 둥근 모서리 */
     display: flex;           /* 정렬 */
@@ -52,5 +62,11 @@
     resize: none;
     font-size: 14px;
     padding: 5px;
+    font-family: 'NEXON Lv1 Gothic OTF';
   }
   
+  .report-button-submit{
+    font-size: 18px;
+    margin-bottom: 80px;
+    margin-top: 40px;
+  }

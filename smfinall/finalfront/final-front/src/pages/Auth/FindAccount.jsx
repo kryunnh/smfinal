@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "../../styles/FindAccount.css"; 
 import "../../styles/GlobalStyles.css";
@@ -83,18 +83,17 @@ export default function FindAccount() {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
+  
     try {
       await axios.post("http://localhost:8080/user/reset-password", {
         email,
-        phoneNumber,
-        verificationCode,
-        newPassword,
+        newPassword, // ✅ 인증번호 제거
       });
+  
       alert("비밀번호가 변경되었습니다.");
       setShowResetModal(false);
     } catch (error) {
-      alert("비밀번호 변경 실패: " + (error.response?.data || "서버 오류"));
+      alert("비밀번호 변경 실패: " + error.response?.data || "서버 오류");
     }
   };
 

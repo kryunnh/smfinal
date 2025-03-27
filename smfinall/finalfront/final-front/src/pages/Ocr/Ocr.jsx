@@ -13,43 +13,6 @@ export default function Ocr() {
     const [imagePath, setImagePath] = useState('');
     const [message, setMessage] = useState('');
 
-    // 전체 레시피 불러오기
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        setToken(token);
-
-        if (token) {
-            axios.get(`http://localhost:8080/api/recipes`)
-                .then(response => {
-                    setRecipes(response.data);
-                })
-                .catch(error => {
-                    console.log("데이터를 불러오는 중 오류 발생:", error);
-                    alert("토큰이 만료되었거나 유효하지 않습니다.");
-                    localStorage.removeItem('token');
-                    setToken(null);
-                });
-
-            axios.get(`http://localhost:8080/user/favorites`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(response => {
-                    const favoritesData = response.data.favorites;
-                    const favoritesObj = {};
-                    favoritesData.forEach(recipe => {
-                        favoritesObj[recipe.recipesId] = true;
-                    });
-                    setFavorites(favoritesObj);
-                })
-                .catch(error => {
-                    console.log("즐겨찾기 정보를 불러오는 중 오류 발생:", error);
-                    alert("즐겨찾기 정보를 불러오는 데 실패했습니다.");
-                });
-        } else {
-            setFavorites({});
-        }
-    }, []);
-
     // OCR 파일 업로드 처리
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -99,10 +62,46 @@ export default function Ocr() {
             });
     };
 
-    // 즐겨찾기 추가/삭제
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setToken(token);
+
+        // 유효하지 않은 토큰 처리 (예: 만료된 토큰)
+        if (token) {
+            axios.get(`http://localhost:8080/api/recipes`)
+                .then(response => {
+                    setRecipes(response.data);
+                })
+                .catch(error => {
+                    console.log("데이터를 불러오는 중 오류 발생:", error);
+                    alert("토큰이 만료되었거나 유효하지 않습니다.");
+                    localStorage.removeItem('token');
+                    setToken(null);  // 토큰 상태 초기화
+                });
+                axios.get(`http://localhost:8080/api/recipes/favorites`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => {
+                    const favoritesData = response.data.favorites;  // response.data.favorites 확인
+                    const favoritesObj = {};
+                    favoritesData.forEach(recipe => {
+                        favoritesObj[recipe.recipesId] = true;
+                    });
+                    setFavorites(favoritesObj);
+                })
+                .catch(error => {
+                    console.log("즐겨찾기 정보를 불러오는 중 오류 발생:", error);
+                    alert("즐겨찾기 정보를 불러오는 데 실패했습니다.");
+                });
+            } else {
+                // 토큰이 없으면 즐겨찾기 정보를 초기화
+                setFavorites({});
+            }
+    }, []);
+
     const handleFavorite = (recipesId) => {
         if (!token) {
-            alert("로그인이 필요합니다!");
+            alert("로그인이 필요합니다!");  // 로그인되지 않았을 때 알림
             return;
         }
 
@@ -122,7 +121,7 @@ export default function Ocr() {
                 console.log(isCurrentlyFavorite ? "즐겨찾기 삭제 실패" : "즐겨찾기 추가 실패", error);
                 alert("즐겨찾기 작업에 실패했습니다.");
             });
-    };
+    }
 
     return (
         <div className="ocrrecipebig">
@@ -145,7 +144,7 @@ export default function Ocr() {
                 {filteredRecipes.slice(0, visibleCount).map((recipe) => (
                     <div key={recipe.recipesId} className="recipe-card">
                         <Link to={`/list/${recipe.recipesId}`} onClick={() => handleClick(recipe.recipesId)}>
-                            <img src={recipe.foodImg} alt={recipe.foodName} />
+                            <img src={`http://localhost:8080/uploads/api/userrecipes/${recipe.foodImg}`} alt={recipe.foodName}/>
                         </Link>
                         <h3>{recipe.foodName}</h3>
                         <div className="recipe-grid-btn">

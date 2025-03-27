@@ -30,6 +30,11 @@ import Header from './header-footer/header';
 import Footer from './header-footer/footer';
 import ChallengeForm from './pages/ChallengForm/ChallengeForm';
 import Ocr from './pages/Ocr/Ocr';
+import TarotPage from "./pages/Tarot/TarotPage";
+import AdminPage from "./pages/Admin/AdminPage";
+import ProtectedAdminRoute from "./components/Admin/ProtectedAdminRoute";
+import FindAccount from "./pages/Auth/FindAccount";
+import ChallengeDetail from './pages/Challenge/ChallengeDetail';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -61,6 +66,7 @@ function App() {
         <Route path="popular" element={<Popular />} />
         <Route path="challenge" element={<Challenge />} />
         <Route path="challengeform" element={<ChallengeForm />} />
+        <Route path="challenge/:id" element={<ChallengeDetail/>}/>
         <Route path="mypage/*" element={<MyPage />} />
         <Route path="boardlist" element={<BoardList />} />
         <Route path="boardlist/:boardId" element={<BoardDetail />} />
@@ -70,6 +76,16 @@ function App() {
         <Route path="club/:clubId" element={<ClubDetail />} />
         <Route path="clubwrite" element={<ClubWrite />} />
         <Route path="club/:clubId/apply" element={<ClubApply />} />
+        <Route path="/find-account" element={<FindAccount />} />
+        <Route path="/tarot" element={<TarotPage />} />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedAdminRoute>
+              <AdminPage />
+            </ProtectedAdminRoute>
+          }
+        />
         <Route path="ocr" element={<Ocr />} />
         {/* report 페이지 (팝업 스타일) */}
         <Route path="report/:boardId" element={<ReportForm />} />

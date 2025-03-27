@@ -85,13 +85,13 @@ const BoardList = () => {
     <div className="page">
       <h1 className="big-title">요리 고민방</h1>
       
-      <div className="search-container">
+      <div className="search-container-board">
         <input
           type="text"
           value={findStr}
           onChange={handleSearchChange}
           placeholder="검색어를 입력하세요"
-          className="search"
+          className="search-board"
         />
         <button onClick={handleSearchClick} className="search-btnn">검색</button>
       </div>

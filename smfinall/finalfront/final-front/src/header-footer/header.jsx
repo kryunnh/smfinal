@@ -178,44 +178,44 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
               >
               <Link
                 to="/mypage"
-                className={location.pathname === "/mypage" ? "active" : ""}
-              >
+              //   className={location.pathname === "/mypage" ? "active" : ""}
+             >
                 ▼ 마이페이지
               </Link>
               {activeDropdown === "mypage" && (
                 <div className="dropdown">
                   <Link
-                    to={"/user-edit"}
+                    to={"/mypage/user-edit"}
                     className={location.pathname === "/user-edit" ? "active" : ""}
                   >
                     회원 정보 수정
                   </Link>
                   <Link
-                    to={"/activity"}
+                    to={"/mypage/activity"}
                     className={location.pathname === "/activity" ? "active" : ""}
                   >
                     내 활동
                   </Link>
                   <Link
-                    to={"/notifications"}
+                    to={"/mypage/notifications"}
                     className={location.pathname === "/notifications" ? "active" : ""}
                   >
                     알림
                   </Link>
                   <Link
-                    to={"/inquiry"}
+                    to={"/mypage/inquiry"}
                     className={location.pathname === "/inquiry" ? "active" : ""}
                   >
                     1:1 문의 목록
                   </Link>
                   <Link
-                    to={"/inquiry-write"}
+                    to={"/mypage/inquiry/new"}
                     className={location.pathname === "/inquiry-write" ? "active" : ""}
                   >
                     1:1 문의 작성
                   </Link>
                   <Link
-                    to={"/withdrawal"}
+                    to={"/mypage/withdrawal"}
                     className={location.pathname === "/withdrawal" ? "active" : ""}
                   >
                     회원 탈퇴
@@ -228,11 +228,16 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
           <button onClick={() => navigate("/login")}>로그인</button>
         )}
 
-          {isLoggedIn && !isAdmin && (
-            <div className="logout-btn">
-              <button onClick={handleLogout}>로그아웃</button>
-            </div>
-          )}
+          {isLoggedIn ? (
+                    <>
+                    
+                        <button onClick={handleLogout} className="logout-btn">로그아웃</button>
+                    </>
+                ) : (
+                    <>
+                        <button><Link to={'/login'}>로그인</Link></button>
+                    </>
+                )}
          </div>
       </nav>
     </header>

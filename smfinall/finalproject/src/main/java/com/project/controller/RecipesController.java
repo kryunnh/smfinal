@@ -1,8 +1,11 @@
 package com.project.controller;
 
-import java.util.List;  
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +36,8 @@ public class RecipesController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+
+	
 	@GetMapping("/api/recipes")
 	public List<Recipes> getRecipes(){
 		List<Recipes> recipes = recipesService.getAllRecipes(); 
@@ -60,7 +65,7 @@ public class RecipesController {
 		recipe.setIngredients(ingredients); 
 		return recipe;
 	}
-	@PutMapping("api/recipes/{id}/increase-view")
+	@PutMapping("/api/recipes/{id}/increase-view")
 	@Transactional
 	public Recipes increaseViewCount(@PathVariable Long id) {
 	    Recipes recipe = recipesService.findById(id);
@@ -73,7 +78,7 @@ public class RecipesController {
 	    }
 	}
 	
-	@PostMapping("api/recipes/{id}/favorite")
+	@PostMapping("/api/recipes/{id}/favorite")
 	public Recipes addFavorite(@PathVariable Long id, @RequestHeader("Authorization") String token) {
 		String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 	    Claims  claims;
@@ -89,7 +94,7 @@ public class RecipesController {
             throw new RuntimeException("로그인이 필요합니다.");
         }
 
-        User user = userService.getUserByEmail(email); 
+        User user = userService.getUserByEmail(email);  
         Recipes recipe = recipesService.findById(id);
         if (recipe != null) {
             recipesService.addFavorite(recipe, email); 
@@ -99,7 +104,7 @@ public class RecipesController {
         }
     }
 
-    @DeleteMapping("api/recipes/{id}/favorite")
+    @DeleteMapping("/api/recipes/{id}/favorite")
     public Recipes deleteFavorite(@PathVariable Long id, @RequestHeader("Authorization") String token) {
     	String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
         Claims claims;
@@ -127,7 +132,7 @@ public class RecipesController {
     }
 
 	
-	@GetMapping("api/recipes/search")
+	@GetMapping("/api/recipes/search")
 	public List<Recipes> searchRecipes(@RequestParam(value = "query",required = false) String query,
 									   @RequestParam(value = "category", required = false) String category){
 		if("음식명".equals(category)) {
@@ -137,6 +142,37 @@ public class RecipesController {
 		}
 		return recipesService.getAllRecipes();
 	}
+	
+	 @GetMapping("/api/recipes/favorites")
+	    public ResponseEntity<Map<String, Object>> getFavorites(@RequestHeader("Authorization") String token) {
+	        // JWT 토큰에서 사용자 정보를 추출
+	        String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+	        Claims  claims;
+	        try {
+	            claims = jwtUtil.extractAllClaims(jwtToken); 
+	        } catch (Exception e) {
+	            throw new RuntimeException("유효하지 않은 토큰입니다.");
+	        }
+
+	        String email = claims.getSubject(); 
+
+	        if (email == null) {
+	            throw new RuntimeException("로그인이 필요합니다.");
+	        }
+	        User user = userService.getUserByEmail(email);
+	        if (user == null) {
+	            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+	        }
+	        // 사용자의 즐겨찾기 목록을 가져옴
+	        List<Recipes> favoriteRecipes = recipesService.getFavoritesByUserId(user.getId());
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("favorites", favoriteRecipes);
+
+	        return ResponseEntity.ok(response);
+	    }
+
 }
 
+	
 	

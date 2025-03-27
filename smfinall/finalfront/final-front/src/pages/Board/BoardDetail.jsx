@@ -100,7 +100,6 @@ function BoardDetail() {
 
   return (
     <div className="page">
-      <h1 className="big-title">요리 고민방 자세히 보기</h1>
       <hr />
       <div className="view-board">
         <div className="view-title">{boardDetail.title}</div>
@@ -114,19 +113,19 @@ function BoardDetail() {
       
       <hr />
 
-      <div className="button-group">
+      <div className="buttons-board">
         {canReport && (
-          <button className="report-btn" onClick={openReportPopup}>
-            신고하기
+          <button className="edit-btn-board" onClick={openReportPopup}>
+            신고
           </button>
         )}
         {canEditOrDelete && (
           <>
-            <button className="edit-btn" onClick={handleEdit}>
-              수정하기
+            <button className="edit-btn-board" onClick={handleEdit}>
+              수정
             </button>
-            <button className="delete-btn" onClick={handleDelete}>
-              삭제하기
+            <button className="delete-btn-board" onClick={handleDelete}>
+              삭제
             </button>
           </>
         )}

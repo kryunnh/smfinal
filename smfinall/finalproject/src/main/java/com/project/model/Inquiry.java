@@ -12,4 +12,5 @@ public class Inquiry {
     private String content;
     private String reply;
     private String createdAt;
+    private String userName; // ✅ 추가된 필드 (작성자 이름)
 }

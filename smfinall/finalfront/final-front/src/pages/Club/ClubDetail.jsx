@@ -146,7 +146,7 @@ const ClubDetail = () => {
 
           {/* 돌아가기 및 모임 신청 버튼 */}
           <div className="button-container">
-            <button className="back-button" onClick={() => navigate('/clublist')}>
+            <button className="back-button-club" onClick={() => navigate('/clublist')}>
               돌아가기
             </button>
             {isLoggedIn && userEmail !== clubDetail.recruiterEmail &&!isClosed &&( // 로그인한 사용자와 주최자가 다를 때만 신청 버튼 보이기

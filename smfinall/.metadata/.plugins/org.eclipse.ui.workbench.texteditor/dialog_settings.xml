@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="Favorite"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="fields"/>
-			<item value="apiUrl"/>
-			<item value="ingredients"/>
-			<item value="getComment"/>
-			<item value="image"/>
-			<item value="uploads"/>
-			<item value="upload"/>
-			<item value="4"/>
-			<item value="category"/>
-			<item value="body"/>
+			<item value="favorite"/>
+			<item value="favorites"/>
+			<item value="ingredientss"/>
+			<item value="hasRole"/>
 			<item value="user"/>
-			<item value="uuid"/>
-			<item value="잘"/>
-			<item value="boardId"/>
-			<item value="send"/>
+			<item value="src"/>
+			<item value="json"/>
+			<item value="http"/>
+			<item value="spring-web"/>
+			<item value="faster"/>
+			<item value="simple"/>
+			<item value="gson"/>
+			<item value="aop"/>
+			<item value="spring-boot-starter-validation"/>
+			<item value="validation"/>
 		</list>
 		<list key="replacehistory">
 			<item value="date"/>
