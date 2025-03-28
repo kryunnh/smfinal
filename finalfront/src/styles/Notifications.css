@@ -1,0 +1,64 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+/* 📌 알림 페이지 스타일 */
+.notifications-container {
+    min-width: 1200px;
+    margin: 60px auto;
+    background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    text-align: center;
+}
+
+.notifications-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #FFA575; /* ✅ 강조된 주황색 제목 */
+}
+
+.notifications-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notifications-table th,
+.notifications-table td {
+    border: 1px solid  #FFD2B9;
+    padding: 10px;
+    text-align: center;
+}
+
+.notifications-table th {
+    background: #FFA575; /* ✅ 검정 대신 주황 */
+    font-weight: bold;
+}
+
+.read-button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.read-button:hover {
+    background: #388e3c;
+}
+
+.delete-button {
+    background: #FF7A7A; 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background: #e65353;
+}

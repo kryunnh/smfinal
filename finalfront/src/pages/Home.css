@@ -1,0 +1,167 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* padding, border를 포함한 크기 계산 */
+}
+
+.home {
+  width: 100%; /* 화면 크기에 맞게 가로폭을 100%로 설정 */
+  max-width: 1400px; /* 최대 폭을 1400px로 설정 */
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.weather-app {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 15px;
+  margin:0;
+}
+
+.icon-sunny {
+  color: rgb(228, 13, 13); /* 햇볕 아이콘 색상 */
+  font-size: 30px;
+  vertical-align: middle;
+}
+
+.icon-rain {
+  color: blue; /* 비 아이콘 색상 */
+  font-size: 30px;
+  vertical-align: middle;
+}
+
+.icon-cloud {
+  color: gray; /* 구름 아이콘 색상 */
+  font-size: 30px;
+  vertical-align: middle;
+}
+
+.icon-snow {
+  color: rgb(159, 248, 233); /* 눈 아이콘 색상 */
+  font-size: 30px;
+  vertical-align: middle;
+}
+
+.weather-recipe,
+.best-recipe,
+.new-recipe {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* 아이템들이 한 줄에 두 개씩 배치되도록 공간을 균등하게 분배 */
+  gap: 40px; /* 카드 간의 간격 */
+}
+
+.weather-recipe-card,
+.best-recipe-card,
+.new-recipe-card {
+  background: #fff;
+  text-align: center;
+  height: 300px;
+  width: 300px;
+  transition: transform 0.3s ease;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.weather-recipe-card:hover,
+.best-recipe-card:hover,
+.new-recipe-card:hover {
+  transform: scale(1.05); /* Hover 시 크기 확대 */
+}
+
+.weather-recipe-card img,
+.best-recipe-card img,
+.new-recipe-card img {
+  width: 250px;
+  height: 250px;
+  border-radius: 10px;
+  justify-content: center;
+  margin: 0;
+}
+
+.weather {
+  text-align: right;
+}
+
+.weather-head p {
+  font-size: 12px;
+}
+
+.tarobanner {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.small-title {
+  text-align: left;
+  margin-top: 150px;
+  color: #FFA575;
+  margin-bottom: 40px;
+}
+
+.homefoodename {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1400px) {
+  .home {
+    width: 100%; /* 화면 크기에 맞게 가로폭을 100%로 설정 */
+  }
+
+  .weather-recipe,
+  .best-recipe,
+  .new-recipe {
+    gap: 40px; /* 작은 화면에서는 카드 사이의 간격을 좁힘 */
+  }
+
+  .weather-recipe-card,
+  .best-recipe-card,
+  .new-recipe-card {
+    width: 220px; /* 카드 크기를 줄임 */
+    height: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .small-title {
+    text-align: center; /* 화면 크기가 작아지면 제목 중앙 정렬 */
+  }
+
+  .weather-recipe,
+  .best-recipe,
+  .new-recipe {
+    flex-direction: column; /* 세로로 배치 */
+    gap: 20px;
+  }
+
+  .weather-recipe-card,
+  .best-recipe-card,
+  .new-recipe-card {
+    width: 45%; /* 한 줄에 두 개씩 나오도록 설정 */
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .small-title {
+    margin-top: 100px; /* 모바일 화면에서는 제목의 상단 여백을 더 줄임 */
+  }
+
+  .weather-recipe-card,
+  .best-recipe-card,
+  .new-recipe-card {
+    width: 80%; /* 카드 크기 조정 */
+    height: auto;
+  }
+}

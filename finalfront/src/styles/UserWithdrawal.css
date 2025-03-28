@@ -1,0 +1,41 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+/* 📌 회원 탈퇴 폼 스타일 */
+.withdrawal-form-container {
+    min-width: 1200px;
+    margin: 60px auto;
+    background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    text-align: center;
+}
+
+.withdrawal-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.withdrawal-textarea {
+    width: 90%;
+    height: 200px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+    background: #fff;
+    color: #333;
+}
+
+.withdrawal-buttons {
+    display: flex;
+  justify-content: center;  /* ✅ 버튼을 가운데로 정렬 */
+  gap: 20px;                /* ✅ 버튼 사이 간격 */
+  margin-top: 20px;
+}
+
+
