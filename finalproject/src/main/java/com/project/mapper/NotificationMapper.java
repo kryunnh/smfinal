@@ -38,4 +38,3 @@ public interface NotificationMapper {
     	List<Notification> findUnreadAdminNotifications(@Param("userId") Long userId);
 
 }
-

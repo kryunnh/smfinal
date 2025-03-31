@@ -23,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.project.config.JwtUtil;
 import com.project.mapper.InquiryMapper;
 import com.project.mapper.UserMapper;
-import com.project.model.Favorite;
+import com.project.model.Favorites;
 import com.project.model.Inquiry;
 import com.project.model.Notification;
 import com.project.model.User;
@@ -41,25 +41,29 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final InquiryMapper inquiryMapper;
+    private final NotificationService notificationService; 
     // 🔹 이메일 인증 코드 저장
     private final Map<String, String> verificationCodes = new HashMap<>(); // 🔹 이메일-코드 저장
     private final EmailService emailService;
     private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/"; // ✅ 업로드 디렉토리 고정
     private final JdbcTemplate jdbcTemplate;
-
+    
     @Autowired
     public UserService(EmailService emailService,
                        InquiryMapper inquiryMapper,
                        JwtUtil jwtUtil,
                        PasswordEncoder passwordEncoder,
                        UserMapper userMapper,
+                       NotificationService notificationService,
                        JdbcTemplate jdbcTemplate) {  // 🔹 JdbcTemplate 추가
         this.emailService = emailService;
         this.inquiryMapper = inquiryMapper;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.notificationService = notificationService;
         this.jdbcTemplate = jdbcTemplate; // 🔹 추가된 jdbcTemplate
+ 
     }
     // ✅ 인증번호 생성 후 저장
     public void sendVerificationEmail(String email) {
@@ -265,7 +269,8 @@ public class UserService {
         }
 
         // 🔹 5. JWT 생성
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+
         System.out.println("✅ JWT 토큰 생성 완료: " + token);
 
         // 🔹 6. 응답 구성
@@ -381,6 +386,10 @@ public class UserService {
     // 🔹 회원탈퇴 요청 저장
     public void requestAccountDeletion(String email, String reason) {
         userMapper.requestAccountDeletion(email, reason);
+        // ✅ WebSocket 알림 전송 (관리자에게 탈퇴 요청 알림)
+        notificationService.sendWithdrawNotification(
+            "회원 " + email + " 님의 탈퇴 요청이 접수되었습니다."
+        );
     }
 
     // 🔹 (본인) 유저 알림 목록 조회
@@ -400,7 +409,7 @@ public class UserService {
     /** ✅ 유저 즐겨찾기 관련 기능 **/
 
     // 유저의 즐겨찾기 목록 조회
-    public List<Favorite> getFavoritesByUser(Long userId) {
+    public List<Favorites> getFavoritesByUser(Long userId) {
         return userMapper.getFavoritesByUserId(userId);
     }
     public List<Map<String, Object>> getFavoriteRecipeList(Long userId) {
@@ -423,6 +432,10 @@ public class UserService {
     // 🔹 1:1 문의 등록
     public void insertInquiry(Inquiry inquiry) {
         userMapper.insertInquiry(inquiry);
+        // ✅ WebSocket 알림 전송
+        notificationService.sendInquiryNotification(
+            "새로운 1:1 문의가 등록되었습니다. [" + inquiry.getTitle() + "]"
+        );
     }
 
  // 🔹 로그인한 사용자의 문의 목록 조회

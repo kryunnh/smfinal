@@ -20,7 +20,7 @@ import com.project.model.User;
 import com.project.model.UserDeletionRequest;
 import com.project.model.UserRecipe;
 import com.project.model.krhBoardVO;
-import com.project.model.krhReportVo;
+import com.project.model.krhReportVO;
 
 @Mapper
 public interface AdminMapper {
@@ -262,11 +262,11 @@ public interface AdminMapper {
 
     // 전체 신고 조회
     @Select("SELECT * FROM reports ORDER BY reportedAt DESC")
-    List<krhReportVo> getAllReports();
+    List<krhReportVO> getAllReports();
 
     // 상세 신고 조회
     @Select("SELECT * FROM reports WHERE reportId = #{reportId}")
-    krhReportVo getReportById(int reportId);
+    krhReportVO getReportById(int reportId);
 
     // 신고 삭제
     @Delete("DELETE FROM reports WHERE reportId = #{reportId}")

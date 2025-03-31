@@ -1,0 +1,114 @@
+/* 전체 컨테이너 */
+/* 전체 컨테이너 */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* 제목 스타일 */
+.login-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ff7f50;
+  margin-bottom: 20px;
+}
+
+/* 로그인 박스 */
+.login-box {
+  width: 400px;
+  padding: 40px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 입력 필드 라벨 */
+.login-label {
+  align-self: flex-start;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* 입력 필드 */
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+/* 로그인 버튼 */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #ff7f50;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 20px; /* 버튼의 border-radius: 20px */
+  margin-top: 20px;
+}
+
+.login-button:hover {
+  background-color: #ff6347;
+}
+
+/* 하단 링크 */
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.login-links a {
+  color: #888;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.login-links a:hover {
+  color: #ff7f50;
+}
+.find-button {
+  width: 50%;
+  padding: 12px;
+  border: none;
+  background-color: #ff7f50;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 20px; /* 버튼의 border-radius: 20px */
+  margin-top: 20px;
+}
+.register-button{
+  width: 50%;
+  padding: 12px;
+  border: none;
+  background-color: #ff7f50;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 20px; /* 버튼의 border-radius: 20px */
+  margin-top: 20px;
+}
+.find-button:hover {
+  background-color: #ff6347;
+}
+.register-button:hover {
+  background-color: #ff6347;
+}
+

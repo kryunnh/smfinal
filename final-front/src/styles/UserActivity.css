@@ -1,0 +1,96 @@
+@import "./FormStyles.css"; /* ✅ 공통 스타일 불러오기 */
+
+/* 📌 내 활동(게시글 + 관심 목록) 컨테이너 */
+.user-activity-container {
+    min-width: 1200px;
+  margin: 60px auto;
+  background: #fffaf2; /* ✅ 부드러운 크림 톤 */
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(255, 167, 116, 0.2);
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+  text-align: center;
+}
+
+.activity-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.user-posts-section, .favorites-section {
+    margin-bottom: 30px;
+}
+
+/* 📌 테이블 스타일 */
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+.activity-table th, .activity-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+.activity-table th {
+    background: #FFA575;         /* ✅ 주황 계열로 변경 */
+  color: white;                /* 글씨는 흰색으로 가독성 유지 */
+  font-size: 18px;
+}
+
+.favorites-grid {
+    display: flex;
+    flex-wrap: wrap;         /* ✅ 줄바꿈 허용 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 24px;               /* 카드 사이 여백 */
+    max-width: 800px;        /* 폼이 너무 넓어지지 않게 제한 (선택) */
+    margin: 0 auto;
+  }
+  
+
+/* 📌 관심 항목 카드 스타일 */
+.favorite-item {
+    width: 180px;            /* ✅ 고정 너비 */
+    background-color: #FFF3E4; 
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+.favorite-image {
+    width: 150px;         /* 원하는 가로 크기 */
+    height: 150px;        /* 원하는 세로 크기 */
+    object-fit: cover;    /* 비율 유지하면서 자르기 */
+    border-radius: 8px;   /* 모서리 둥글게 (선택) */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* (선택) 그림자 효과 */
+  }
+  
+
+/* 📌 버튼 스타일 */
+.favorite-detail-btn, .favorite-remove-btn {
+    margin-top: 5px;
+  background: #FFA575;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.favorite-remove-btn {
+    background: red;
+}
+
+.favorite-detail-btn:hover {
+    background: #0056b3;
+}
+
+.favorite-remove-btn:hover {
+    background: darkred;
+}

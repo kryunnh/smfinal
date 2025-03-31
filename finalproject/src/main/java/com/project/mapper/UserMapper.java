@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.project.model.Favorite;
+import com.project.model.Favorites;
 import com.project.model.Inquiry;
 import com.project.model.Notification;
 import com.project.model.User;
@@ -27,6 +27,23 @@ public interface UserMapper {
     // 🔹 해당 이메일과 휴대폰 번호를 가진 유저 존재 여부 확인
     @Select("SELECT COUNT(*) FROM users WHERE email = #{email} AND phone_number = #{phoneNumber}")
     int countUserByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+    @Select("""
+    		  SELECT 
+    		    id, 
+    		    email, 
+    		    password, 
+    		    name, 
+    		    phone_number, 
+    		    profile_image, 
+    		    role, 
+    		    is_verified, 
+    		    created_at,
+    		    last_login_update AS lastLogin
+    		  FROM users
+    		  WHERE id = #{id}
+    		""")
+    		User findUserById(Long id);
+
 
     // 🔹 특정 이메일로 유저 조회 (Optional)
     @Select("SELECT * FROM users WHERE email = #{email}")
@@ -51,6 +68,7 @@ public interface UserMapper {
     // ✅ 특정 ID로 문의 조회 (이메일 포함)
     @Select("SELECT * FROM inquiries WHERE id = #{id}")
     Inquiry findById(Long id);
+    
     // ✅ 특정 문의글이 해당 사용자의 것인지 확인하는 메서드
     @Select("SELECT COUNT(*) FROM inquiries WHERE id = #{inquiryId} AND user_email = #{email}")
     int isInquiryOwner(@Param("inquiryId") Long inquiryId, @Param("email") String email);
@@ -128,7 +146,7 @@ public interface UserMapper {
     	        r.recipes_id AS recipeId,
     	        r.foodName,
     	        r.foodImg
-    	    FROM favorites f
+    	    FROM favorite f
     	    JOIN recipes r ON f.recipe_id = r.recipes_id
     	    WHERE f.user_id = #{userId}
     	""")
@@ -136,12 +154,12 @@ public interface UserMapper {
 
     
     // 유저의 즐겨찾기 목록 조회
-    @Select("SELECT * FROM favorites WHERE user_id = #{userId}")
-    List<Favorite> getFavoritesByUserId(Long userId);
+    @Select("SELECT * FROM favorite WHERE user_id = #{userId}")
+    List<Favorites> getFavoritesByUserId(Long userId);
 
     // 즐겨찾기 삭제
  // 🔹 삭제된 행 수(int)를 반환하여 삭제 성공 여부를 확인 가능
-    @Delete("DELETE FROM favorites WHERE user_id = #{userId} AND recipe_id = #{recipeId}")
+    @Delete("DELETE FROM favorite WHERE user_id = #{userId} AND recipe_id = #{recipeId}")
     int removeFavorite(Long userId, Long recipeId);
 
     // 🔹 1:1 문의 등록
@@ -170,5 +188,11 @@ public interface UserMapper {
     // 로그인 기록 저장 
     @Insert("INSERT INTO login_history (user_id, login_time) VALUES (#{userId}, NOW())")
     void insertLoginHistory(@Param("userId") Long userId);
-
+    // ✅ 단일 관리자 조회
+    @Select("SELECT * FROM users WHERE role = 'admin' LIMIT 1")
+    User findAdminUser();
+   
+    // ✅ 여러 관리자 조회 (예비용)
+    @Select("SELECT * FROM users WHERE role = 'admin'")
+    List<User> findAllAdmins();
 }

@@ -32,7 +32,7 @@ import com.project.model.User;
 import com.project.model.UserDeletionRequest;
 import com.project.model.UserRecipe;
 import com.project.model.krhBoardVO;
-import com.project.model.krhReportVo;
+import com.project.model.krhReportVO;
 import com.project.service.AdminService;
 import com.project.service.FileStorageService;
 
@@ -329,13 +329,13 @@ public class AdminController {
 
  // 📌 신고 전체 목록
  @GetMapping("/reports")
- public List<krhReportVo> getAllReports() {
+ public List<krhReportVO> getAllReports() {
      return adminService.getReports();
  }
 
  // 📌 신고 상세 조회
  @GetMapping("/reports/{reportId}")
- public krhReportVo getReportDetail(@PathVariable int reportId) {
+ public krhReportVO getReportDetail(@PathVariable int reportId) {
      return adminService.getReportById(reportId);
  }
 

@@ -1,0 +1,183 @@
+.page {
+    width: 100%;
+    max-width: 1400px;
+    text-align: center;
+    margin: auto; /* 가운데 정렬 */
+    padding: 0 20px; /* 양쪽 여백 추가 */
+    margin-top: 100px;
+}
+
+.big-title {
+    text-align: center;
+    color: #FFA575;
+    margin-top: 100px; /* 제목 위쪽 여백 */
+    margin-bottom: 80px; /* 제목 아래쪽 여백 */
+    font-size: 40px; /* 기본 제목 크기 */
+}
+
+/* 게시판 상세보기 박스 */
+.view-board {
+    padding: 15px;
+    margin: 0;
+    background-color: #FFD2B9;
+    text-align: left;
+    border-radius: 10px;
+}
+
+/* 제목 */
+.view-title {
+    padding: 20px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* 작성일, 조회수, 작성자 공통 스타일 */
+.view-views,
+.view-createdAt,
+.view-author {
+    padding: 20px;
+    display: inline-block;
+    font-size: 18px;
+}
+
+/* 본문 */
+.view-content {
+    min-height: 400px;
+    padding: 40px;
+    font-size: 20px;
+    text-align: left;
+}
+
+.buttons-board{
+    text-align: right;
+    margin-bottom: 80px;
+}
+/* 이미지 */
+.page img {
+    width: 60%;
+    max-width: 800px;
+}
+
+.edit-btn-board{
+    padding: 10px 20px;
+    border: none;
+    background-color: #eeeeee;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn-board:hover{
+    background-color: #d2d2d2;
+}
+
+.delete-btn-board{
+    padding: 10px 20px;
+    border: none;
+    background-color: #eeeeee;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn-board:hover{
+    background-color: #d2d2d2;
+}
+
+/* 💡 반응형 스타일 (태블릿 크기) */
+@media (max-width: 1024px) {
+    .big-title {
+        font-size: 35px; /* 제목 크기 줄이기 */
+        margin-top: 80px;
+        margin-bottom: 60px;
+    }
+
+    .view-title {
+        font-size: 22px;
+    }
+
+    .view-content {
+        font-size: 18px;
+        padding: 30px;
+    }
+
+    .button-group {
+        text-align: center; /* 버튼을 가운데 정렬 */
+    }
+
+    .button-group button {
+        font-size: 14px;
+        padding: 8px 16px;
+        margin: 5px;
+    }
+
+    .page img {
+        width: 70%;
+    }
+}
+
+/* 💡 반응형 스타일 (스마트폰 크기) */
+@media (max-width: 768px) {
+    .big-title {
+        font-size: 28px;
+        margin-top: 60px;
+        margin-bottom: 40px;
+    }
+
+    .view-title {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    .view-content {
+        font-size: 16px;
+        padding: 20px;
+    }
+
+    .view-views,
+    .view-createdAt,
+    .view-author {
+        font-size: 14px;
+        display: block; /* 한 줄로 표시 */
+        padding: 10px;
+    }
+
+    .button-group {
+        text-align: center;
+    }
+
+    .button-group button {
+        font-size: 14px;
+        padding: 8px 12px;
+        margin: 3px;
+    }
+
+    .page img {
+        width: 80%;
+    }
+}
+
+/* 💡 반응형 스타일 (작은 스마트폰 크기) */
+@media (max-width: 480px) {
+    .big-title {
+        font-size: 24px;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    .view-title {
+        font-size: 18px;
+    }
+
+    .view-content {
+        font-size: 14px;
+        padding: 15px;
+    }
+
+    .button-group button {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .page img {
+        width: 90%;
+    }
+}

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class krhReportVo {
+public class krhReportVO {
 	int reportId; //신고 번호
 	int boardId; //게시글 번호
 	long reporterId; //신고자 아이디=user.id

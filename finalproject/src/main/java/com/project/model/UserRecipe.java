@@ -1,5 +1,9 @@
 package com.project.model;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,11 +32,11 @@ public class UserRecipe {
     private int foodTime;
     private int categoryId;
     private String status; // 승인 여부 (on/off)
-
-    // ✅ 추가된 필드
+    private List<String> ingredients; //김륜하
+    private List<Ingredients> ingredientss; //이정면
     private String writerName;
     private String writerEmail;
-    private String ingredientsss;
+    private String ingredientsss; //김동하
     
     public String getIngredientsss() {
         return ingredientsss;
@@ -42,4 +46,3 @@ public class UserRecipe {
         this.ingredientsss = ingredientsss;
     }
 }
-

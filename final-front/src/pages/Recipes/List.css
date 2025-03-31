@@ -1,0 +1,114 @@
+.recipe-main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1400px;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    margin: 0 auto;
+}
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+.speaker{
+    border-radius: 80px;
+}
+
+.recipe-main li{
+    list-style: none;
+}
+
+.recipe-search{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 80px;
+}
+
+
+.recipe-search select{
+    border-radius: 20px 0 0 20px;
+    padding: 15px;
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.recipe-search input{
+    border-radius: 0 20px 20px 0;
+    padding: 10px 100px 10px 10px;
+    text-align: left;
+    margin-left: 0;
+}
+
+.recipe-search button{
+    margin-left: 20px;
+    background-color: #FFA575;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid #FFA575;
+}
+
+.recipe-grid {
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 50px;
+    margin-top: 30px;
+    align-items: start; 
+}
+
+.recipe-grid img{
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+}
+
+.recipe-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    transition: opacity 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+
+.recipe-grid-btn{
+    display: flex;
+    justify-content: space-around;
+    font-size: small;
+    margin-top: 20px;
+    
+}
+
+.load-more{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 80px;
+    padding: 10px 20px;
+    margin-bottom: 100px;
+    background-color: #FFA575;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.load-more:hover{
+    background-color: #ff9d68;
+}

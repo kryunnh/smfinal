@@ -17,7 +17,7 @@ import com.project.model.User;
 import com.project.model.UserDeletionRequest;
 import com.project.model.UserRecipe;
 import com.project.model.krhBoardVO;
-import com.project.model.krhReportVo;
+import com.project.model.krhReportVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -394,12 +394,12 @@ public class AdminService {
     }
 
     // 📌 전체 신고 목록 조회
-    public List<krhReportVo> getReports() {
+    public List<krhReportVO> getReports() {
         return adminMapper.getAllReports();
     }
 
     // 📌 신고 상세 조회
-    public krhReportVo getReportById(int reportId) {
+    public krhReportVO getReportById(int reportId) {
         return adminMapper.getReportById(reportId);
     }
 
