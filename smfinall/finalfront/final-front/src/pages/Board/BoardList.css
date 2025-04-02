@@ -34,8 +34,8 @@ table {
 
 .tdz tr:hover {
     cursor: pointer;
-    background-color: #FFD2B9;
-    color: #5E5E5E;
+    /* background-color: #FFD2B9;
+    color: #5E5E5E; */
 }
 
 /* 페이지네이션 스타일 */

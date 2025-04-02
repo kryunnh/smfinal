@@ -36,6 +36,12 @@ import AdminPage from "./pages/Admin/AdminPage";
 import ProtectedAdminRoute from "./components/Admin/ProtectedAdminRoute";
 import FindAccount from "./pages/Auth/FindAccount";
 import ChallengeDetail from './pages/Challenge/ChallengeDetail';
+import AdminNotificationHandler from "./component/AdminNotificationHandler.jsx";
+import ChatNotificationHandler from "./component/ChatNotificationHandler";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import MyChatPage from './pages/MyPage/MyChatPage';
+import AdminChatPage from './pages/Admin/AdminChatPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -99,12 +105,20 @@ function App() {
   
   return (
     <>
+    {/* ✅ WebSocket 알림 컴포넌트 추가! */}
+    <AdminNotificationHandler userRole="admin" />
+    <ChatNotificationHandler />
+    <ToastContainer position="top-right" autoClose={4000} />
       {!isReportPage && <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
 
       <Routes>
+        {/* ✅ 유저용 채팅 (MyPage) */}
+        <Route path="/mypage/chat" element={<MyChatPage />} />
+        {/* ✅ 관리자 채팅 */}
+        <Route path="/admin/chat" element={<AdminChatPage />} />
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="register" element={<RegisterModal />} />
+        <Route pacth="register" element={<RegisterModal />} />
         <Route path="list" element={<List />} />
         <Route path="list/:id" element={<ListDetail />} />
         <Route path="korean" element={<Korean />} />

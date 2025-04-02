@@ -89,7 +89,7 @@ const Chatbot = () => {
               onKeyPress={handleKeyPress}
               style={{fontFamily:"NEXON Lv1 Gothic OTF"}}
             />
-            <button className="chatbtn" onClick={sendChat}>
+            <button className="chattbtn" onClick={sendChat}>
               전송
             </button>
           </div>

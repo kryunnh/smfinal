@@ -184,6 +184,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                   <Link to="/admin/notifications">신고 목록</Link>
                   <Link to="/admin/inquiries">1:1 문의 관리</Link>
                   <Link to="/admin/competitions">맛있는 도전 관리</Link>
+                  <Link to="/admin/chat">고객 센터</Link>
                 </div>
               )}
             </div>
@@ -237,6 +238,13 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
                   >
                     회원 탈퇴
                   </Link>
+                  <Link
+                  to={"mypage/chat"}
+                    className={location.pathname==="/chat" ? "active":""}
+                  >
+                    고객센터
+                    </Link>
+                  
                 </div>
               )}
             </div>

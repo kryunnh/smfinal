@@ -27,6 +27,23 @@ public interface UserMapper {
     // 🔹 해당 이메일과 휴대폰 번호를 가진 유저 존재 여부 확인
     @Select("SELECT COUNT(*) FROM users WHERE email = #{email} AND phone_number = #{phoneNumber}")
     int countUserByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+    @Select("""
+    		  SELECT 
+    		    id, 
+    		    email, 
+    		    password, 
+    		    name, 
+    		    phone_number, 
+    		    profile_image, 
+    		    role, 
+    		    is_verified, 
+    		    created_at,
+    		    last_login_update AS lastLogin
+    		  FROM users
+    		  WHERE id = #{id}
+    		""")
+    		User findUserById(Long id);
+
 
     // 🔹 특정 이메일로 유저 조회 (Optional)
     @Select("SELECT * FROM users WHERE email = #{email}")
@@ -51,6 +68,7 @@ public interface UserMapper {
     // ✅ 특정 ID로 문의 조회 (이메일 포함)
     @Select("SELECT * FROM inquiries WHERE id = #{id}")
     Inquiry findById(Long id);
+    
     // ✅ 특정 문의글이 해당 사용자의 것인지 확인하는 메서드
     @Select("SELECT COUNT(*) FROM inquiries WHERE id = #{inquiryId} AND user_email = #{email}")
     int isInquiryOwner(@Param("inquiryId") Long inquiryId, @Param("email") String email);
@@ -119,7 +137,7 @@ public interface UserMapper {
 
 
     // 🔹 특정 유저의 게시물 조회
-    @Select("SELECT boardId, title, views, createdAt FROM board WHERE authorEmail = #{email}")
+    @Select("SELECT boardId, title, createdAt FROM board WHERE authorEmail = #{email}")
     List<krhBoardVO> findBoardsByUserEmail(@Param("email") String email);
 
     /** ✅ 유저 즐겨찾기 관련 기능 **/
@@ -170,5 +188,11 @@ public interface UserMapper {
     // 로그인 기록 저장 
     @Insert("INSERT INTO login_history (user_id, login_time) VALUES (#{userId}, NOW())")
     void insertLoginHistory(@Param("userId") Long userId);
-
+    // ✅ 단일 관리자 조회
+    @Select("SELECT * FROM users WHERE role = 'admin' LIMIT 1")
+    User findAdminUser();
+   
+    // ✅ 여러 관리자 조회 (예비용)
+    @Select("SELECT * FROM users WHERE role = 'admin'")
+    List<User> findAllAdmins();
 }

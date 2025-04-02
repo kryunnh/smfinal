@@ -35,6 +35,8 @@ public class SecurityConfig {
             .and()
             .csrf().disable()  // ✅ CSRF 비활성화 (PUT, DELETE 요청 허용)
             .authorizeHttpRequests()
+            .requestMatchers("/ws/**").permitAll()
+            .requestMatchers("/app/**", "/topic/**").permitAll() 
             .requestMatchers("/api/uploads/**").permitAll()  // ✅ 수정
             // 🔹 회원 관련 API 허용
             .requestMatchers(HttpMethod.GET, "/user/get-hashed-password").permitAll()

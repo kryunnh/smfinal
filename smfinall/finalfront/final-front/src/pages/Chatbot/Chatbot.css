@@ -49,26 +49,12 @@
   }
   
   .chatbot-footer input {
-    width: 65%;
+    width:70%;
     padding: 10px 20px;
     border-radius: 5px;
     border: 1px solid #ddd;
   }
   
-  .chatbot-footer button {
-    width: 20%;
-    background-color: #FFA575;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .chatbot-footer button:hover {
-    background-color:#ff9d68;
-  }
   
   .chatbot-footer input:focus {
     border-color: #ff9861;
@@ -93,3 +79,12 @@
     color: black;
   }
   
+  .chattbtn{
+    background-color: #FFA575;
+    padding:10px 20px;
+    color:white;
+  }
+
+  .chattbtn:hover{
+    background-color: #ff9d68;
+  }

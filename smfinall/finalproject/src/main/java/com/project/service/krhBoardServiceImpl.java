@@ -21,7 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class krhBoardServiceImpl implements krhBoardService{
 
 	private final krhBoardMapper krhboardMapper;
-	
+	 private final NotificationService notificationService;
+	 
 	@Override
 	public int countBoard(String findStr) {
 		// TODO Auto-generated method stub
@@ -108,11 +109,15 @@ public class krhBoardServiceImpl implements krhBoardService{
 	}
 
 	//게시글 신고
-	@Override
-	public void reportBoard(krhReportVO report) {
-		// TODO Auto-generated method stub
-		krhboardMapper.reportBoard(report);
-	}
+		@Override
+		public void reportBoard(krhReportVO report) {
+			// TODO Auto-generated method stub
+			krhboardMapper.reportBoard(report);
+			 // ✅ 관리자에게 WebSocket 실시간 알림 전송
+		    notificationService.sendReportNotification(
+		        "게시글 신고가 접수되었습니다. [신고 사유: " + report.getReason() + "]"
+		    );
+		}
 	
 	@Override
 	public boolean isBoardReported(int boardId, long reporterId) {

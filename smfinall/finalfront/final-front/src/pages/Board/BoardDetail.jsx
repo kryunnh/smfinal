@@ -133,7 +133,6 @@ function BoardDetail() {
 
       <BoardLike boardId={boardId} />
       <BoardComment />
-      <button onClick={scrollToTop} className="totop">🔝</button>
     </div>
   );
 }

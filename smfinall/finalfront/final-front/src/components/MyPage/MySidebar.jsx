@@ -10,6 +10,7 @@ export default function MySidebar() {
         <div className="mypage-sidebarli"><Link to="/mypage/notifications">알림</Link></div>
         <div className="mypage-sidebarli"><Link to="/mypage/inquiry">1:1 문의 목록</Link></div>
         <div className="mypage-sidebarli"><Link to="/mypage/inquiry/new">1:1 문의 작성</Link></div>
+        <div className="mypage-sidebarli"><Link to="/mypage/chat">💬 고객센터</Link></div>
         <div className="mypage-sidebarli"><Link to="/mypage/withdrawal">회원 탈퇴</Link></div>
       </div>
     </nav>

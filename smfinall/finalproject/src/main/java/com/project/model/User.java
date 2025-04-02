@@ -19,7 +19,8 @@ public class User {
     private String role = "USER";
     private Boolean isVerified;  // ✅ Boolean으로 선언해야 함
     private LocalDateTime createdAt;
-    
+    private LocalDateTime lastLogin;
+
     // ✅ 생성자 추가
     public User(String email, String password, String name, String phoneNumber, String profileImage, Boolean isVerified) {
         this.email = email;

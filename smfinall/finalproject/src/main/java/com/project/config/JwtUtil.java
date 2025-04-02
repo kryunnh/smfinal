@@ -30,6 +30,18 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String generateToken(Long userId,String email, String role) {
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("id", userId)
+                .claim("role", "ROLE_" + role)  // ✅ 역할을 토큰에 추가
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10시간 유효
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    
     // ✅ 토큰에서 Claim 추출
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);

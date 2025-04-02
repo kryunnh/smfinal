@@ -16,6 +16,7 @@ public class krhUserRecipeServiceImpl implements krhUserRecipeService {
     
     @Autowired
     private krhUserRecipeMapper userRecipeMapper;
+    private final NotificationService notificationService; 
 
     @Transactional
     @Override
@@ -44,6 +45,10 @@ public class krhUserRecipeServiceImpl implements krhUserRecipeService {
                 System.err.println("재료 ID가 유효하지 않습니다: " + ingredient);
             }
         }
+     // ✅ 공모전 알림 전송 (마지막에 추가!)
+        notificationService.sendCompetitionNotification(
+            "새 공모전 레시피 승인 요청이 도착했습니다. [레시피명: " + userRecipe.getFoodName() + "]"
+        );
     }
 
     // 재료 이름을 이용하여 ID를 조회하는 메서드
